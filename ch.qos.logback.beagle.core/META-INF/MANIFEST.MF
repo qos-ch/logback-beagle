@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ch.qos.logback.beagle.core
+Bundle-SymbolicName: ch.qos.logback.beagle.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: http://logback.qos.ch
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .
