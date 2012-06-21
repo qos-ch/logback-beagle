@@ -5,17 +5,27 @@
       version="1.0.0.qualifier"
       provider-name="http://logback.qos.ch">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://logback.qos.ch/consolePlugin.html">
+      During the development process, it is common for developers to print log output on the console. Typically, the developer will also customize the format of the log output by setting properties of a PatternLayout instance. Logback Beagle serves the same purpose as the regular console, but offers several advantages over the plain-old console. Below is a list of key advantages of our plugin:
+
+- event of level WARN and ERROR are colored in orange and respectively in red,
+- go to the java class and line where any given logging request was issued by double-clicking on its output line,
+- filter events with logback&apos;s powerful filtering mechanism without changing your logging configuration,
+- change the output format dynamically whenever you chose to do so,
+- easy configuration (only one line in your logback.xml file).
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      Copyright (C) 1999-2012, QOS.ch. All rights reserved.
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      
    </license>
+
+   <url>
+      <update label="Logback" url="http://logback.qos.ch/eclipse/"/>
+   </url>
 
    <plugin
          id="ch.qos.logback.beagle.core"
