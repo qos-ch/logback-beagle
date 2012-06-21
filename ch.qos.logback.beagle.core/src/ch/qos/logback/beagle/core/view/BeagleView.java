@@ -1,4 +1,4 @@
-package ch.qos.logback.beagle.core;
+package ch.qos.logback.beagle.core.view;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;

@@ -5,6 +5,8 @@ Bundle-SymbolicName: ch.qos.logback.beagle.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: http://logback.qos.ch
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui
+Bundle-ClassPath: .,
+ lib/logback-core-1.0.6.jar,
+ lib/logback-classic-1.0.6.jar

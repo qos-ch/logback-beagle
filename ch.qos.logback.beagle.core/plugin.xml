@@ -9,9 +9,9 @@
       </category>
       <view
             category="ch.qos.logback.beagle.core.category"
-            class="ch.qos.logback.beagle.core.BeagleView"
+            class="ch.qos.logback.beagle.core.view.BeagleView"
             icon="icons/obj16/sailing-ship-16x16.png"
-            id="ch.qos.logback.beagle.core.BeagleView"
+            id="ch.qos.logback.beagle.core.view.BeagleView"
             name="Beagle">
       </view>
    </extension>
@@ -20,7 +20,7 @@
       <perspectiveExtension
             targetID="org.eclipse.jdt.ui.JavaPerspective">
          <view
-               id="ch.qos.logback.beagle.core.BeagleView"
+               id="ch.qos.logback.beagle.core.view.BeagleView"
                relationship="stack"
                relative="org.eclipse.ui.views.ProblemView">
          </view>
