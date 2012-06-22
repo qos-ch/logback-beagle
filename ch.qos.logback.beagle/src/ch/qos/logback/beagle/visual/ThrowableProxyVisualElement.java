@@ -48,13 +48,13 @@ public class ThrowableProxyVisualElement implements IVisualElement {
   public String getText() {
     StringBuilder buf = new StringBuilder();
     if (index == INDEX_FOR_INITIAL_LINE) {
-      ThrowableProxyUtil.printFirstLine(buf, itp);
+      ThrowableProxyUtil.subjoinFirstLine(buf, itp);
     } else {
       int lastIndex = stepArray.length - commonFrames;
       if (index < lastIndex) {
         StackTraceElementProxy step = stepArray[index];
         buf.append(TAB_SUBSTITUTE);
-        ThrowableProxyUtil.printSTEP(buf, step);
+        ThrowableProxyUtil.subjoinSTEP(buf, step);
       } else {
         buf.append(TAB_SUBSTITUTE);
         buf.append("... ").append(commonFrames)
