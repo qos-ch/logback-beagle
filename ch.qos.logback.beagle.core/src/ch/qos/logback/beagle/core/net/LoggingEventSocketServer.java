@@ -4,10 +4,15 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.core.Activator;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * 
@@ -26,6 +31,11 @@ public class LoggingEventSocketServer implements Runnable {
     //
     private boolean stop = false;
 
+    //
+    private final List<ILoggingEvent> loggingEvents = Collections.synchronizedList(new LinkedList<ILoggingEvent>());
+
+    private Listener listener = null;
+
     /**
      * 
      */
@@ -43,7 +53,7 @@ public class LoggingEventSocketServer implements Runnable {
             serverSocket = new ServerSocket(port);
             while (!stop) {
                 Socket socket = serverSocket.accept();
-                new Thread(new LoggingEventSocketReader(socket)).start();
+                new Thread(new LoggingEventSocketReader(socket, loggingEvents, listener)).start();
             }
             serverSocket.close();
         } catch (BindException bindException) {
@@ -81,4 +91,28 @@ public class LoggingEventSocketServer implements Runnable {
         this.port = port;
     }
 
+    /**
+     * 
+     * @param index
+     * @return
+     */
+    public ILoggingEvent getLoggingEvent(int index) {
+        return loggingEvents.get(index);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public int getLoggingEventsCount() {
+        return loggingEvents.size();
+    }
+
+    /**
+     * 
+     * @param listener
+     */
+    public void addLoggingEventChangeListener(Listener listener) {
+        this.listener = listener;
+    }
 }

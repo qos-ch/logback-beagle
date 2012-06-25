@@ -1,11 +1,17 @@
 package ch.qos.logback.beagle.core.net;
 
 import java.io.BufferedInputStream;
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.List;
+
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.core.Activator;
-import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEventVO;
 
 /**
  * 
@@ -16,37 +22,42 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 public class LoggingEventSocketReader implements Runnable {
 
     //
-    private ObjectInputStream ois = null;
+    private final List<ILoggingEvent> loggingEvents;
 
     //
-    private boolean oisInError = false;
+    private final Listener listener;
 
-    public LoggingEventSocketReader(Socket socket) {
-        try {
-            ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-        } catch (Exception exception) {
-            Activator.INSTANCE.logException(exception, exception.getMessage());
-            oisInError = true;
-        }
+    //
+    private final Socket socket;
+
+    /**
+     * 
+     * @param socket
+     * @param loggingEvents
+     * @param listener
+     */
+    public LoggingEventSocketReader(Socket socket, List<ILoggingEvent> loggingEvents, Listener listener) {
+        this.loggingEvents = loggingEvents;
+        this.listener = listener;
+        this.socket = socket;
     }
 
     @Override
     public void run() {
-        if (oisInError) {
-            return;
-        }
         try {
+            ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             while (true) {
                 // read an event from the wire
-                LoggingEvent event = (LoggingEvent) ois.readObject();
-                // trick to keep the original thread name
-                event.getThreadName();
-                // add it to the manager's LoggingEvent list
-                // TODO:
-                // LoggingEventManager.getManager().addLoggingEvent(event);
+                LoggingEventVO event = (LoggingEventVO) ois.readObject();
+                // add event
+                loggingEvents.add(event);
+                Event swtEvent = new Event();
+                swtEvent.index = loggingEvents.indexOf(event);
+                listener.handleEvent(swtEvent);
             }
+        } catch (EOFException eofException) {
+            // nothing to do
         } catch (Exception exception) {
-            oisInError = true;
             Activator.INSTANCE.logException(exception);
         }
     }
