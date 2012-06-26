@@ -31,11 +31,11 @@ import ch.qos.logback.core.CoreConstants;
 public class OnMenuSelectionAction implements SelectionListener {
 
   final Table table;
-  final ClassicTISBuffer visualElementBuffer;
+  final ClassicTISBuffer classicTISBuffer;
 
-  public OnMenuSelectionAction(ClassicTISBuffer visualElementBuffer) {
-    this.visualElementBuffer = visualElementBuffer;
-    this.table = visualElementBuffer.getTable();
+  public OnMenuSelectionAction(ClassicTISBuffer classicTISBuffer) {
+    this.classicTISBuffer = classicTISBuffer;
+    this.table = classicTISBuffer.getTable();
   }
 
   @Override
@@ -62,9 +62,9 @@ public class OnMenuSelectionAction implements SelectionListener {
   }
 
   private void handleCallerMenu(String menuItemText, int index,
-      ITableItemStub iVisualElement) {
+      ITableItemStub iTableItemStub) {
     if (MenuBuilder.EXPLAND_CALLERS_MENU_TEXT.equals(menuItemText)) {
-      StackTraceElement[] callerDataArray = getCallerDataFromVisualElement(iVisualElement);
+      StackTraceElement[] callerDataArray = getCallerDataFromVisualElement(iTableItemStub);
 
       if (callerDataArray != null && callerDataArray.length > 0) {
 	if (checkForDoubleExpansion(index)) {
@@ -73,18 +73,18 @@ public class OnMenuSelectionAction implements SelectionListener {
 	}
 
 	for (int i = 0; i < callerDataArray.length; i++) {
-	  CallerDataTIS cdVisualElement = new CallerDataTIS(
+	  CallerDataTIS callerDataTIS = new CallerDataTIS(
 	      callerDataArray[i], i);
-	  visualElementBuffer.add(cdVisualElement, index + 1 + i);
+	  classicTISBuffer.add(callerDataTIS, index + 1 + i);
 	}
       }
     } else {
       int target = index;
-      if (iVisualElement instanceof LoggingEventTIS) {
+      if (iTableItemStub instanceof LoggingEventTIS) {
 	// the next entry is a CallerDataVisualElement
 	target++;
       }
-      visualElementBuffer.removeNeighboringCallerDataVisualElements(target);
+      classicTISBuffer.removeNeighboringCallerDataVisualElements(target);
     }
   }
 
@@ -104,7 +104,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 
     ITableItemStub iVisualElement = null;
     if (index != Constants.NA) {
-      iVisualElement = visualElementBuffer.get(index);
+      iVisualElement = classicTISBuffer.get(index);
     }
 
     switch (menuItemToIndex(mi)) {
@@ -129,7 +129,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     int[] selIndices = table.getSelectionIndices();
     Arrays.sort(selIndices);
     for (int index : selIndices) {
-      ITableItemStub ve = visualElementBuffer.get(index);
+      ITableItemStub ve = classicTISBuffer.get(index);
       buf.append(ve.getText());
       buf.append(CoreConstants.LINE_SEPARATOR);
     }
@@ -137,9 +137,9 @@ public class OnMenuSelectionAction implements SelectionListener {
   }
 
   StackTraceElement[] getCallerDataFromVisualElement(
-      ITableItemStub iVisualElement) {
-    if (iVisualElement instanceof LoggingEventTIS) {
-      LoggingEventTIS loggingEventVisualElement = (LoggingEventTIS) iVisualElement;
+      ITableItemStub iTableItemStub) {
+    if (iTableItemStub instanceof LoggingEventTIS) {
+      LoggingEventTIS loggingEventVisualElement = (LoggingEventTIS) iTableItemStub;
       return loggingEventVisualElement.getILoggingEvent().getCallerData();
     } else {
       return null;
@@ -148,13 +148,12 @@ public class OnMenuSelectionAction implements SelectionListener {
 
   boolean checkForDoubleExpansion(int index) {
     int next = index + 1;
-    if (next >= visualElementBuffer.size()) {
+    if (next >= classicTISBuffer.size()) {
       return false;
     }
 
-    ITableItemStub visualElem = visualElementBuffer.get(next);
-    return (visualElem instanceof CallerDataTIS);
-
+    ITableItemStub iTableItemStub = classicTISBuffer.get(next);
+    return (iTableItemStub instanceof CallerDataTIS);
   }
 
 }
