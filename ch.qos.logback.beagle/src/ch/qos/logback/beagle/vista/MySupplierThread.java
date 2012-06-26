@@ -53,23 +53,23 @@ class MySupplierThread extends Thread implements Listener {
     }
     while (!disposed) {
       try {
-        Thread.sleep(10);
+	Thread.sleep(10);
       } catch (InterruptedException e1) {
       }
       int limit = 2;
       if (COUNT < MAX) {
-        limit = MAX;
+	limit = MAX;
       }
       for (int i = 0; i < limit; i++) {
-        ILoggingEvent le = null;
-        // if ((i % 10) != 0) {
-        le = leb.getLoggingEvent();
-        // } else {
-        // le = LoggingEventBuilder.buildLoggingEventWithEx("message "
-        // + COUNT);
-        // }
-        internalAdd(le);
-        COUNT++;
+	ILoggingEvent le = null;
+	// if ((i % 10) != 0) {
+	le = leb.getLoggingEvent();
+	// } else {
+	// le = LoggingEventBuilder.buildLoggingEventWithEx("message "
+	// + COUNT);
+	// }
+	internalAdd(le);
+	COUNT++;
       }
       externalSync();
     }
@@ -92,7 +92,7 @@ class MySupplierThread extends Thread implements Listener {
     if (tableEventBuffer.isActive()) {
       int firstAvailableIndex = nextIndex - size;
       int targetedBeginIndex = Math.max(firstAvailableIndex,
-          nextTransferredIndex);
+	  nextTransferredIndex);
       int fromIndex = size - (nextIndex - targetedBeginIndex);
 
       tableEventBuffer.add(internalList.subList(fromIndex, size));

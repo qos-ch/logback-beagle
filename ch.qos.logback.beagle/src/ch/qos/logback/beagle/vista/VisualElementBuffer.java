@@ -38,8 +38,6 @@ public class VisualElementBuffer implements Listener, DisposeListener {
 
   private boolean TAIL = true;
 
-  
-  
   List<IVisualElement> visualElementBuffer = Collections
       .synchronizedList(new ArrayList<IVisualElement>());
   int count = 0;
@@ -49,7 +47,7 @@ public class VisualElementBuffer implements Listener, DisposeListener {
   boolean active = true;
 
   volatile boolean disposed = false;
-  
+
   Label diffCue;
   Label jumpCue;
 
@@ -88,13 +86,13 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     while (tp != null) {
       IThrowableProxy itp = e.getThrowableProxy();
       veList.add(new ThrowableProxyVisualElement(itp,
-          ThrowableProxyVisualElement.INDEX_FOR_INITIAL_LINE, c));
+	  ThrowableProxyVisualElement.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-        veList.add(new ThrowableProxyVisualElement(itp, i, c));
+	veList.add(new ThrowableProxyVisualElement(itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-        veList.add(new ThrowableProxyVisualElement(itp, stackDepth, c));
+	veList.add(new ThrowableProxyVisualElement(itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
@@ -108,23 +106,23 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     int found = middleIndex;
     for (int i = middleIndex; i >= limit; i--) {
       if (visualElementBuffer.get(i) instanceof CallerDataVisualElement)
-        found = i;
+	found = i;
       else
-        break;
+	break;
     }
     return found;
   }
 
   int findLastIndex(int middleIndex) {
     int limit = middleIndex + MAX_EXTENT <= visualElementBuffer.size() ? middleIndex
-        + MAX_EXTENT
-        : visualElementBuffer.size();
+	+ MAX_EXTENT
+	: visualElementBuffer.size();
     int found = middleIndex;
     for (int i = middleIndex; i < limit; i++) {
       if (visualElementBuffer.get(i) instanceof CallerDataVisualElement)
-        found = i;
+	found = i;
       else
-        break;
+	break;
     }
     return found;
   }
@@ -135,10 +133,10 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     visualElementBuffer.subList(beginIndex, lastIndex + 1).clear();
     display.syncExec(new Runnable() {
       public void run() {
-        // int topIndex = table.getTopIndex();
-        table.clearAll();
-        table.setItemCount(visualElementBuffer.size());
-        // table.setTopIndex(topIndex - CLEAN_COUNT);
+	// int topIndex = table.getTopIndex();
+	table.clearAll();
+	table.setItemCount(visualElementBuffer.size());
+	// table.setTopIndex(topIndex - CLEAN_COUNT);
       }
     });
   }
@@ -147,10 +145,10 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     visualElementBuffer.add(index, cdVisualElement);
     display.syncExec(new Runnable() {
       public void run() {
-        // int topIndex = table.getTopIndex();
-        table.clearAll();
-        table.setItemCount(visualElementBuffer.size());
-        // table.setTopIndex(topIndex - 1);
+	// int topIndex = table.getTopIndex();
+	table.clearAll();
+	table.setItemCount(visualElementBuffer.size());
+	// table.setTopIndex(topIndex - 1);
       }
     });
   }
@@ -163,7 +161,8 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     addVisualElementInChunks(visualElementList);
   }
 
-  private final void setTableItem(TableItem tableItem, IVisualElement visualElement) {
+  private final void setTableItem(TableItem tableItem,
+      IVisualElement visualElement) {
     tableItem.setText(visualElement.getText());
     tableItem.setBackground(visualElement.getBackgroundColor());
     tableItem.setImage(visualElement.getImage());
@@ -175,23 +174,23 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     addVisualElementInChunks(visualElementList);
   }
 
-  
   private void addVisualElementInChunks(final List<IVisualElement> veList) {
-    
-    int maxChunk = Constants.CLEAN_COUNT/5;
-    //int maxChunk = 4;
+
+    int maxChunk = Constants.CLEAN_COUNT / 5;
+    // int maxChunk = 4;
     int rangeStart = 0;
     int size = veList.size();
-    while(rangeStart < size) {
+    while (rangeStart < size) {
       int rangeEnd = rangeStart + maxChunk;
-      if(rangeEnd > size) {
-        rangeEnd = size;
+      if (rangeEnd > size) {
+	rangeEnd = size;
       }
       addVisualElement(veList.subList(rangeStart, rangeEnd));
       rangeStart = rangeEnd;
     }
-    
+
   }
+
   private void addVisualElement(final List<IVisualElement> veList) {
     if (disposed) {
       return;
@@ -203,22 +202,22 @@ public class VisualElementBuffer implements Listener, DisposeListener {
 
     display.syncExec(new Runnable() {
       public void run() {
-        TableItem ti = null;
-        if (disposed) {
-          return;
-        }
+	TableItem ti = null;
+	if (disposed) {
+	  return;
+	}
 
-        for (IVisualElement visualElement : veList) {
-          ti = new TableItem(table, SWT.NONE);
-          if (disposed) {
-            System.out.println("syncExec 1");
-            return;
-          }
-          setTableItem(ti, visualElement);
-        }
-        if (TAIL && ti != null) {
-          table.showItem(ti);
-        }
+	for (IVisualElement visualElement : veList) {
+	  ti = new TableItem(table, SWT.NONE);
+	  if (disposed) {
+	    System.out.println("syncExec 1");
+	    return;
+	  }
+	  setTableItem(ti, visualElement);
+	}
+	if (TAIL && ti != null) {
+	  table.showItem(ti);
+	}
       }
     });
 
@@ -226,12 +225,12 @@ public class VisualElementBuffer implements Listener, DisposeListener {
       visualElementBuffer.subList(0, Constants.CLEAN_COUNT).clear();
       System.out.println("new buffer size= " + visualElementBuffer.size());
       display.syncExec(new Runnable() {
-        public void run() {
-          int topIndex = table.getTopIndex();
-          table.clearAll();
-          table.setItemCount(visualElementBuffer.size());
-          table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
-        }
+	public void run() {
+	  int topIndex = table.getTopIndex();
+	  table.clearAll();
+	  table.setItemCount(visualElementBuffer.size());
+	  table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
+	}
       });
     }
   }

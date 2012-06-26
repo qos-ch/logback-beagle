@@ -39,7 +39,7 @@ public class HideMain {
     final Shell shell = new Shell(display);
 
     ResourceUtil.init(display);
-    
+
     shell.setLayout(new FormLayout());
 
     FormData formData;
@@ -51,21 +51,19 @@ public class HideMain {
     formData.top = new FormAttachment(0, 5);
     button.setLayoutData(formData);
 
-    final Composite comp1 =  makeComposite(shell, button, "one");
+    final Composite comp1 = makeComposite(shell, button, "one");
     formData = new FormData();
     formData.left = new FormAttachment(0, 5);
     formData.top = new FormAttachment(button, 0);
     formData.bottom = new FormAttachment(100, -5);
     comp1.setLayoutData(formData);
 
-    
-    final Composite comp2 =  makeComposite(shell, button, "two");
+    final Composite comp2 = makeComposite(shell, button, "two");
     formData = new FormData();
     formData.left = new FormAttachment(0, 5);
     formData.top = new FormAttachment(button, 0);
     formData.bottom = new FormAttachment(100, -5);
     comp2.setLayoutData(formData);
-
 
     button.addSelectionListener(new SelectionListener() {
 
@@ -77,25 +75,24 @@ public class HideMain {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        // System.out.println("widgetSelected");
-        if (showOne) {
-          comp1.moveAbove(null);
-          System.out.println("moving one above");
-        } else {
-          comp2.moveAbove(null);
+	// System.out.println("widgetSelected");
+	if (showOne) {
+	  comp1.moveAbove(null);
+	  System.out.println("moving one above");
+	} else {
+	  comp2.moveAbove(null);
 
-          System.out.println("moving two above");
-        }
-        showOne = !showOne;
+	  System.out.println("moving two above");
+	}
+	showOne = !showOne;
       }
 
     });
 
-
     shell.open();
     while (!shell.isDisposed()) {
       if (!display.readAndDispatch())
-        display.sleep();
+	display.sleep();
     }
     display.dispose();
   }
@@ -105,13 +102,14 @@ public class HideMain {
     composite.setLayout(new FormLayout());
     FormData formData;
     formData = new FormData();
-    
-    final ToolBar toolBar =  new ToolBar(composite, SWT.HORIZONTAL|SWT.SHADOW_ETCHED_OUT);
-    
+
+    final ToolBar toolBar = new ToolBar(composite, SWT.HORIZONTAL
+	| SWT.SHADOW_ETCHED_OUT);
+
     final Menu menu = new Menu(shell, SWT.POP_UP);
     for (int i = 0; i < 8; i++) {
-        MenuItem item = new MenuItem(menu, SWT.PUSH);
-        item.setText("Item " + i);
+      MenuItem item = new MenuItem(menu, SWT.PUSH);
+      item.setText("Item " + i);
     }
 
     formData = new FormData();
@@ -119,37 +117,35 @@ public class HideMain {
     formData.left = new FormAttachment(0, 5);
     toolBar.setLayoutData(formData);
 
-    final ToolItem toolItem =      new ToolItem(toolBar, SWT.DROP_DOWN);
+    final ToolItem toolItem = new ToolItem(toolBar, SWT.DROP_DOWN);
     toolItem.setImage(ResourceUtil.ERROR_IMG);
     toolItem.addListener(SWT.Selection, new Listener() {
 
       public void handleEvent(Event event) {
-          if (event.detail == SWT.ARROW) {
-              Point point = new Point(event.x, event.y);
-              point = event.display.map(toolBar, null, point);
-              menu.setLocation(point);
-              menu.setVisible(true);
-          }
+	if (event.detail == SWT.ARROW) {
+	  Point point = new Point(event.x, event.y);
+	  point = event.display.map(toolBar, null, point);
+	  menu.setLocation(point);
+	  menu.setVisible(true);
+	}
 
       }
 
-  });
+    });
 
-
-    final ToolItem toolItemB =      new ToolItem(toolBar, SWT.PUSH);
+    final ToolItem toolItemB = new ToolItem(toolBar, SWT.PUSH);
     toolItemB.setImage(ResourceUtil.WARN_IMG);
-    
-    
+
     formData = new FormData();
-    final Table table = new Table(composite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI
-        | SWT.BORDER);
-   
+    final Table table = new Table(composite, SWT.H_SCROLL | SWT.V_SCROLL
+	| SWT.MULTI | SWT.BORDER);
+
     formData.left = new FormAttachment(0, 5);
     formData.top = new FormAttachment(toolBar, 5);
     formData.bottom = new FormAttachment(100, -5);
 
     table.setLayoutData(formData);
-    
+
     for (int i = 0; i < LEN; i++) {
       new TableItem(table, SWT.NONE).setText(prefix + " " + i);
     }

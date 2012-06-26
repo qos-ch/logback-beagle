@@ -27,97 +27,96 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 
 public class Vista {
 
-	static final int OFFSET_FROM_BUTTOM = -5;
+  static final int OFFSET_FROM_BUTTOM = -5;
 
-	final Table table;
-	final VisualElementBuffer visualElementBuffer;
-	final UnfreezeToolItemListener unfreezeButtonListener;
-	final Composite parent;
-	
-	public Vista(Composite parent) {
-		this.parent = parent;
-		
-		FormData formData;
+  final Table table;
+  final VisualElementBuffer visualElementBuffer;
+  final UnfreezeToolItemListener unfreezeButtonListener;
+  final Composite parent;
 
-		table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.MULTI | SWT.BORDER);
-		table.setFont(ResourceUtil.FONT);
+  public Vista(Composite parent) {
+    this.parent = parent;
 
-		int charHeight = MetricsUtil.computeCharHeight(table);
-		int charWidth = MetricsUtil.computeCharWidth(table);
+    FormData formData;
 
-		formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
-		Label jumpCueLabel = new Label(parent, SWT.LEFT);
-		formData.left = new FormAttachment(0, charWidth);
-		formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
-		jumpCueLabel.setLayoutData(formData);
+    table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
+	| SWT.MULTI | SWT.BORDER);
+    table.setFont(ResourceUtil.FONT);
 
-		formData = new FormData(30 * charWidth, charHeight);
-		Label diffCueLabel = new Label(parent, SWT.LEFT);
-		formData.left = new FormAttachment(jumpCueLabel, charWidth);
-		formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
-		diffCueLabel.setLayoutData(formData);
-		diffCueLabel.setText("xxxxxxxxxxxxx");
+    int charHeight = MetricsUtil.computeCharHeight(table);
+    int charWidth = MetricsUtil.computeCharWidth(table);
 
-		ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
-		formData = new FormData();
-		formData.right = new FormAttachment(100, -5);
-		formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
+    formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
+    Label jumpCueLabel = new Label(parent, SWT.LEFT);
+    formData.left = new FormAttachment(0, charWidth);
+    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
+    jumpCueLabel.setLayoutData(formData);
 
-		// formData.right = new FormAttachment(100, -5);
-		// formData.top = new FormAttachment(0, 5);
-		toolbar.setLayoutData(formData);
-		ToolItem unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
-		unfreezeToolItem.setEnabled(false);
-		unfreezeToolItem.setImage(ResourceUtil
-				.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
-		unfreezeToolItem.setToolTipText("release scroll lock");
+    formData = new FormData(30 * charWidth, charHeight);
+    Label diffCueLabel = new Label(parent, SWT.LEFT);
+    formData.left = new FormAttachment(jumpCueLabel, charWidth);
+    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
+    diffCueLabel.setLayoutData(formData);
+    diffCueLabel.setText("xxxxxxxxxxxxx");
 
-		formData = new FormData();
-		formData.top = new FormAttachment(0, 5);
-		formData.left = new FormAttachment(0, 5);
-		formData.right = new FormAttachment(100, -5);
-		formData.bottom = new FormAttachment(toolbar, -5);
+    ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
+    formData = new FormData();
+    formData.right = new FormAttachment(100, -5);
+    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
 
-		table.setLayoutData(formData);
-		TableColumn tableColumn = new TableColumn(table, SWT.NULL);
-		tableColumn.setText("");
-		tableColumn.setWidth(100);
-		tableColumn.pack();
-		table.setHeaderVisible(false);
-		table.setLinesVisible(false);
+    // formData.right = new FormAttachment(100, -5);
+    // formData.top = new FormAttachment(0, 5);
+    toolbar.setLayoutData(formData);
+    ToolItem unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
+    unfreezeToolItem.setEnabled(false);
+    unfreezeToolItem.setImage(ResourceUtil
+	.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
+    unfreezeToolItem.setToolTipText("release scroll lock");
 
-		table.addControlListener(new TableControlListener(charWidth));
+    formData = new FormData();
+    formData.top = new FormAttachment(0, 5);
+    formData.left = new FormAttachment(0, 5);
+    formData.right = new FormAttachment(100, -5);
+    formData.bottom = new FormAttachment(toolbar, -5);
 
-		visualElementBuffer = new VisualElementBuffer(table);
-		visualElementBuffer.diffCue = diffCueLabel;
-		visualElementBuffer.jumpCue = jumpCueLabel;
+    table.setLayoutData(formData);
+    TableColumn tableColumn = new TableColumn(table, SWT.NULL);
+    tableColumn.setText("");
+    tableColumn.setWidth(100);
+    tableColumn.pack();
+    table.setHeaderVisible(false);
+    table.setLinesVisible(false);
 
-		// table.setData(Constants.EVENT_BUFFER_KEY, visualElementBuffer);
-		table.addListener(SWT.SetData, visualElementBuffer);
-		table.addDisposeListener(visualElementBuffer);
+    table.addControlListener(new TableControlListener(charWidth));
 
-		this.unfreezeButtonListener = new UnfreezeToolItemListener(
-				visualElementBuffer);
-		unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
+    visualElementBuffer = new VisualElementBuffer(table);
+    visualElementBuffer.diffCue = diffCueLabel;
+    visualElementBuffer.jumpCue = jumpCueLabel;
 
-		TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
-				table, visualElementBuffer, unfreezeToolItem,
-				unfreezeButtonListener);
-		table.addSelectionListener(tableItemSelectionListener);
+    // table.setData(Constants.EVENT_BUFFER_KEY, visualElementBuffer);
+    table.addListener(SWT.SetData, visualElementBuffer);
+    table.addDisposeListener(visualElementBuffer);
 
-		TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
-				visualElementBuffer);
-		table.addMouseMoveListener(myMouseListener);
-		table.addMouseListener(myMouseListener);
-		table.addMouseTrackListener(myMouseListener);
+    this.unfreezeButtonListener = new UnfreezeToolItemListener(
+	visualElementBuffer);
+    unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
 
-		table.addMouseMoveListener(new TimeDifferenceMouseListener(
-				visualElementBuffer));
+    TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
+	table, visualElementBuffer, unfreezeToolItem, unfreezeButtonListener);
+    table.addSelectionListener(tableItemSelectionListener);
 
-		Menu menu = MenuBuilder.buildMenu(visualElementBuffer);
-		MenuBuilder.addOnMenuSelectionAction(menu, visualElementBuffer);
-		table.setMenu(menu);
-		table.setItemCount(0);
-	}
+    TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
+	visualElementBuffer);
+    table.addMouseMoveListener(myMouseListener);
+    table.addMouseListener(myMouseListener);
+    table.addMouseTrackListener(myMouseListener);
+
+    table.addMouseMoveListener(new TimeDifferenceMouseListener(
+	visualElementBuffer));
+
+    Menu menu = MenuBuilder.buildMenu(visualElementBuffer);
+    MenuBuilder.addOnMenuSelectionAction(menu, visualElementBuffer);
+    table.setMenu(menu);
+    table.setItemCount(0);
+  }
 }

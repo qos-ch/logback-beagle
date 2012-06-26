@@ -24,7 +24,7 @@ public class LoggingEventBuilder {
   static Logger LOGGER = Logger_Context.getLogger("xx");
 
   int count = 0;
-  
+
   CorpusModel corpusModel;
   ILoggingEvent[] internalBuffer = new ILoggingEvent[0];
   int lastServedIndex = 0;
@@ -46,9 +46,9 @@ public class LoggingEventBuilder {
   }
 
   private void shape() {
-    for(int i = 0; i < internalBuffer.length; i++) {
+    for (int i = 0; i < internalBuffer.length; i++) {
       PubLoggingEventVO le = (PubLoggingEventVO) internalBuffer[i];
-      le.message = "msg "+ count;
+      le.message = "msg " + count;
       count++;
     }
   }

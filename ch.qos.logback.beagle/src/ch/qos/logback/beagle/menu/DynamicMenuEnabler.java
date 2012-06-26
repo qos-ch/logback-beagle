@@ -56,7 +56,7 @@ public class DynamicMenuEnabler implements MenuListener {
   void defaultState(Menu menu) {
     disableMenuItem(menu, MenuBuilder.JUMP_TO_CALLER_MENU_INDEX);
     disableMenuItem(menu, MenuBuilder.SHOW_CALLERS_MENU_INDEX);
-    MenuItem mi =  findMenuItemByIndex(menu, MenuBuilder.SHOW_CALLERS_MENU_INDEX);
+    MenuItem mi = findMenuItemByIndex(menu, MenuBuilder.SHOW_CALLERS_MENU_INDEX);
     mi.setText(MenuBuilder.EXPLAND_CALLERS_MENU_TEXT);
   }
 
@@ -65,7 +65,7 @@ public class DynamicMenuEnabler implements MenuListener {
     int selCount = table.getSelectionCount();
 
     System.out.println("menu shown, items selected="
-        + table.getSelectionCount());
+	+ table.getSelectionCount());
     Menu menu = (Menu) e.widget;
 
     defaultState(menu);
@@ -73,26 +73,27 @@ public class DynamicMenuEnabler implements MenuListener {
     if (selCount == 1) {
       int selectionIndex = SelectionUtil.getUniqueSelection(table);
       if (selectionIndex == Constants.NA) {
-        return;
+	return;
       }
       IVisualElement iVisualElement = visualElementBuffer.get(selectionIndex);
-      
-      if(iVisualElement.supportsJump()) {
-        enableMenuItem(menu, MenuBuilder.JUMP_TO_CALLER_MENU_INDEX);
+
+      if (iVisualElement.supportsJump()) {
+	enableMenuItem(menu, MenuBuilder.JUMP_TO_CALLER_MENU_INDEX);
       }
-      
-      MenuItem callersMenuItem =   findMenuItemByIndex(menu, MenuBuilder.SHOW_CALLERS_MENU_INDEX);
-      if(iVisualElement instanceof LoggingEventVisualElement) {
-        LoggingEventVisualElement leve = (LoggingEventVisualElement) iVisualElement;
-        if(alreadyCallerExpanded(selectionIndex)) {
-          callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
-          callersMenuItem.setEnabled(true); 
-        } else if(leve.supportsJump()) {
-          callersMenuItem.setEnabled(true); 
-        }
-      } else if(iVisualElement instanceof CallerDataVisualElement) {
-        callersMenuItem.setEnabled(true);
-        callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
+
+      MenuItem callersMenuItem = findMenuItemByIndex(menu,
+	  MenuBuilder.SHOW_CALLERS_MENU_INDEX);
+      if (iVisualElement instanceof LoggingEventVisualElement) {
+	LoggingEventVisualElement leve = (LoggingEventVisualElement) iVisualElement;
+	if (alreadyCallerExpanded(selectionIndex)) {
+	  callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
+	  callersMenuItem.setEnabled(true);
+	} else if (leve.supportsJump()) {
+	  callersMenuItem.setEnabled(true);
+	}
+      } else if (iVisualElement instanceof CallerDataVisualElement) {
+	callersMenuItem.setEnabled(true);
+	callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
       }
     }
   }
@@ -107,7 +108,7 @@ public class DynamicMenuEnabler implements MenuListener {
     return (visualElem instanceof CallerDataVisualElement);
 
   }
-  
+
   boolean isCallerDataVisualElement(int selectionIndex) {
     return (visualElementBuffer.get(selectionIndex) instanceof CallerDataVisualElement);
   }

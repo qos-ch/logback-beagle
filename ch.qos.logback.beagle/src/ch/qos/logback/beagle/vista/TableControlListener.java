@@ -19,10 +19,10 @@ public class TableControlListener implements ControlListener {
 
   int targetWidth = 0;
   int charWidth;
-  
+
   TableControlListener(int charWidth) {
     this.charWidth = charWidth;
-    System.out.println("charWidth="+charWidth);
+    System.out.println("charWidth=" + charWidth);
   }
 
   @Override
@@ -44,9 +44,9 @@ public class TableControlListener implements ControlListener {
 
     targetWidth = tableWidth;
     for (TableItem ti : table.getItems()) {
-      int itemWidth =  (3 + ti.getText().length()) * charWidth;
-      if (targetWidth <itemWidth) {
-        targetWidth = itemWidth;
+      int itemWidth = (3 + ti.getText().length()) * charWidth;
+      if (targetWidth < itemWidth) {
+	targetWidth = itemWidth;
       }
     }
 

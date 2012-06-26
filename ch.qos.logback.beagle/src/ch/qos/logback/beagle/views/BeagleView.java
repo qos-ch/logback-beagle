@@ -48,7 +48,6 @@ public class BeagleView extends ViewPart {
   private Action action2;
   private Action doubleClickAction;
 
-
   class NameSorter extends ViewerSorter {
   }
 
@@ -67,13 +66,13 @@ public class BeagleView extends ViewPart {
 
     TableItem ti = new TableItem(table, SWT.LEFT);
     ti.setText("hello");
-    
+
     // Create the help context id for the viewer's control
-    PlatformUI.getWorkbench().getHelpSystem().setHelp(table,
-        "ch.qos.logback.beagle.viewer");
+    PlatformUI.getWorkbench().getHelpSystem()
+	.setHelp(table, "ch.qos.logback.beagle.viewer");
     makeActions();
     hookContextMenu();
-    //hookDoubleClickAction();
+    // hookDoubleClickAction();
     contributeToActionBars();
   }
 
@@ -82,12 +81,12 @@ public class BeagleView extends ViewPart {
     menuMgr.setRemoveAllWhenShown(true);
     menuMgr.addMenuListener(new IMenuListener() {
       public void menuAboutToShow(IMenuManager manager) {
-        BeagleView.this.fillContextMenu(manager);
+	BeagleView.this.fillContextMenu(manager);
       }
     });
     Menu menu = menuMgr.createContextMenu(table);
     table.setMenu(menu);
-    //getSite().registerContextMenu(menuMgr, table);
+    // getSite().registerContextMenu(menuMgr, table);
   }
 
   private void contributeToActionBars() {
@@ -103,7 +102,7 @@ public class BeagleView extends ViewPart {
   }
 
   private void fillContextMenu(IMenuManager manager) {
-    //manager.add(action1);
+    // manager.add(action1);
     manager.add(action2);
     // Other plug-ins can contribute there actions here
     manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -111,41 +110,39 @@ public class BeagleView extends ViewPart {
 
   private void fillLocalToolBar(IToolBarManager manager) {
     manager.add(action1);
-    //manager.add(action2);
+    // manager.add(action2);
   }
 
   private void makeActions() {
     action1 = new Action() {
       public void run() {
-        showMessage("Action 1 executed");
+	showMessage("Action 1 executed");
       }
     };
     action1.setText("Action 1");
     action1.setToolTipText("Action 1 tooltip");
     action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-        .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+	.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 
     action2 = new Action() {
       public void run() {
-        showMessage("Action 2 executed");
+	showMessage("Action 2 executed");
       }
     };
     action2.setText("Action 2");
     action2.setToolTipText("Action 2 tooltip");
     action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-        .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+	.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
     doubleClickAction = new Action() {
       public void run() {
-        TableItem[] tableItemArrray = table.getSelection();
-        showMessage("Double-click detected on " + tableItemArrray.toString());
+	TableItem[] tableItemArrray = table.getSelection();
+	showMessage("Double-click detected on " + tableItemArrray.toString());
       }
     };
   }
 
-
   private void showMessage(String message) {
-    MessageDialog.openInformation(table.getShell(),
-        "Beagle View", message);
+    MessageDialog.openInformation(table.getShell(), "Beagle View", message);
   }
 
   /**

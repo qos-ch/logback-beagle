@@ -22,79 +22,85 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 
 public class MyMain {
 
-	static final int OFFSET_FROM_BUTTOM = -5;
+  static final int OFFSET_FROM_BUTTOM = -5;
 
-	public static void main(String[] args) {
-		Display display = new Display();
-		ResourceUtil.init(display);
+  /**
+   * @param args
+   */
+  /**
+   * @param args
+   */
+  public static void main(String[] args) {
+    Display display = new Display();
+    ResourceUtil.init(display);
 
-		Shell shell = new Shell(display);
-		shell.setText("Logback Beagle");
-		shell.setBounds(100, 100, 500, 500);
-		shell.setLayout(new FormLayout());
+    Shell shell = new Shell(display);
+    shell.setText("Logback Beagle");
+    shell.setBounds(100, 100, 500, 500);
+    shell.setLayout(new FormLayout());
 
-		FormData formData;
+    FormData formData;
 
-		Button button = new Button(shell, SWT.PUSH);
-		button.setText("switch");
-		formData = new FormData();
-		formData.left = new FormAttachment(0, 5);
-		formData.top = new FormAttachment(0, 5);
-		button.setLayoutData(formData);
+    Button button = new Button(shell, SWT.PUSH);
+    button.setText("switch");
+    formData = new FormData();
+    formData.left = new FormAttachment(0, 5);
+    formData.top = new FormAttachment(0, 5);
+    button.setLayoutData(formData);
 
-		final VistaManager vistaManager = VistaManager.getInstance();
-		final Vista vista0 = VistaManager.buildVista(shell, button);
-		vistaManager.put("V0", vista0);
+    final VistaManager vistaManager = VistaManager.getInstance();
+    final Vista vista0 = VistaManager.buildVista(shell, button);
+    vistaManager.put("V0", vista0);
 
-		final Vista vista1 = VistaManager.buildVista(shell, button);
-		vistaManager.put("V1", vista1);
+    final Vista vista1 = VistaManager.buildVista(shell, button);
+    vistaManager.put("V1", vista1);
 
-		vistaManager.setCurrent("V0");
+    vistaManager.setCurrent("V0");
 
-		MySupplierThread supplierThread0 = new MySupplierThread(
-				vista0.visualElementBuffer, vista0.unfreezeButtonListener);
-		display.addListener(SWT.Dispose, supplierThread0);
-		supplierThread0.start();
+    MySupplierThread supplierThread0 = new MySupplierThread(
+	vista0.visualElementBuffer, vista0.unfreezeButtonListener);
+    display.addListener(SWT.Dispose, supplierThread0);
+    supplierThread0.start();
 
-		MySupplierThread supplierThread1 = new MySupplierThread(
-				vista1.visualElementBuffer, vista1.unfreezeButtonListener);
-		display.addListener(SWT.Dispose, supplierThread1);
-		supplierThread1.start();
+    MySupplierThread supplierThread1 = new MySupplierThread(
+	vista1.visualElementBuffer, vista1.unfreezeButtonListener);
+    display.addListener(SWT.Dispose, supplierThread1);
+    supplierThread1.start();
 
-		button.addSelectionListener(new SelectionListener() {
+    button.addSelectionListener(new SelectionListener() {
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+      }
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Vista current = vistaManager.currentVista;
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+	Vista current = vistaManager.currentVista;
 
-				if (current == null) {
-					vistaManager.setCurrent("V0");
-				} else if (vista0 == current) {
-					vistaManager.setCurrent("V1");
-				} else if (vista1 == current) {
-					vistaManager.setCurrent("V0");
-				}
-				;
-			}
-
-		});
-
-		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		try {
-			display.dispose();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ResourceUtil.dispose();
-		System.out.println("exiting");
+	if (current == null) {
+	  vistaManager.setCurrent("V0");
+	} else if (vista0 == current) {
+	  vistaManager.setCurrent("V1");
+	} else if (vista1 == current) {
+	  vistaManager.setCurrent("V0");
 	}
+	;
+      }
+
+    });
+
+    shell.open();
+    while (!shell.isDisposed()) {
+      if (!display.readAndDispatch())
+	display.sleep();
+    }
+    try {
+      display.dispose();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    ResourceUtil.dispose();
+    System.out.println("exiting");
+  }
 
 }

@@ -88,7 +88,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     if (table.getSelectionCount() > 1) {
       visualElementBuffer.clearCues();
     }
-    
+
     lastIndex = currentIndex;
     doSelect(anchorIndex, currentIndex);
   }
@@ -105,12 +105,12 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
     if (MouseEventUtil.isButtonHeldDown(e)) {
       if (scroller != null) {
-        System.out.println("already in capture mode");
-        return;
+	System.out.println("already in capture mode");
+	return;
       }
       System.out.println("entering capture mode");
       Scroller.Direction direction = e.y < 0 ? Scroller.Direction.UP
-          : Scroller.Direction.DOWN;
+	  : Scroller.Direction.DOWN;
       table.setCapture(true);
       scroller = new Scroller(table, anchorIndex, direction);
       table.getDisplay().timerExec(Scroller.DELAY, scroller);

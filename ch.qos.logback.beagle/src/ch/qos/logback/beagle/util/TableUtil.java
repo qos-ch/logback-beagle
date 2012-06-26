@@ -16,6 +16,6 @@ public class TableUtil {
     int start = table.getTopIndex();
     int itemCount = table.getItemCount();
     return Math.min(table.getBounds().height / table.getItemHeight() + 2,
-        itemCount - start);
+	itemCount - start);
   }
 }

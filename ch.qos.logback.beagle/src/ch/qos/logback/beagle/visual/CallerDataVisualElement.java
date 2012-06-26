@@ -44,8 +44,9 @@ public class CallerDataVisualElement implements IVisualElement {
 
   @Override
   public StackTraceElement getJumpData() {
-    return new StackTraceElement(stackTraceElement.getClassName(), stackTraceElement
-        .getMethodName(), stackTraceElement.getFileName(), stackTraceElement.getLineNumber());
+    return new StackTraceElement(stackTraceElement.getClassName(),
+	stackTraceElement.getMethodName(), stackTraceElement.getFileName(),
+	stackTraceElement.getLineNumber());
   }
 
   @Override

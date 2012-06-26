@@ -14,15 +14,15 @@ import org.eclipse.swt.widgets.Table;
 
 public class MetricsUtil {
 
-	public static int computeCharWidth(Table table) {
-		GC gc = new GC(table);
-		FontMetrics fm = gc.getFontMetrics();
-		return fm.getAverageCharWidth();
-	}
+  public static int computeCharWidth(Table table) {
+    GC gc = new GC(table);
+    FontMetrics fm = gc.getFontMetrics();
+    return fm.getAverageCharWidth();
+  }
 
-	public  static int computeCharHeight(Table table) {
-		GC gc = new GC(table);
-		FontMetrics fm = gc.getFontMetrics();
-		return fm.getHeight();
-	}
+  public static int computeCharHeight(Table table) {
+    GC gc = new GC(table);
+    FontMetrics fm = gc.getFontMetrics();
+    return fm.getHeight();
+  }
 }

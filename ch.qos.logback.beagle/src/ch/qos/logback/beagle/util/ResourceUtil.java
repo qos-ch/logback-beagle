@@ -31,26 +31,28 @@ public class ResourceUtil {
 
   public static String JUMP_IMG_KEY = "JUMP_IMG_KEY";
   public static Color GRAY;
-  public static  Font FONT;
- 
+  public static Font FONT;
+
   static String PATH_TO_ICONS = "icons/";
-  
-  
+
   private static Map<String, Image> IMAGE_MAP = new HashMap<String, Image>();
-  
+
   public static void init(Display display) {
 
-    WARN_IMG = loadImage(display, PATH_TO_ICONS+"flag_orange.png");
-    ERROR_IMG = loadImage(display, PATH_TO_ICONS+"flag_red.png");
+    WARN_IMG = loadImage(display, PATH_TO_ICONS + "flag_orange.png");
+    ERROR_IMG = loadImage(display, PATH_TO_ICONS + "flag_red.png");
 
     putImage(WARN_IMG_KEY, WARN_IMG);
     putImage(ERROR_IMG_KEY, ERROR_IMG);
 
-    putImage(RELEASE_SCROLL_LOCK_IMG_KEY, loadImage(display, PATH_TO_ICONS+"play_doc.gif"));
+    putImage(RELEASE_SCROLL_LOCK_IMG_KEY,
+	loadImage(display, PATH_TO_ICONS + "play_doc.gif"));
 
-    putImage(JUMP_IMG_KEY, loadImage(display, PATH_TO_ICONS+"book_open.png"));
-    putImage(EXPAND_CALLERS_IMG_KEY, loadImage(display, PATH_TO_ICONS+"preview-16x16.png"));
-    putImage(COPY_CLIPBAORD_IMG_KEY, loadImage(display, PATH_TO_ICONS+"copy-16x16.png"));
+    putImage(JUMP_IMG_KEY, loadImage(display, PATH_TO_ICONS + "book_open.png"));
+    putImage(EXPAND_CALLERS_IMG_KEY,
+	loadImage(display, PATH_TO_ICONS + "preview-16x16.png"));
+    putImage(COPY_CLIPBAORD_IMG_KEY,
+	loadImage(display, PATH_TO_ICONS + "copy-16x16.png"));
 
     FONT = new Font(null, "Courier", 10, SWT.NORMAL);
     GRAY = new Color(display, 245, 247, 248);
@@ -58,9 +60,10 @@ public class ResourceUtil {
   }
 
   public static Image loadImage(Display display, String resourcePath) {
-    //URL url = ResourceUtil.class.getClassLoader().getResource(resourcePath);
-    //ImageDescriptor iDescriptor = ImageDescriptor.createFromURL(url);
-    ImageDescriptor iDescriptor = ImageDescriptor.createFromFile(null, resourcePath);
+    // URL url = ResourceUtil.class.getClassLoader().getResource(resourcePath);
+    // ImageDescriptor iDescriptor = ImageDescriptor.createFromURL(url);
+    ImageDescriptor iDescriptor = ImageDescriptor.createFromFile(null,
+	resourcePath);
     return iDescriptor.createImage();
   }
 
@@ -68,7 +71,7 @@ public class ResourceUtil {
       int scale) {
     Image image = loadImage(display, resourcePath);
     Image scaled = new Image(display, image.getImageData().scaledTo(scale,
-        scale));
+	scale));
     return scaled;
   }
 
@@ -87,7 +90,7 @@ public class ResourceUtil {
   public static void dispose() {
     for (Image img : IMAGE_MAP.values()) {
       if (img != null) {
-        img.dispose();
+	img.dispose();
       }
     }
     FONT.dispose();

@@ -12,11 +12,15 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 public interface IVisualElement {
-  
+
   String getText();
+
   Color getBackgroundColor();
+
   Image getImage();
+
   boolean supportsJump();
+
   StackTraceElement getJumpData();
-  
+
 }

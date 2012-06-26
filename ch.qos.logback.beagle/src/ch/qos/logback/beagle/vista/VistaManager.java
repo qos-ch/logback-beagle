@@ -21,64 +21,64 @@ import org.eclipse.swt.widgets.Shell;
 
 public class VistaManager {
 
-	static VistaManager SINGLETON = new VistaManager();
+  static VistaManager SINGLETON = new VistaManager();
 
-	static VistaManager getInstance() {
-		return SINGLETON;
-	}
+  static VistaManager getInstance() {
+    return SINGLETON;
+  }
 
-	static private Vista buildVista(Composite composite, FormData formData) {
-		Composite vistaContainer = new Composite(composite, SWT.NONE);
-		vistaContainer.setLayout(new FormLayout());
-		formData.left = new FormAttachment(0, 5);
-		formData.right = new FormAttachment(100, -5);
-		formData.bottom = new FormAttachment(100, -5);
-		vistaContainer.setLayoutData(formData);
+  static private Vista buildVista(Composite composite, FormData formData) {
+    Composite vistaContainer = new Composite(composite, SWT.NONE);
+    vistaContainer.setLayout(new FormLayout());
+    formData.left = new FormAttachment(0, 5);
+    formData.right = new FormAttachment(100, -5);
+    formData.bottom = new FormAttachment(100, -5);
+    vistaContainer.setLayoutData(formData);
 
-		return new Vista(vistaContainer);
-	}
+    return new Vista(vistaContainer);
+  }
 
-	static Vista buildVista(Shell shell, Button button) {
-		FormData formData = new FormData();
-		Vista vista = buildVista(shell, formData);
-		formData.top = new FormAttachment(button, 5);
-		return vista;
-	}
+  static Vista buildVista(Shell shell, Button button) {
+    FormData formData = new FormData();
+    Vista vista = buildVista(shell, formData);
+    formData.top = new FormAttachment(button, 5);
+    return vista;
+  }
 
-	static Vista buildVista(Composite parent) {
-		FormData formData = new FormData();
-		Vista vista = buildVista(parent, formData);
-		formData.top = new FormAttachment(0, 5);
-		return vista;
-	}
+  static Vista buildVista(Composite parent) {
+    FormData formData = new FormData();
+    Vista vista = buildVista(parent, formData);
+    formData.top = new FormAttachment(0, 5);
+    return vista;
+  }
 
-	Map<String, Vista> vistaMap = new HashMap<String, Vista>();
-	Vista currentVista;
+  Map<String, Vista> vistaMap = new HashMap<String, Vista>();
+  Vista currentVista;
 
-	void setCurrent(Vista vista) {
-		Vista oldVista = currentVista;
-		if (oldVista != null) {
-			oldVista.parent.setVisible(false);
-		}
-		currentVista = vista;
-		currentVista.parent.setVisible(true);
-		currentVista.parent.moveAbove(null);
-	}
+  void setCurrent(Vista vista) {
+    Vista oldVista = currentVista;
+    if (oldVista != null) {
+      oldVista.parent.setVisible(false);
+    }
+    currentVista = vista;
+    currentVista.parent.setVisible(true);
+    currentVista.parent.moveAbove(null);
+  }
 
-	public void setCurrent(String key) {
-		Vista vista = get(key);
-		if (vista == null) {
-			return;
-		}
-		setCurrent(vista);
-	}
+  public void setCurrent(String key) {
+    Vista vista = get(key);
+    if (vista == null) {
+      return;
+    }
+    setCurrent(vista);
+  }
 
-	void put(String key, Vista value) {
-		vistaMap.put(key, value);
-	}
+  void put(String key, Vista value) {
+    vistaMap.put(key, value);
+  }
 
-	Vista get(String key) {
-		return vistaMap.get(key);
-	}
+  Vista get(String key) {
+    return vistaMap.get(key);
+  }
 
 }

@@ -43,7 +43,7 @@ public class TimeDifferenceMouseListener implements MouseMoveListener {
     LoggingEventVisualElement otherLE = (LoggingEventVisualElement) otherVE;
 
     long diff = otherLE.getILoggingEvent().getTimeStamp()
-        - selLE.getILoggingEvent().getTimeStamp();
+	- selLE.getILoggingEvent().getTimeStamp();
 
     diffCue.setText(diff + "  ms");
   }
@@ -58,9 +58,9 @@ public class TimeDifferenceMouseListener implements MouseMoveListener {
     if (selectionCount != 1) {
       return;
     }
-    
+
     int otherIndex = MouseEventUtil.computeIndex(table, e);
-    if(otherIndex == Constants.NA) {
+    if (otherIndex == Constants.NA) {
       return;
     }
     int selectionIndex = table.getSelectionIndex();

@@ -52,13 +52,13 @@ public class ThrowableProxyVisualElement implements IVisualElement {
     } else {
       int lastIndex = stepArray.length - commonFrames;
       if (index < lastIndex) {
-        StackTraceElementProxy step = stepArray[index];
-        buf.append(TAB_SUBSTITUTE);
-        ThrowableProxyUtil.subjoinSTEP(buf, step);
+	StackTraceElementProxy step = stepArray[index];
+	buf.append(TAB_SUBSTITUTE);
+	ThrowableProxyUtil.subjoinSTEP(buf, step);
       } else {
-        buf.append(TAB_SUBSTITUTE);
-        buf.append("... ").append(commonFrames)
-            .append(" common frames omitted");
+	buf.append(TAB_SUBSTITUTE);
+	buf.append("... ").append(commonFrames)
+	    .append(" common frames omitted");
       }
     }
     return buf.toString();

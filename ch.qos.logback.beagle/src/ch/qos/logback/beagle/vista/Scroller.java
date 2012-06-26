@@ -82,23 +82,23 @@ public class Scroller implements Runnable {
 
     if (direction == Direction.UP) {
       if (anchorIndex >= end) { // straight up
-        decrementStart();
-        SelectionUtil.selectRange(table, start, anchorIndex);
-        targetItemIndex = start;
+	decrementStart();
+	SelectionUtil.selectRange(table, start, anchorIndex);
+	targetItemIndex = start;
       } else { // first down than up
-        decrementEnd();
-        SelectionUtil.selectRange(table, anchorIndex, end);
-        targetItemIndex = end;
+	decrementEnd();
+	SelectionUtil.selectRange(table, anchorIndex, end);
+	targetItemIndex = end;
       }
     } else {
       if (anchorIndex <= start) { // straight down
-        incrementEnd();
-        SelectionUtil.selectRange(table, anchorIndex, end);
-        targetItemIndex = end;
+	incrementEnd();
+	SelectionUtil.selectRange(table, anchorIndex, end);
+	targetItemIndex = end;
       } else { // first up than down
-        incrementStart();
-        SelectionUtil.selectRange(table, start, anchorIndex);
-        targetItemIndex = start;
+	incrementStart();
+	SelectionUtil.selectRange(table, start, anchorIndex);
+	targetItemIndex = start;
       }
     }
     TableItem ti = table.getItem(targetItemIndex);

@@ -10,7 +10,7 @@ package ch.qos.logback.beagle;
 
 public class Constants {
   final public static int NA = -1;
-  
+
   final public static int ICON_SIZE = 16;
 
   public static int MAX = 1500;

@@ -67,7 +67,7 @@ public class LoggingEventVisualElement implements IVisualElement {
 
   @Override
   public StackTraceElement getJumpData() {
-    if(supportsJump()) {
+    if (supportsJump()) {
       return iLoggingEvent.getCallerData()[0];
     } else {
       return null;
@@ -77,7 +77,7 @@ public class LoggingEventVisualElement implements IVisualElement {
   @Override
   public boolean supportsJump() {
     return (iLoggingEvent.getCallerData() != null && iLoggingEvent
-        .getCallerData().length > 0);
+	.getCallerData().length > 0);
   }
 
 }

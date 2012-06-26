@@ -49,7 +49,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     MenuItem[] miArray = menu.getItems();
     for (int i = 0; i < miArray.length; i++) {
       if (menuItem == miArray[i])
-        return i;
+	return i;
     }
     return Constants.NA;
   }
@@ -60,33 +60,34 @@ public class OnMenuSelectionAction implements SelectionListener {
       System.out.println("Jump to " + ste.getClassName());
     }
   }
-  
-  private void handleCallerMenu(String menuItemText, int index, IVisualElement iVisualElement) {
+
+  private void handleCallerMenu(String menuItemText, int index,
+      IVisualElement iVisualElement) {
     if (MenuBuilder.EXPLAND_CALLERS_MENU_TEXT.equals(menuItemText)) {
       StackTraceElement[] callerDataArray = getCallerDataFromVisualElement(iVisualElement);
 
       if (callerDataArray != null && callerDataArray.length > 0) {
-        if (checkForDoubleExpansion(index)) {
-          System.out.println("doubvle expansion");
-          return;
-        }
+	if (checkForDoubleExpansion(index)) {
+	  System.out.println("doubvle expansion");
+	  return;
+	}
 
-        for (int i = 0; i < callerDataArray.length; i++) {
-          CallerDataVisualElement cdVisualElement = new CallerDataVisualElement(
-              callerDataArray[i], i);
-          visualElementBuffer.add(cdVisualElement, index + 1 + i);
-        }
+	for (int i = 0; i < callerDataArray.length; i++) {
+	  CallerDataVisualElement cdVisualElement = new CallerDataVisualElement(
+	      callerDataArray[i], i);
+	  visualElementBuffer.add(cdVisualElement, index + 1 + i);
+	}
       }
     } else {
       int target = index;
-      if(iVisualElement instanceof LoggingEventVisualElement) {
-        // the next entry is a CallerDataVisualElement
-        target++;
+      if (iVisualElement instanceof LoggingEventVisualElement) {
+	// the next entry is a CallerDataVisualElement
+	target++;
       }
       visualElementBuffer.removeNeighboringCallerDataVisualElements(target);
     }
   }
-  
+
   private void handleCopyToClipboard(Display display) {
     final Clipboard cb = new Clipboard(display);
     TextTransfer textTransfer = TextTransfer.getInstance();
@@ -94,21 +95,21 @@ public class OnMenuSelectionAction implements SelectionListener {
     cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });
     cb.dispose();
   }
-  
+
   @Override
   public void widgetSelected(SelectionEvent e) {
     MenuItem mi = (MenuItem) e.widget;
 
     int index = SelectionUtil.getUniqueSelection(table);
-    
+
     IVisualElement iVisualElement = null;
     if (index != Constants.NA) {
       iVisualElement = visualElementBuffer.get(index);
-    } 
+    }
 
     switch (menuItemToIndex(mi)) {
     case MenuBuilder.JUMP_TO_CALLER_MENU_INDEX:
-      handleMenuJump(iVisualElement);    
+      handleMenuJump(iVisualElement);
       break;
     case MenuBuilder.SHOW_CALLERS_MENU_INDEX:
       handleCallerMenu(mi.getText(), index, iVisualElement);
@@ -119,7 +120,7 @@ public class OnMenuSelectionAction implements SelectionListener {
       handleCopyToClipboard(e.display);
       break;
     default:
-      throw new IllegalStateException("Unexpected menu item "+mi);
+      throw new IllegalStateException("Unexpected menu item " + mi);
     }
   }
 
@@ -135,7 +136,8 @@ public class OnMenuSelectionAction implements SelectionListener {
     return buf.toString();
   }
 
-  StackTraceElement[] getCallerDataFromVisualElement(IVisualElement iVisualElement) {
+  StackTraceElement[] getCallerDataFromVisualElement(
+      IVisualElement iVisualElement) {
     if (iVisualElement instanceof LoggingEventVisualElement) {
       LoggingEventVisualElement loggingEventVisualElement = (LoggingEventVisualElement) iVisualElement;
       return loggingEventVisualElement.getILoggingEvent().getCallerData();
