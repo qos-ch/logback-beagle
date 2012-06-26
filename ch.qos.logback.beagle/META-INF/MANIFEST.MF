@@ -7,7 +7,8 @@ Bundle-Activator: ch.qos.logback.beagle.Activator
 Require-Bundle: ch.qos.logback.core;bundle-version="1.0.0",
  ch.qos.logback.classic;bundle-version="1.0.0",
  org.eclipse.core.runtime,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.slf4j.api;bundle-version="1.6.4"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .
+Bundle-ClassPath: ., lib/logback-classic-1.0.6-tests.jar
