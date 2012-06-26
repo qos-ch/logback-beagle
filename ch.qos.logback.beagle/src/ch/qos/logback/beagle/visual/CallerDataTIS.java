@@ -11,14 +11,14 @@ package ch.qos.logback.beagle.visual;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-public class CallerDataVisualElement implements IVisualElement {
+public class CallerDataTIS extends TableItemStubBase {
 
   static Color CALLER_DATACOLOR = new Color(null, 193, 230, 253);
 
   final StackTraceElement stackTraceElement;
   final int index;
 
-  public CallerDataVisualElement(StackTraceElement stackTraceElement, int index) {
+  public CallerDataTIS(StackTraceElement stackTraceElement, int index) {
     this.stackTraceElement = stackTraceElement;
     this.index = index;
   }

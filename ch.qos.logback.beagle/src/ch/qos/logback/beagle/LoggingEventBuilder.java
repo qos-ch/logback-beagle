@@ -36,7 +36,7 @@ public class LoggingEventBuilder {
     corpusModel = new CorpusModel(112340, wordList);
   }
 
-  public ILoggingEvent getLoggingEvent() {
+  public ILoggingEvent buildLoggingEvent() {
     if (lastServedIndex >= internalBuffer.length) {
       internalBuffer = Corpus.make(corpusModel, BUFFER_SIZE, true);
       shape();

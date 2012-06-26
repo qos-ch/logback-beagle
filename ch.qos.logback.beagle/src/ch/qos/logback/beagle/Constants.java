@@ -13,7 +13,7 @@ public class Constants {
 
   final public static int ICON_SIZE = 16;
 
-  public static int MAX = 1500;
+  public static int MAX = 20*1000;
 
   public static int CLEAN_COUNT = MAX / 10;
 }

@@ -15,32 +15,32 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
-import ch.qos.logback.beagle.visual.IVisualElement;
-import ch.qos.logback.beagle.visual.LoggingEventVisualElement;
+import ch.qos.logback.beagle.visual.ITableItemStub;
+import ch.qos.logback.beagle.visual.LoggingEventTIS;
 
 public class TimeDifferenceMouseListener implements MouseMoveListener {
 
   final Table table;
-  final VisualElementBuffer visualElementBuffer;
+  final ClassicTISBuffer visualElementBuffer;
   final Label diffCue;
 
-  TimeDifferenceMouseListener(VisualElementBuffer visualElementBuffer) {
+  TimeDifferenceMouseListener(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
     this.table = visualElementBuffer.table;
     this.diffCue = visualElementBuffer.diffCue;
   }
 
   private void updateLabel(int selIndex, int otherIndex) {
-    IVisualElement selVE = visualElementBuffer.get(selIndex);
-    IVisualElement otherVE = visualElementBuffer.get(otherIndex);
-    if (!(selVE instanceof LoggingEventVisualElement)) {
+    ITableItemStub selVE = visualElementBuffer.get(selIndex);
+    ITableItemStub otherVE = visualElementBuffer.get(otherIndex);
+    if (!(selVE instanceof LoggingEventTIS)) {
       return;
     }
-    if (!(otherVE instanceof LoggingEventVisualElement)) {
+    if (!(otherVE instanceof LoggingEventTIS)) {
       return;
     }
-    LoggingEventVisualElement selLE = (LoggingEventVisualElement) selVE;
-    LoggingEventVisualElement otherLE = (LoggingEventVisualElement) otherVE;
+    LoggingEventTIS selLE = (LoggingEventTIS) selVE;
+    LoggingEventTIS otherLE = (LoggingEventTIS) otherVE;
 
     long diff = otherLE.getILoggingEvent().getTimeStamp()
 	- selLE.getILoggingEvent().getTimeStamp();

@@ -30,7 +30,7 @@ public class Vista {
   static final int OFFSET_FROM_BUTTOM = -5;
 
   final Table table;
-  final VisualElementBuffer visualElementBuffer;
+  final ClassicTISBuffer visualElementBuffer;
   final UnfreezeToolItemListener unfreezeButtonListener;
   final Composite parent;
 
@@ -89,11 +89,11 @@ public class Vista {
 
     table.addControlListener(new TableControlListener(charWidth));
 
-    visualElementBuffer = new VisualElementBuffer(table);
+    visualElementBuffer = new ClassicTISBuffer(table);
     visualElementBuffer.diffCue = diffCueLabel;
     visualElementBuffer.jumpCue = jumpCueLabel;
 
-    // table.setData(Constants.EVENT_BUFFER_KEY, visualElementBuffer);
+    // when the table is cleared visualElementBuffer's handleEvent method will re-populate the item
     table.addListener(SWT.SetData, visualElementBuffer);
     table.addDisposeListener(visualElementBuffer);
 

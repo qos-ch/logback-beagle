@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.VisualElementBuffer;
+import ch.qos.logback.beagle.vista.ClassicTISBuffer;
 
 public class MenuBuilder {
 
@@ -30,7 +30,7 @@ public class MenuBuilder {
   final public static int SHOW_CALLERS_MENU_INDEX = 1;
   final public static int COPY_TO_CLIPBOARD_MENU_INDEX = 2;
 
-  static public Menu buildMenu(VisualElementBuffer visualElementBuffer) {
+  static public Menu buildMenu(ClassicTISBuffer visualElementBuffer) {
     Menu menu = new Menu(visualElementBuffer.getTable());
 
     MenuItem jumpToCaller = new MenuItem(menu, SWT.PUSH);
@@ -54,7 +54,7 @@ public class MenuBuilder {
   }
 
   static public void addOnMenuSelectionAction(Menu menu,
-      VisualElementBuffer visualElementBuffer) {
+      ClassicTISBuffer visualElementBuffer) {
     OnMenuSelectionAction onMenuSelectionAction = new OnMenuSelectionAction(
 	visualElementBuffer);
     for (MenuItem menuItem : menu.getItems()) {

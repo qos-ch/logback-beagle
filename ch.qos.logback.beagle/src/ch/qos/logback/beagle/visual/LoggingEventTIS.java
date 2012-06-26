@@ -17,16 +17,13 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
-public class LoggingEventVisualElement implements IVisualElement {
+public class LoggingEventTIS extends TableItemStubBase {
 
   public ILoggingEvent getILoggingEvent() {
     return iLoggingEvent;
   }
 
   static PatternLayout LAYOUT = new PatternLayout();
-
-  Color orange = new Color(null, 242, 198, 174);
-  Color red = new Color(null, 253, 139, 113);
 
   static {
     LoggerContext c = new LoggerContext();
@@ -39,7 +36,7 @@ public class LoggingEventVisualElement implements IVisualElement {
   final ILoggingEvent iLoggingEvent;
   final Color color;
 
-  public LoggingEventVisualElement(ILoggingEvent event, Color color) {
+  public LoggingEventTIS(ILoggingEvent event, Color color) {
     this.iLoggingEvent = event;
     this.color = color;
   }

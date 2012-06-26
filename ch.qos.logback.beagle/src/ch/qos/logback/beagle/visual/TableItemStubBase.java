@@ -8,19 +8,14 @@
  */
 package ch.qos.logback.beagle.visual;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 
-public interface IVisualElement {
+import org.eclipse.swt.widgets.TableItem;
 
-  String getText();
+abstract public class TableItemStubBase implements ITableItemStub {
 
-  Color getBackgroundColor();
-
-  Image getImage();
-
-  boolean supportsJump();
-
-  StackTraceElement getJumpData();
-
+  public void populate(TableItem ti) {
+    ti.setText(getText());
+    ti.setBackground(this.getBackgroundColor());
+    ti.setImage(this.getImage());  
+  }
 }

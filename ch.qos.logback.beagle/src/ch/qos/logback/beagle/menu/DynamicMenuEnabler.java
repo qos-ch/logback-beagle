@@ -16,17 +16,17 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.SelectionUtil;
-import ch.qos.logback.beagle.vista.VisualElementBuffer;
-import ch.qos.logback.beagle.visual.CallerDataVisualElement;
-import ch.qos.logback.beagle.visual.IVisualElement;
-import ch.qos.logback.beagle.visual.LoggingEventVisualElement;
+import ch.qos.logback.beagle.vista.ClassicTISBuffer;
+import ch.qos.logback.beagle.visual.CallerDataTIS;
+import ch.qos.logback.beagle.visual.ITableItemStub;
+import ch.qos.logback.beagle.visual.LoggingEventTIS;
 
 public class DynamicMenuEnabler implements MenuListener {
 
   final Table table;
-  final VisualElementBuffer visualElementBuffer;
+  final ClassicTISBuffer visualElementBuffer;
 
-  public DynamicMenuEnabler(VisualElementBuffer visualElementBuffer) {
+  public DynamicMenuEnabler(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
     this.table = visualElementBuffer.getTable();
   }
@@ -75,7 +75,7 @@ public class DynamicMenuEnabler implements MenuListener {
       if (selectionIndex == Constants.NA) {
 	return;
       }
-      IVisualElement iVisualElement = visualElementBuffer.get(selectionIndex);
+      ITableItemStub iVisualElement = visualElementBuffer.get(selectionIndex);
 
       if (iVisualElement.supportsJump()) {
 	enableMenuItem(menu, MenuBuilder.JUMP_TO_CALLER_MENU_INDEX);
@@ -83,15 +83,15 @@ public class DynamicMenuEnabler implements MenuListener {
 
       MenuItem callersMenuItem = findMenuItemByIndex(menu,
 	  MenuBuilder.SHOW_CALLERS_MENU_INDEX);
-      if (iVisualElement instanceof LoggingEventVisualElement) {
-	LoggingEventVisualElement leve = (LoggingEventVisualElement) iVisualElement;
+      if (iVisualElement instanceof LoggingEventTIS) {
+	LoggingEventTIS leve = (LoggingEventTIS) iVisualElement;
 	if (alreadyCallerExpanded(selectionIndex)) {
 	  callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
 	  callersMenuItem.setEnabled(true);
 	} else if (leve.supportsJump()) {
 	  callersMenuItem.setEnabled(true);
 	}
-      } else if (iVisualElement instanceof CallerDataVisualElement) {
+      } else if (iVisualElement instanceof CallerDataTIS) {
 	callersMenuItem.setEnabled(true);
 	callersMenuItem.setText(MenuBuilder.COLLAPSE_CALLERS_MENU_TEXT);
       }
@@ -104,12 +104,12 @@ public class DynamicMenuEnabler implements MenuListener {
       return false;
     }
 
-    IVisualElement visualElem = visualElementBuffer.get(next);
-    return (visualElem instanceof CallerDataVisualElement);
+    ITableItemStub visualElem = visualElementBuffer.get(next);
+    return (visualElem instanceof CallerDataTIS);
 
   }
 
   boolean isCallerDataVisualElement(int selectionIndex) {
-    return (visualElementBuffer.get(selectionIndex) instanceof CallerDataVisualElement);
+    return (visualElementBuffer.get(selectionIndex) instanceof CallerDataTIS);
   }
 }

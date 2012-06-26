@@ -14,9 +14,9 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class UnfreezeToolItemListener implements SelectionListener {
 
-  final VisualElementBuffer visualElementBuffer;
+  final ClassicTISBuffer visualElementBuffer;
 
-  UnfreezeToolItemListener(VisualElementBuffer visualElementBuffer) {
+  UnfreezeToolItemListener(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
   }
 

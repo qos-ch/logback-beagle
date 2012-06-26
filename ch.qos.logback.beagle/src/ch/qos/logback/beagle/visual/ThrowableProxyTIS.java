@@ -15,7 +15,7 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 
-public class ThrowableProxyVisualElement implements IVisualElement {
+public class ThrowableProxyTIS extends TableItemStubBase {
 
   // static Color COLOR = new Color(null, 209, 193, 245);
   static Color EXCEPTION_COLOR = new Color(null, 221, 221, 255);
@@ -30,7 +30,7 @@ public class ThrowableProxyVisualElement implements IVisualElement {
 
   final Color color;
 
-  public ThrowableProxyVisualElement(IThrowableProxy itp, int index, Color color) {
+  public ThrowableProxyTIS(IThrowableProxy itp, int index, Color color) {
     this.itp = itp;
     this.index = index;
     this.stepArray = itp.getStackTraceElementProxyArray();

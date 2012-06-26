@@ -22,12 +22,12 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     MouseMoveListener, MouseTrackListener {
 
   final Table table;
-  final VisualElementBuffer visualElementBuffer;
+  final ClassicTISBuffer visualElementBuffer;
   int anchorIndex = Constants.NA;
   int lastIndex = Constants.NA;
   Scroller scroller;
 
-  TableSelectionViaMouseMovements(VisualElementBuffer visualElementBuffer) {
+  TableSelectionViaMouseMovements(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
     this.table = visualElementBuffer.table;
   }

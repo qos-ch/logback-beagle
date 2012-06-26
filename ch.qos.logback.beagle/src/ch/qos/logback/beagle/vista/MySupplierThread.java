@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.LoggingEventBuilder;
+import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
 class MySupplierThread extends Thread implements Listener {
@@ -24,9 +25,9 @@ class MySupplierThread extends Thread implements Listener {
   static int MAX = Constants.MAX + 10;
   static int CLEAN_COUNT = Constants.CLEAN_COUNT;
 
-  static int COUNT = 0;
-  UnfreezeToolItemListener fbListener;
-  VisualElementBuffer tableEventBuffer;
+  int count = 0;
+  UnfreezeToolItemListener unfreezeToolItemListener;
+  ITableItemStubBuffer<ILoggingEvent> visualElementBuffer;
 
   int lastAdd = 0;
 
@@ -37,10 +38,10 @@ class MySupplierThread extends Thread implements Listener {
 
   boolean disposed = false;
 
-  MySupplierThread(VisualElementBuffer tableEventBuffer,
-      UnfreezeToolItemListener fbListener) {
-    this.tableEventBuffer = tableEventBuffer;
-    this.fbListener = fbListener;
+  MySupplierThread(ITableItemStubBuffer<ILoggingEvent> visualElementBuffer,
+      UnfreezeToolItemListener unfreezeToolItemListener) {
+    this.visualElementBuffer = visualElementBuffer;
+    this.unfreezeToolItemListener = unfreezeToolItemListener;
   }
 
   public void run() {
@@ -53,23 +54,15 @@ class MySupplierThread extends Thread implements Listener {
     }
     while (!disposed) {
       try {
-	Thread.sleep(10);
+	Thread.sleep(1);
       } catch (InterruptedException e1) {
       }
-      int limit = 2;
-      if (COUNT < MAX) {
-	limit = MAX;
-      }
-      for (int i = 0; i < limit; i++) {
+      // bursts of 2
+      int burstSize = 2;
+      for (int i = 0; i < burstSize; i++) {
 	ILoggingEvent le = null;
-	// if ((i % 10) != 0) {
-	le = leb.getLoggingEvent();
-	// } else {
-	// le = LoggingEventBuilder.buildLoggingEventWithEx("message "
-	// + COUNT);
-	// }
+	le = leb.buildLoggingEvent();
 	internalAdd(le);
-	COUNT++;
       }
       externalSync();
     }
@@ -79,25 +72,11 @@ class MySupplierThread extends Thread implements Listener {
   void internalAdd(ILoggingEvent le) {
     internalList.add(le);
     nextIndex++;
-
   }
 
   void externalSync() {
-
-    if (internalList.size() >= MAX) {
-      internalList.subList(0, CLEAN_COUNT).clear();
-    }
-    int size = internalList.size();
-
-    if (tableEventBuffer.isActive()) {
-      int firstAvailableIndex = nextIndex - size;
-      int targetedBeginIndex = Math.max(firstAvailableIndex,
-	  nextTransferredIndex);
-      int fromIndex = size - (nextIndex - targetedBeginIndex);
-
-      tableEventBuffer.add(internalList.subList(fromIndex, size));
-      nextTransferredIndex = nextIndex;
-    }
+    visualElementBuffer.add(internalList);
+    internalList.clear();
   }
 
   @Override

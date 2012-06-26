@@ -25,21 +25,21 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.visual.CallerDataVisualElement;
-import ch.qos.logback.beagle.visual.IVisualElement;
-import ch.qos.logback.beagle.visual.LoggingEventVisualElement;
-import ch.qos.logback.beagle.visual.ThrowableProxyVisualElement;
+import ch.qos.logback.beagle.visual.CallerDataTIS;
+import ch.qos.logback.beagle.visual.ITableItemStub;
+import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
+import ch.qos.logback.beagle.visual.LoggingEventTIS;
+import ch.qos.logback.beagle.visual.ThrowableProxyTIS;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 
-public class VisualElementBuffer implements Listener, DisposeListener {
+public class ClassicTISBuffer implements
+    ITableItemStubBuffer<ILoggingEvent>, Listener, DisposeListener {
 
-  static IVisualElement[] EMTPRY_VISUAL_ELEMENT_ARRAY = new IVisualElement[0];
+  static ITableItemStub[] EMPTY_TIS_ARRAY = new ITableItemStub[0];
 
-  private boolean TAIL = true;
-
-  List<IVisualElement> visualElementBuffer = Collections
-      .synchronizedList(new ArrayList<IVisualElement>());
+  List<ITableItemStub> tisList = Collections
+      .synchronizedList(new ArrayList<ITableItemStub>());
   int count = 0;
   Table table;
   Display display;
@@ -51,52 +51,60 @@ public class VisualElementBuffer implements Listener, DisposeListener {
   Label diffCue;
   Label jumpCue;
 
-  VisualElementBuffer(Table table) {
+  ClassicTISBuffer(Table table) {
     this.table = table;
     this.display = table.getDisplay();
   }
 
+  /**
+   * This method is called when a tableItem needs to be refreshed.
+   */
   public void handleEvent(Event event) {
+    if(event.type != SWT.SetData) {
+      throw new IllegalStateException("Unexpected event type "+event.type);
+    }
     TableItem item = (TableItem) event.item;
 
     int index = event.index;
     // ignore out of bounds requests
-    if (index >= visualElementBuffer.size()) {
+    if (index >= tisList.size()) {
       return;
     }
-    IVisualElement ive = (IVisualElement) visualElementBuffer.get(index);
-    item.setText(ive.getText());
-    item.setBackground(ive.getBackgroundColor());
-    item.setImage(ive.getImage());
-  }
+    ITableItemStub tis = tisList.get(index);
+    tis.populate(item);
+}
 
-  // IVisualElement[]
-  void loggingEventToVisualElement(List<IVisualElement> veList, ILoggingEvent e) {
-    // List<IVisualElement> veList = new ArrayList<IVisualElement>();
+  /**
+   * Convert an ILoggingEvent to a list of IVisualElement.
+   * 
+   * @param veList
+   * @param event
+   */
+  private void loggingEventToVisualElement(List<ITableItemStub> veList,
+      ILoggingEvent event) {
 
     count++;
     Color c = null;
     if (count % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    veList.add(new LoggingEventVisualElement(e, c));
+    veList.add(new LoggingEventTIS(event, c));
 
-    IThrowableProxy tp = e.getThrowableProxy();
+    IThrowableProxy tp = event.getThrowableProxy();
 
     while (tp != null) {
-      IThrowableProxy itp = e.getThrowableProxy();
-      veList.add(new ThrowableProxyVisualElement(itp,
-	  ThrowableProxyVisualElement.INDEX_FOR_INITIAL_LINE, c));
+      IThrowableProxy itp = event.getThrowableProxy();
+      veList.add(new ThrowableProxyTIS(itp,
+	  ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-	veList.add(new ThrowableProxyVisualElement(itp, i, c));
+	veList.add(new ThrowableProxyTIS(itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-	veList.add(new ThrowableProxyVisualElement(itp, stackDepth, c));
+	veList.add(new ThrowableProxyTIS(itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
-    // return veList.toArray(EMTPRY_VISUAL_ELEMENT_ARRAY);
   }
 
   static int MAX_EXTENT = 20;
@@ -105,7 +113,7 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     int limit = middleIndex - MAX_EXTENT >= 0 ? middleIndex - MAX_EXTENT : 0;
     int found = middleIndex;
     for (int i = middleIndex; i >= limit; i--) {
-      if (visualElementBuffer.get(i) instanceof CallerDataVisualElement)
+      if (tisList.get(i) instanceof CallerDataTIS)
 	found = i;
       else
 	break;
@@ -114,12 +122,12 @@ public class VisualElementBuffer implements Listener, DisposeListener {
   }
 
   int findLastIndex(int middleIndex) {
-    int limit = middleIndex + MAX_EXTENT <= visualElementBuffer.size() ? middleIndex
+    int limit = middleIndex + MAX_EXTENT <= tisList.size() ? middleIndex
 	+ MAX_EXTENT
-	: visualElementBuffer.size();
+	: tisList.size();
     int found = middleIndex;
     for (int i = middleIndex; i < limit; i++) {
-      if (visualElementBuffer.get(i) instanceof CallerDataVisualElement)
+      if (tisList.get(i) instanceof CallerDataTIS)
 	found = i;
       else
 	break;
@@ -130,52 +138,50 @@ public class VisualElementBuffer implements Listener, DisposeListener {
   public void removeNeighboringCallerDataVisualElements(int index) {
     int beginIndex = findBeginIndex(index);
     int lastIndex = findLastIndex(index);
-    visualElementBuffer.subList(beginIndex, lastIndex + 1).clear();
+    tisList.subList(beginIndex, lastIndex + 1).clear();
     display.syncExec(new Runnable() {
       public void run() {
 	// int topIndex = table.getTopIndex();
 	table.clearAll();
-	table.setItemCount(visualElementBuffer.size());
+	table.setItemCount(tisList.size());
 	// table.setTopIndex(topIndex - CLEAN_COUNT);
       }
     });
   }
 
-  public void add(final CallerDataVisualElement cdVisualElement, int index) {
-    visualElementBuffer.add(index, cdVisualElement);
+  public void add(final CallerDataTIS cdVisualElement, int index) {
+    tisList.add(index, cdVisualElement);
     display.syncExec(new Runnable() {
       public void run() {
 	// int topIndex = table.getTopIndex();
 	table.clearAll();
-	table.setItemCount(visualElementBuffer.size());
+	table.setItemCount(tisList.size());
 	// table.setTopIndex(topIndex - 1);
       }
     });
   }
 
-  void add(final List<ILoggingEvent> loggingEventList) {
-    List<IVisualElement> visualElementList = new ArrayList<IVisualElement>();
+  /**
+   * This method is invoked by the producer to add events into this buffer/list.
+   * 
+   * @param loggingEventList
+   */
+  public void add(final List<ILoggingEvent> loggingEventList) {
+    List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
     for (ILoggingEvent iLoggingEvent : loggingEventList) {
       loggingEventToVisualElement(visualElementList, iLoggingEvent);
     }
     addVisualElementInChunks(visualElementList);
   }
 
-  private final void setTableItem(TableItem tableItem,
-      IVisualElement visualElement) {
-    tableItem.setText(visualElement.getText());
-    tableItem.setBackground(visualElement.getBackgroundColor());
-    tableItem.setImage(visualElement.getImage());
-  }
 
-  void add(final ILoggingEvent iLoggingEvent) {
-    List<IVisualElement> visualElementList = new ArrayList<IVisualElement>();
+  public void add(final ILoggingEvent iLoggingEvent) {
+    List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
     loggingEventToVisualElement(visualElementList, iLoggingEvent);
     addVisualElementInChunks(visualElementList);
   }
 
-  private void addVisualElementInChunks(final List<IVisualElement> veList) {
-
+  private void addVisualElementInChunks(final List<ITableItemStub> veList) {
     int maxChunk = Constants.CLEAN_COUNT / 5;
     // int maxChunk = 4;
     int rangeStart = 0;
@@ -188,50 +194,22 @@ public class VisualElementBuffer implements Listener, DisposeListener {
       addVisualElement(veList.subList(rangeStart, rangeEnd));
       rangeStart = rangeEnd;
     }
-
   }
 
-  private void addVisualElement(final List<IVisualElement> veList) {
+  private void addVisualElement(final List<ITableItemStub> veList) {
     if (disposed) {
       return;
     }
 
-    for (IVisualElement ve : veList) {
-      visualElementBuffer.add(ve);
+    for (ITableItemStub ve : veList) {
+      tisList.add(ve);
     }
 
-    display.syncExec(new Runnable() {
-      public void run() {
-	TableItem ti = null;
-	if (disposed) {
-	  return;
-	}
+    display.syncExec(new AddTableItemRunnable(veList));
 
-	for (IVisualElement visualElement : veList) {
-	  ti = new TableItem(table, SWT.NONE);
-	  if (disposed) {
-	    System.out.println("syncExec 1");
-	    return;
-	  }
-	  setTableItem(ti, visualElement);
-	}
-	if (TAIL && ti != null) {
-	  table.showItem(ti);
-	}
-      }
-    });
-
-    if (visualElementBuffer.size() >= Constants.MAX) {
-      visualElementBuffer.subList(0, Constants.CLEAN_COUNT).clear();
-      System.out.println("new buffer size= " + visualElementBuffer.size());
-      display.syncExec(new Runnable() {
-	public void run() {
-	  int topIndex = table.getTopIndex();
-	  table.clearAll();
-	  table.setItemCount(visualElementBuffer.size());
-	  table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
-	}
-      });
+    if (tisList.size() >= Constants.MAX) {
+      tisList.subList(0, Constants.CLEAN_COUNT).clear();
+      display.syncExec(new ResetTableRunnable());
     }
   }
 
@@ -244,7 +222,7 @@ public class VisualElementBuffer implements Listener, DisposeListener {
   }
 
   public int size() {
-    return visualElementBuffer.size();
+    return tisList.size();
   }
 
   public void clearCues() {
@@ -252,12 +230,12 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     jumpCue.setImage(null);
   }
 
-  public IVisualElement get(int index) {
-    if (index >= visualElementBuffer.size()) {
+  public ITableItemStub get(int index) {
+    if (index >= tisList.size()) {
       System.out.println("EventBuffer.get invoked with index=" + index);
       return null;
     } else {
-      return visualElementBuffer.get(index);
+      return tisList.get(index);
     }
   }
 
@@ -271,4 +249,43 @@ public class VisualElementBuffer implements Listener, DisposeListener {
     return table;
   }
 
+  
+  // ------------------------- ResetTableRunnable class
+  private final class ResetTableRunnable implements Runnable {
+    public void run() {
+      int topIndex = table.getTopIndex();
+      table.clearAll();
+      table.setItemCount(tisList.size());
+      table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
+    }
+  }
+
+
+  // ------------------------- AddTableItemRunnable class
+  private final class AddTableItemRunnable implements Runnable {
+    private final List<ITableItemStub> tisList;
+
+    private AddTableItemRunnable(List<ITableItemStub> tisList) {
+      this.tisList = tisList;
+    }
+
+    public void run() {
+      if (disposed) {
+	return;
+      }
+
+      TableItem ti = null;
+      for (ITableItemStub tis : tisList) {
+	ti = new TableItem(table, SWT.NONE);
+	if (disposed) {
+	  return;
+	}
+	tis.populate(ti);
+      }
+
+      if (isActive() && ti != null) {
+	table.showItem(ti);
+      }
+    }
+  }
 }

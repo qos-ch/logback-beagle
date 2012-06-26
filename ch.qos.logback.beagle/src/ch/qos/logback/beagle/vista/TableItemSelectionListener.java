@@ -17,17 +17,17 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.visual.IVisualElement;
+import ch.qos.logback.beagle.visual.ITableItemStub;
 
 public class TableItemSelectionListener implements SelectionListener {
 
   Table table;
-  VisualElementBuffer visualElementBuffer;
+  ClassicTISBuffer visualElementBuffer;
   TableItem lastSelection;
   ToolItem unfreezeButton;
 
   TableItemSelectionListener(Table table,
-      VisualElementBuffer visualElementBuffer, ToolItem unfreezeButton,
+      ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
     this.table = table;
     this.visualElementBuffer = visualElementBuffer;
@@ -50,7 +50,7 @@ public class TableItemSelectionListener implements SelectionListener {
     lastSelection = currentlySelectedTI;
 
     visualElementBuffer.clearCues();
-    IVisualElement visualElem = visualElementBuffer.get(indexOfCurrentSel);
+    ITableItemStub visualElem = visualElementBuffer.get(indexOfCurrentSel);
     if (visualElem.supportsJump() && table.getSelectionCount() == 1) {
       visualElementBuffer.jumpCue.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
     }
