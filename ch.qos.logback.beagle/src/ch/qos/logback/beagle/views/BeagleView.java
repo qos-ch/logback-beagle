@@ -8,10 +8,6 @@
  */
 package ch.qos.logback.beagle.views;
 
-import java.io.BufferedOutputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -21,9 +17,6 @@ import org.eclipse.ui.part.ViewPart;
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.vista.TableMediator;
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEventVO;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -69,33 +62,6 @@ public class BeagleView extends ViewPart {
 
         PlatformUI.getWorkbench().getHelpSystem()
                 .setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
-
-        // only for testing
-        Thread test = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Socket socket = new Socket("localhost", 4321);
-                    ObjectOutputStream oos = new ObjectOutputStream(
-                            new BufferedOutputStream(socket.getOutputStream()));
-                    for (int i = 1; i <= 1024 * 100; i++) {
-                        LoggingEvent loggingEvent = new LoggingEvent();
-                        loggingEvent.setLevel(Level.ERROR);
-                        loggingEvent.getThreadName();
-                        loggingEvent.setMessage("test " + i);
-                        loggingEvent.setLoggerName("org.eclipse.beagle");
-                        oos.writeObject(LoggingEventVO.build(loggingEvent));
-                        oos.flush();
-                    }
-                    oos.close();
-                    socket.close();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-        });
-        test.start();
-        // only for testing
 
     }
 
