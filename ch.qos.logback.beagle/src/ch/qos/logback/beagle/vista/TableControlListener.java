@@ -15,45 +15,68 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+/**
+ * Reacts to changes in the window size of the table it listens to. This table
+ * is assumed to have a single column. The reactions consists of updating the
+ * width of this column which ultimately enables or disables a horizontal scroll
+ * bar.
+ * 
+ * 
+ * @author ceki
+ * 
+ */
 public class TableControlListener implements ControlListener {
 
-  int targetWidth = 0;
-  int charWidth;
+  final int charWidth;
 
   TableControlListener(int charWidth) {
     this.charWidth = charWidth;
-    System.out.println("charWidth=" + charWidth);
   }
 
   @Override
   public void controlMoved(ControlEvent e) {
-
+    // we don't care about moving the table
   }
 
   @Override
   public void controlResized(ControlEvent e) {
     Table table = (Table) e.widget;
+    adjustTableWidth(table);
+  }
 
-    ScrollBar sb = table.getVerticalBar();
-    int tableWidth = table.getSize().x;
+  /**
+   * Adjust the size of the table assuming it contains only a single column.
+   * 
+   * @param table
+   */
+  private void adjustTableWidth(Table table) {
+    int visibleTableWidth = computeVisibleTableWidth(table);
+    int maxItemWidth = computeMaxItemWidth(table);
 
-    if (sb != null) {
-      // System.out.println("x="+sb.getSize().x);
-      tableWidth -= sb.getSize().x + 5;
-    }
+    int targetWidth = Math.max(visibleTableWidth, maxItemWidth);
+    TableColumn tableCol = table.getColumn(0);
+    tableCol.setWidth(targetWidth);
+  }
 
-    targetWidth = tableWidth;
+  private int computeMaxItemWidth(Table table) {
+    int maxItemWidth = 0;
     for (TableItem ti : table.getItems()) {
-      int itemWidth = (3 + ti.getText().length()) * charWidth;
-      if (targetWidth < itemWidth) {
-	targetWidth = itemWidth;
+      int itemWidth = ti.getText().length() * charWidth;
+      if (maxItemWidth < itemWidth) {
+	maxItemWidth = itemWidth;
       }
     }
+    return maxItemWidth;
+  }
 
-    TableColumn tableCol = table.getColumn(0);
+  private int computeVisibleTableWidth(Table table) {
+    ScrollBar sb = table.getVerticalBar();
+    int targetWidth = table.getSize().x;
 
-    tableCol.setWidth(targetWidth);
-
+    if (sb != null) {
+      targetWidth -= sb.getSize().x;
+    }
+    return targetWidth;
   }
 
 }

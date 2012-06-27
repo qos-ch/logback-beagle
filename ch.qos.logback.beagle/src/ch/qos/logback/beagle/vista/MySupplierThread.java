@@ -19,13 +19,13 @@ import ch.qos.logback.beagle.LoggingEventBuilder;
 import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
-class MySupplierThread extends Thread implements Listener {
+public class MySupplierThread extends Thread implements Listener {
 
   ITableItemStubBuffer<ILoggingEvent> tisBuffer;
   List<ILoggingEvent> internalList = new ArrayList<ILoggingEvent>();
   boolean disposed = false;
 
-  MySupplierThread(ITableItemStubBuffer<ILoggingEvent> tisBuffer) {
+  public MySupplierThread(ITableItemStubBuffer<ILoggingEvent> tisBuffer) {
     this.tisBuffer = tisBuffer;
   }
 

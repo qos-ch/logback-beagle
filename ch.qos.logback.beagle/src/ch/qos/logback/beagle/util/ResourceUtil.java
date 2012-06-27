@@ -18,6 +18,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import ch.qos.logback.beagle.Constants;
+
 public class ResourceUtil {
 
   public static Image ERROR_IMG;
@@ -62,7 +64,8 @@ public class ResourceUtil {
   public static Image loadImage(Display display, String resourcePath) {
     // URL url = ResourceUtil.class.getClassLoader().getResource(resourcePath);
     // ImageDescriptor iDescriptor = ImageDescriptor.createFromURL(url);
-    ImageDescriptor iDescriptor = ImageDescriptor.createFromFile(null,
+    ImageDescriptor iDescriptor = ImageDescriptor.createFromFile(
+	Constants.class,
 	resourcePath);
     return iDescriptor.createImage();
   }

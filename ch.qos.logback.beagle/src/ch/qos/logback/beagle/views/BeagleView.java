@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -26,6 +27,11 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+
+import ch.qos.logback.beagle.net.LoggingEventSocketServer;
+import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.vista.MySupplierThread;
+import ch.qos.logback.beagle.vista.TableMediator;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -43,13 +49,12 @@ import org.eclipse.ui.part.ViewPart;
  */
 
 public class BeagleView extends ViewPart {
-  private Table table;
+
   private Action action1;
   private Action action2;
   private Action doubleClickAction;
-
-  class NameSorter extends ViewerSorter {
-  }
+  Table table;
+  TableMediator tableMediator;
 
   /**
    * The constructor.
@@ -62,18 +67,33 @@ public class BeagleView extends ViewPart {
    * it.
    */
   public void createPartControl(Composite parent) {
-    table = new Table(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 
-    TableItem ti = new TableItem(table, SWT.LEFT);
-    ti.setText("hello");
+    ResourceUtil.init(parent.getDisplay());
+
+    System.out.println("=============" + parent.getLayout());
+    parent.setLayout(new FormLayout());
+
+    tableMediator = new TableMediator(parent);
+
+    LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
+	tableMediator.classicTISBuffer);
+    Thread serverThread = new Thread(loggingEventSocketServer);
+    serverThread.start();
+    parent.addListener(SWT.Dispose, loggingEventSocketServer);
+
+    // MySupplierThread supplierThread0 = new MySupplierThread(
+    // tableMediator.classicTISBuffer);
+    // supplierThread0.start();
+    // parent.addListener(SWT.Dispose, supplierThread0);
 
     // Create the help context id for the viewer's control
     PlatformUI.getWorkbench().getHelpSystem()
-	.setHelp(table, "ch.qos.logback.beagle.viewer");
-    makeActions();
-    hookContextMenu();
+	.setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
+    // makeActions();
+    // hookContextMenu();
     // hookDoubleClickAction();
-    contributeToActionBars();
+    // contributeToActionBars();
+
   }
 
   private void hookContextMenu() {
@@ -149,6 +169,6 @@ public class BeagleView extends ViewPart {
    * Passing the focus request to the viewer's control.
    */
   public void setFocus() {
-    table.setFocus();
+    tableMediator.table.setFocus();
   }
 }

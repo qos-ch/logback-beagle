@@ -29,8 +29,8 @@ public class TableMediator {
 
   static final int OFFSET_FROM_BUTTOM = -5;
 
-  Table table;
-  ClassicTISBuffer classicTISBuffer;
+  public Table table;
+  public ClassicTISBuffer classicTISBuffer;
   final Composite parent;
 
   public TableMediator(Composite parent) {
@@ -39,7 +39,7 @@ public class TableMediator {
   }
 
   private void init() {
-    FormData formData;
+    
 
     table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
 	| SWT.MULTI | SWT.BORDER);
@@ -48,6 +48,7 @@ public class TableMediator {
     int charHeight = MetricsUtil.computeCharHeight(table);
     int charWidth = MetricsUtil.computeCharWidth(table);
 
+    FormData formData;
     formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
     Label jumpCueLabel = new Label(parent, SWT.LEFT);
     formData.left = new FormAttachment(0, charWidth);

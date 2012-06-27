@@ -8,8 +8,13 @@
  */
 package ch.qos.logback.beagle;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -17,11 +22,10 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-  // The plug-in ID
   public static final String PLUGIN_ID = "ch.qos.logback.beagle";
 
-  // The shared instance
-  private static Activator plugin;
+  public static Activator INSTANCE = null;
+  private BundleContext bundleContext = null;
 
   /**
    * The constructor
@@ -38,7 +42,8 @@ public class Activator extends AbstractUIPlugin {
    */
   public void start(BundleContext context) throws Exception {
     super.start(context);
-    plugin = this;
+    INSTANCE = this;
+    bundleContext = context;
   }
 
   /*
@@ -49,7 +54,7 @@ public class Activator extends AbstractUIPlugin {
    * )
    */
   public void stop(BundleContext context) throws Exception {
-    plugin = null;
+    INSTANCE = null;
     super.stop(context);
   }
 
@@ -59,7 +64,7 @@ public class Activator extends AbstractUIPlugin {
    * @return the shared instance
    */
   public static Activator getDefault() {
-    return plugin;
+    return INSTANCE;
   }
 
   /**
@@ -72,5 +77,18 @@ public class Activator extends AbstractUIPlugin {
    */
   public static ImageDescriptor getImageDescriptor(String path) {
     return imageDescriptorFromPlugin(PLUGIN_ID, path);
+  }
+
+  public void logException(Exception exception) {
+    logException(exception, exception.getMessage());
+  }
+
+  public void logException(Exception exception, String message) {
+    if (bundleContext != null) {
+      Bundle bundle = bundleContext.getBundle();
+      ILog logger = Platform.getLog(bundle);
+      logger.log(new Status(IStatus.ERROR, bundle.getSymbolicName(), message,
+	  exception));
+    }
   }
 }
