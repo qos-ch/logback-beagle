@@ -8,30 +8,22 @@
  */
 package ch.qos.logback.beagle.views;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ViewerSorter;
+import java.io.BufferedOutputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.MySupplierThread;
 import ch.qos.logback.beagle.vista.TableMediator;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEventVO;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -50,125 +42,68 @@ import ch.qos.logback.beagle.vista.TableMediator;
 
 public class BeagleView extends ViewPart {
 
-  private Action action1;
-  private Action action2;
-  private Action doubleClickAction;
-  Table table;
-  TableMediator tableMediator;
+    //
+    TableMediator tableMediator;
 
-  /**
-   * The constructor.
-   */
-  public BeagleView() {
-  }
+    /**
+     * 
+     * @param parent
+     */
+    @Override
+    public void createPartControl(Composite parent) {
 
-  /**
-   * This is a callback that will allow us to create the viewer and initialize
-   * it.
-   */
-  public void createPartControl(Composite parent) {
+        parent.setLayout(new FormLayout());
 
-    ResourceUtil.init(parent.getDisplay());
+        // initialize Beagle table
+        ResourceUtil.init(parent.getDisplay());
+        tableMediator = new TableMediator(parent);
 
-    System.out.println("=============" + parent.getLayout());
-    parent.setLayout(new FormLayout());
+        // start Beagle socket server
+        LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
+                tableMediator.classicTISBuffer);
+        Thread serverThread = new Thread(loggingEventSocketServer);
+        serverThread.start();
 
-    tableMediator = new TableMediator(parent);
+        // stop Beagle socket server, if user dispose the view
+        parent.addListener(SWT.Dispose, loggingEventSocketServer);
 
-    LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
-	tableMediator.classicTISBuffer);
-    Thread serverThread = new Thread(loggingEventSocketServer);
-    serverThread.start();
-    parent.addListener(SWT.Dispose, loggingEventSocketServer);
+        PlatformUI.getWorkbench().getHelpSystem()
+                .setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
 
-    // MySupplierThread supplierThread0 = new MySupplierThread(
-    // tableMediator.classicTISBuffer);
-    // supplierThread0.start();
-    // parent.addListener(SWT.Dispose, supplierThread0);
+        // only for testing
+        Thread test = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket("localhost", 4321);
+                    ObjectOutputStream oos = new ObjectOutputStream(
+                            new BufferedOutputStream(socket.getOutputStream()));
+                    for (int i = 1; i <= 1024 * 100; i++) {
+                        LoggingEvent loggingEvent = new LoggingEvent();
+                        loggingEvent.setLevel(Level.ERROR);
+                        loggingEvent.getThreadName();
+                        loggingEvent.setMessage("test " + i);
+                        loggingEvent.setLoggerName("org.eclipse.beagle");
+                        oos.writeObject(LoggingEventVO.build(loggingEvent));
+                        oos.flush();
+                    }
+                    oos.close();
+                    socket.close();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        test.start();
+        // only for testing
 
-    // Create the help context id for the viewer's control
-    PlatformUI.getWorkbench().getHelpSystem()
-	.setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
-    // makeActions();
-    // hookContextMenu();
-    // hookDoubleClickAction();
-    // contributeToActionBars();
+    }
 
-  }
-
-  private void hookContextMenu() {
-    MenuManager menuMgr = new MenuManager("#PopupMenu");
-    menuMgr.setRemoveAllWhenShown(true);
-    menuMgr.addMenuListener(new IMenuListener() {
-      public void menuAboutToShow(IMenuManager manager) {
-	BeagleView.this.fillContextMenu(manager);
-      }
-    });
-    Menu menu = menuMgr.createContextMenu(table);
-    table.setMenu(menu);
-    // getSite().registerContextMenu(menuMgr, table);
-  }
-
-  private void contributeToActionBars() {
-    IActionBars bars = getViewSite().getActionBars();
-    fillLocalPullDown(bars.getMenuManager());
-    fillLocalToolBar(bars.getToolBarManager());
-  }
-
-  private void fillLocalPullDown(IMenuManager manager) {
-    manager.add(action1);
-    manager.add(new Separator());
-    manager.add(action2);
-  }
-
-  private void fillContextMenu(IMenuManager manager) {
-    // manager.add(action1);
-    manager.add(action2);
-    // Other plug-ins can contribute there actions here
-    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-  }
-
-  private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(action1);
-    // manager.add(action2);
-  }
-
-  private void makeActions() {
-    action1 = new Action() {
-      public void run() {
-	showMessage("Action 1 executed");
-      }
-    };
-    action1.setText("Action 1");
-    action1.setToolTipText("Action 1 tooltip");
-    action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-	.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-
-    action2 = new Action() {
-      public void run() {
-	showMessage("Action 2 executed");
-      }
-    };
-    action2.setText("Action 2");
-    action2.setToolTipText("Action 2 tooltip");
-    action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-	.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-    doubleClickAction = new Action() {
-      public void run() {
-	TableItem[] tableItemArrray = table.getSelection();
-	showMessage("Double-click detected on " + tableItemArrray.toString());
-      }
-    };
-  }
-
-  private void showMessage(String message) {
-    MessageDialog.openInformation(table.getShell(), "Beagle View", message);
-  }
-
-  /**
-   * Passing the focus request to the viewer's control.
-   */
-  public void setFocus() {
-    tableMediator.table.setFocus();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setFocus() {
+        tableMediator.table.setFocus();
+    }
 }

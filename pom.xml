@@ -28,7 +28,6 @@
   <modules>
     <module>ch.qos.logback.beagle.repository</module>
     <module>ch.qos.logback.beagle.feature</module>
-    <module>ch.qos.logback.beagle.core</module>
     <module>ch.qos.logback.beagle</module>
   </modules>
 
