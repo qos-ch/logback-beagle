@@ -19,6 +19,11 @@
       <url>http://download.eclipse.org/releases/indigo/</url>
     </repository>
     <repository>
+      <id>swtbot</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
+    </repository>
+    <repository>
       <id>orbit</id>
       <layout>p2</layout>
       <url>http://build.eclipse.org/orbit/committers/orbit-I/20120526062928/R20120526062928/repository/</url>
@@ -29,6 +34,7 @@
     <module>ch.qos.logback.beagle.repository</module>
     <module>ch.qos.logback.beagle.feature</module>
     <module>ch.qos.logback.beagle</module>
+    <module>ch.qos.logback.beagle.tests</module>
   </modules>
 
   <build>

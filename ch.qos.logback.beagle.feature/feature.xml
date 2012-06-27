@@ -28,7 +28,7 @@
    </url>
 
    <plugin
-         id="ch.qos.logback.beagle.core"
+         id="ch.qos.logback.beagle"
          download-size="0"
          install-size="0"
          version="0.0.0"
