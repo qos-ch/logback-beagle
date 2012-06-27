@@ -15,7 +15,15 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.qos.logback.beagle.util.SelectionUtil;
 
-public class Scroller implements Runnable {
+/**
+ * SelectionScroller allows the selection of rows when the mouse the beagle
+ * windows with the user holding down the mouse. It mimics the way the regular
+ * console reacts to the mouse exiting its window with the button held.
+ * 
+ * @author ceki
+ * 
+ */
+public class SelectionScroller implements Runnable {
 
   static int DELAY = 100;
   static int STEP_SIZE = 10;
@@ -30,7 +38,8 @@ public class Scroller implements Runnable {
   final Direction direction;
   int anchorIndex;
 
-  public Scroller(Table table, int anchorIndex, Direction direction) {
+  public SelectionScroller(Table table, int anchorIndex, Direction direction) {
+
     this.anchorIndex = anchorIndex;
     this.table = table;
     int[] selectionIndices = table.getSelectionIndices();
@@ -38,7 +47,8 @@ public class Scroller implements Runnable {
     start = selectionIndices[0];
     end = selectionIndices[selectionIndices.length - 1];
     this.direction = direction;
-    // System.out.println("Scroller start="+start+", end="+end+", direction "+direction);
+    System.out.println("Scroller start=" + start + ", end=" + end
+	+ ", direction " + direction);
   }
 
   void incrementEnd() {

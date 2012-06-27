@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.beagle.visual.ITableItemStub;
 
 public class TableItemSelectionListener implements SelectionListener {

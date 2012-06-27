@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Table;
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
 import ch.qos.logback.beagle.util.SelectionUtil;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class TableSelectionViaMouseMovements implements MouseListener,
     MouseMoveListener, MouseTrackListener {
@@ -25,7 +26,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
   final ClassicTISBuffer visualElementBuffer;
   int anchorIndex = Constants.NA;
   int lastIndex = Constants.NA;
-  Scroller scroller;
+  SelectionScroller scroller;
 
   TableSelectionViaMouseMovements(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
@@ -101,19 +102,19 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   @Override
   public void mouseExit(MouseEvent e) {
-    MouseEventUtil.dump("************** mouseExit ", e);
+    MouseEventUtil.dump("************** mouseExit event ***********", e);
 
     if (MouseEventUtil.isButtonHeldDown(e)) {
       if (scroller != null) {
-	System.out.println("already in capture mode");
+	System.out.println("xxxxxxxxxxx already in capture mode");
 	return;
       }
-      System.out.println("entering capture mode");
-      Scroller.Direction direction = e.y < 0 ? Scroller.Direction.UP
-	  : Scroller.Direction.DOWN;
+      System.out.println("********* entering capture mode");
+      SelectionScroller.Direction direction = e.y < 0 ? SelectionScroller.Direction.UP
+	  : SelectionScroller.Direction.DOWN;
       table.setCapture(true);
-      scroller = new Scroller(table, anchorIndex, direction);
-      table.getDisplay().timerExec(Scroller.DELAY, scroller);
+      scroller = new SelectionScroller(table, anchorIndex, direction);
+      table.getDisplay().timerExec(SelectionScroller.DELAY, scroller);
     }
   }
 

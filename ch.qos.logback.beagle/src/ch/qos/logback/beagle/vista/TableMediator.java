@@ -11,7 +11,6 @@ package ch.qos.logback.beagle.vista;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -24,19 +23,22 @@ import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.menu.MenuBuilder;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
-public class Vista {
+public class TableMediator {
 
   static final int OFFSET_FROM_BUTTOM = -5;
 
-  final Table table;
-  final ClassicTISBuffer visualElementBuffer;
-  final UnfreezeToolItemListener unfreezeButtonListener;
+  Table table;
+  ClassicTISBuffer classicTISBuffer;
   final Composite parent;
 
-  public Vista(Composite parent) {
+  public TableMediator(Composite parent) {
     this.parent = parent;
+    init();
+  }
 
+  private void init() {
     FormData formData;
 
     table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
@@ -89,33 +91,33 @@ public class Vista {
 
     table.addControlListener(new TableControlListener(charWidth));
 
-    visualElementBuffer = new ClassicTISBuffer(table);
-    visualElementBuffer.diffCue = diffCueLabel;
-    visualElementBuffer.jumpCue = jumpCueLabel;
+    classicTISBuffer = new ClassicTISBuffer(table);
+    classicTISBuffer.diffCue = diffCueLabel;
+    classicTISBuffer.jumpCue = jumpCueLabel;
 
     // when the table is cleared visualElementBuffer's handleEvent method will re-populate the item
-    table.addListener(SWT.SetData, visualElementBuffer);
-    table.addDisposeListener(visualElementBuffer);
+    table.addListener(SWT.SetData, classicTISBuffer);
+    table.addDisposeListener(classicTISBuffer);
 
-    this.unfreezeButtonListener = new UnfreezeToolItemListener(
-	visualElementBuffer);
+    UnfreezeToolItemListener unfreezeButtonListener = new UnfreezeToolItemListener(
+	classicTISBuffer);
     unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
 
     TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
-	table, visualElementBuffer, unfreezeToolItem, unfreezeButtonListener);
+	table, classicTISBuffer, unfreezeToolItem, unfreezeButtonListener);
     table.addSelectionListener(tableItemSelectionListener);
 
     TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
-	visualElementBuffer);
+	classicTISBuffer);
     table.addMouseMoveListener(myMouseListener);
     table.addMouseListener(myMouseListener);
     table.addMouseTrackListener(myMouseListener);
 
     table.addMouseMoveListener(new TimeDifferenceMouseListener(
-	visualElementBuffer));
+	classicTISBuffer));
 
-    Menu menu = MenuBuilder.buildMenu(visualElementBuffer);
-    MenuBuilder.addOnMenuSelectionAction(menu, visualElementBuffer);
+    Menu menu = MenuBuilder.buildMenu(classicTISBuffer);
+    MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
     table.setMenu(menu);
     table.setItemCount(0);
   }

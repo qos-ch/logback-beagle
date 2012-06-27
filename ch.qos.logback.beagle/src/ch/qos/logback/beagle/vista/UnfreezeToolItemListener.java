@@ -12,6 +12,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.ToolItem;
 
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+
 public class UnfreezeToolItemListener implements SelectionListener {
 
   final ClassicTISBuffer visualElementBuffer;

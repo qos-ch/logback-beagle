@@ -27,7 +27,7 @@ public class VistaManager {
     return SINGLETON;
   }
 
-  static private Vista buildVista(Composite composite, FormData formData) {
+  static private TableMediator buildVista(Composite composite, FormData formData) {
     Composite vistaContainer = new Composite(composite, SWT.NONE);
     vistaContainer.setLayout(new FormLayout());
     formData.left = new FormAttachment(0, 5);
@@ -35,28 +35,28 @@ public class VistaManager {
     formData.bottom = new FormAttachment(100, -5);
     vistaContainer.setLayoutData(formData);
 
-    return new Vista(vistaContainer);
+    return new TableMediator(vistaContainer);
   }
 
-  static Vista buildVista(Shell shell, Button button) {
+  static TableMediator buildVista(Shell shell, Button button) {
     FormData formData = new FormData();
-    Vista vista = buildVista(shell, formData);
+    TableMediator vista = buildVista(shell, formData);
     formData.top = new FormAttachment(button, 5);
     return vista;
   }
 
-  static Vista buildVista(Composite parent) {
+  static TableMediator buildVista(Composite parent) {
     FormData formData = new FormData();
-    Vista vista = buildVista(parent, formData);
+    TableMediator vista = buildVista(parent, formData);
     formData.top = new FormAttachment(0, 5);
     return vista;
   }
 
-  Map<String, Vista> vistaMap = new HashMap<String, Vista>();
-  Vista currentVista;
+  Map<String, TableMediator> vistaMap = new HashMap<String, TableMediator>();
+  TableMediator currentVista;
 
-  void setCurrent(Vista vista) {
-    Vista oldVista = currentVista;
+  void setCurrent(TableMediator vista) {
+    TableMediator oldVista = currentVista;
     if (oldVista != null) {
       oldVista.parent.setVisible(false);
     }
@@ -66,18 +66,18 @@ public class VistaManager {
   }
 
   public void setCurrent(String key) {
-    Vista vista = get(key);
+    TableMediator vista = get(key);
     if (vista == null) {
       return;
     }
     setCurrent(vista);
   }
 
-  void put(String key, Vista value) {
+  void put(String key, TableMediator value) {
     vistaMap.put(key, value);
   }
 
-  Vista get(String key) {
+  TableMediator get(String key) {
     return vistaMap.get(key);
   }
 

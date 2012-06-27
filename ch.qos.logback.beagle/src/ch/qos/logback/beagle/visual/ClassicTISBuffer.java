@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.visual;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,33 +25,30 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.visual.CallerDataTIS;
-import ch.qos.logback.beagle.visual.ITableItemStub;
-import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
-import ch.qos.logback.beagle.visual.LoggingEventTIS;
-import ch.qos.logback.beagle.visual.ThrowableProxyTIS;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 
-public class ClassicTISBuffer implements
-    ITableItemStubBuffer<ILoggingEvent>, Listener, DisposeListener {
+public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
+    Listener, DisposeListener {
 
   static ITableItemStub[] EMPTY_TIS_ARRAY = new ITableItemStub[0];
 
   List<ITableItemStub> tisList = Collections
       .synchronizedList(new ArrayList<ITableItemStub>());
+
   int count = 0;
-  Table table;
-  Display display;
+
+  public final Table table;
+  final Display display;
 
   boolean active = true;
 
   volatile boolean disposed = false;
 
-  Label diffCue;
-  Label jumpCue;
+  public Label diffCue;
+  public Label jumpCue;
 
-  ClassicTISBuffer(Table table) {
+  public ClassicTISBuffer(Table table) {
     this.table = table;
     this.display = table.getDisplay();
   }
@@ -60,8 +57,8 @@ public class ClassicTISBuffer implements
    * This method is called when a tableItem needs to be refreshed.
    */
   public void handleEvent(Event event) {
-    if(event.type != SWT.SetData) {
-      throw new IllegalStateException("Unexpected event type "+event.type);
+    if (event.type != SWT.SetData) {
+      throw new IllegalStateException("Unexpected event type " + event.type);
     }
     TableItem item = (TableItem) event.item;
 
@@ -72,7 +69,7 @@ public class ClassicTISBuffer implements
     }
     ITableItemStub tis = tisList.get(index);
     tis.populate(item);
-}
+  }
 
   /**
    * Convert an ILoggingEvent to a list of IVisualElement.
@@ -123,8 +120,7 @@ public class ClassicTISBuffer implements
 
   int findLastIndex(int middleIndex) {
     int limit = middleIndex + MAX_EXTENT <= tisList.size() ? middleIndex
-	+ MAX_EXTENT
-	: tisList.size();
+	+ MAX_EXTENT : tisList.size();
     int found = middleIndex;
     for (int i = middleIndex; i < limit; i++) {
       if (tisList.get(i) instanceof CallerDataTIS)
@@ -139,26 +135,12 @@ public class ClassicTISBuffer implements
     int beginIndex = findBeginIndex(index);
     int lastIndex = findLastIndex(index);
     tisList.subList(beginIndex, lastIndex + 1).clear();
-    display.syncExec(new Runnable() {
-      public void run() {
-	// int topIndex = table.getTopIndex();
-	table.clearAll();
-	table.setItemCount(tisList.size());
-	// table.setTopIndex(topIndex - CLEAN_COUNT);
-      }
-    });
+    display.syncExec(new ResetTableRunnable());
   }
 
   public void add(final CallerDataTIS cdVisualElement, int index) {
     tisList.add(index, cdVisualElement);
-    display.syncExec(new Runnable() {
-      public void run() {
-	// int topIndex = table.getTopIndex();
-	table.clearAll();
-	table.setItemCount(tisList.size());
-	// table.setTopIndex(topIndex - 1);
-      }
-    });
+    display.syncExec(new ResetTableRunnable());
   }
 
   /**
@@ -174,7 +156,6 @@ public class ClassicTISBuffer implements
     addVisualElementInChunks(visualElementList);
   }
 
-
   public void add(final ILoggingEvent iLoggingEvent) {
     List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
     loggingEventToVisualElement(visualElementList, iLoggingEvent);
@@ -183,7 +164,6 @@ public class ClassicTISBuffer implements
 
   private void addVisualElementInChunks(final List<ITableItemStub> veList) {
     int maxChunk = Constants.CLEAN_COUNT / 5;
-    // int maxChunk = 4;
     int rangeStart = 0;
     int size = veList.size();
     while (rangeStart < size) {
@@ -206,10 +186,13 @@ public class ClassicTISBuffer implements
     }
 
     display.syncExec(new AddTableItemRunnable(veList));
+    contactIfTooBig();
+  }
 
+  private void contactIfTooBig() {
     if (tisList.size() >= Constants.MAX) {
       tisList.subList(0, Constants.CLEAN_COUNT).clear();
-      display.syncExec(new ResetTableRunnable());
+      display.syncExec(new ResetTablePostContractionRunnable());
     }
   }
 
@@ -249,9 +232,16 @@ public class ClassicTISBuffer implements
     return table;
   }
 
-  
   // ------------------------- ResetTableRunnable class
   private final class ResetTableRunnable implements Runnable {
+    public void run() {
+      table.clearAll();
+      table.setItemCount(tisList.size());
+    }
+  }
+
+  // ------------------------- ResetTablePostContractionRunnable class
+  private final class ResetTablePostContractionRunnable implements Runnable {
     public void run() {
       int topIndex = table.getTopIndex();
       table.clearAll();
@@ -259,7 +249,6 @@ public class ClassicTISBuffer implements
       table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
     }
   }
-
 
   // ------------------------- AddTableItemRunnable class
   private final class AddTableItemRunnable implements Runnable {

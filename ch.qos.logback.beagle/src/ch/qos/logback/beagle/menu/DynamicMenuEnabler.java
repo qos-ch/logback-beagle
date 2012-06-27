@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.SelectionUtil;
-import ch.qos.logback.beagle.vista.ClassicTISBuffer;
 import ch.qos.logback.beagle.visual.CallerDataTIS;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.beagle.visual.ITableItemStub;
 import ch.qos.logback.beagle.visual.LoggingEventTIS;
 

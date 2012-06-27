@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.ClassicTISBuffer;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class MenuBuilder {
 

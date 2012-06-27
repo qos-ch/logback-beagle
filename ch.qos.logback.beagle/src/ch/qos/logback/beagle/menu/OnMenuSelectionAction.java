@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.SelectionUtil;
-import ch.qos.logback.beagle.vista.ClassicTISBuffer;
 import ch.qos.logback.beagle.visual.CallerDataTIS;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.beagle.visual.ITableItemStub;
 import ch.qos.logback.beagle.visual.LoggingEventTIS;
 import ch.qos.logback.core.CoreConstants;
@@ -63,18 +63,17 @@ public class OnMenuSelectionAction implements SelectionListener {
 
   private void handleCallerMenu(String menuItemText, int index,
       ITableItemStub iTableItemStub) {
+    
     if (MenuBuilder.EXPLAND_CALLERS_MENU_TEXT.equals(menuItemText)) {
-      StackTraceElement[] callerDataArray = getCallerDataFromVisualElement(iTableItemStub);
+      StackTraceElement[] callerDataArray = getCallerDataFromTIS(iTableItemStub);
 
       if (callerDataArray != null && callerDataArray.length > 0) {
-	if (checkForDoubleExpansion(index)) {
-	  System.out.println("doubvle expansion");
+	if (isAlreadyExpanded(index)) {
 	  return;
 	}
 
 	for (int i = 0; i < callerDataArray.length; i++) {
-	  CallerDataTIS callerDataTIS = new CallerDataTIS(
-	      callerDataArray[i], i);
+	  CallerDataTIS callerDataTIS = new CallerDataTIS(callerDataArray[i], i);
 	  classicTISBuffer.add(callerDataTIS, index + 1 + i);
 	}
       }
@@ -136,8 +135,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     return buf.toString();
   }
 
-  StackTraceElement[] getCallerDataFromVisualElement(
-      ITableItemStub iTableItemStub) {
+  StackTraceElement[] getCallerDataFromTIS(ITableItemStub iTableItemStub) {
     if (iTableItemStub instanceof LoggingEventTIS) {
       LoggingEventTIS loggingEventVisualElement = (LoggingEventTIS) iTableItemStub;
       return loggingEventVisualElement.getILoggingEvent().getCallerData();
@@ -146,7 +144,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     }
   }
 
-  boolean checkForDoubleExpansion(int index) {
+  boolean isAlreadyExpanded(int index) {
     int next = index + 1;
     if (next >= classicTISBuffer.size()) {
       return false;
