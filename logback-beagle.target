@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-
-<target includeMode="feature" name="logback-beagle" sequenceNumber="4">
-  <locations>
-    <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.jdt.feature.group" version="3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1"/>
-      <repository location="http://download.eclipse.org/releases/indigo"/>
-    </location>
-    <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="ch.qos.logback.slf4j" version="1.0.0.v20120123-1500"/>
-      <unit id="ch.qos.logback.slf4j.source" version="1.0.0.v20120123-1500"/>
-      <unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
-      <unit id="org.slf4j.ext" version="1.6.4.v20120130-2120"/>
-      <unit id="org.slf4j.ext.source" version="1.6.4.v20120130-2120"/>
-      <unit id="org.slf4j.api.source" version="1.6.4.v20120130-2120"/>
-      <repository location="http://build.eclipse.org/orbit/committers/orbit-I/20120526062928/R20120526062928/repository/"/>
-    </location>
-  </locations>
-  <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+<?pde version="3.8"?><target includeMode="feature" name="logback-beagle" sequenceNumber="5">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1"/>
+<repository location="http://download.eclipse.org/releases/indigo"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="ch.qos.logback.slf4j" version="1.0.0.v20120123-1500"/>
+<unit id="ch.qos.logback.slf4j.source" version="1.0.0.v20120123-1500"/>
+<unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.ext" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.ext.source" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.api.source" version="1.6.4.v20120130-2120"/>
+<repository location="http://build.eclipse.org/orbit/committers/orbit-I/20120526062928/R20120526062928/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
+<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+</location>
+</locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>
