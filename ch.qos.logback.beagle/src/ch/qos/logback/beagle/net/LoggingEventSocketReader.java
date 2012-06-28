@@ -6,7 +6,8 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import ch.qos.logback.beagle.Activator;
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEventVO;
 
 /**
@@ -17,7 +18,7 @@ import ch.qos.logback.classic.spi.LoggingEventVO;
  */
 public class LoggingEventSocketReader implements Runnable {
 
-  private final ClassicTISBuffer classicTISBuffer;
+  private final ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer;
   private final Socket socket;
   boolean started = true;
   
@@ -27,8 +28,8 @@ public class LoggingEventSocketReader implements Runnable {
    * @param loggingEvents
    */
   public LoggingEventSocketReader(Socket socket,
-      ClassicTISBuffer classicTISBuffer) {
-    this.classicTISBuffer = classicTISBuffer;
+      ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer) {
+    this.iTableItemStubBuffer = iTableItemStubBuffer;
     this.socket = socket;
   }
 
@@ -41,12 +42,12 @@ public class LoggingEventSocketReader implements Runnable {
 	// read an event from the wire
 	LoggingEventVO event = (LoggingEventVO) ois.readObject();
 	// add event
-	classicTISBuffer.add(event);
+	iTableItemStubBuffer.add(event);
       }
     } catch (EOFException eofException) {
       // nothing to do
-    } catch (Exception exception) {
-      Activator.INSTANCE.logException(exception);
+    } catch (Exception ex) {
+      logException(ex);
     }
   }
 
@@ -54,4 +55,9 @@ public class LoggingEventSocketReader implements Runnable {
     started = false;
   }
   
+  void logException(Throwable t) {
+    if( Activator.INSTANCE != null) {
+      Activator.INSTANCE.logException(t);
+    }
+  }
 }

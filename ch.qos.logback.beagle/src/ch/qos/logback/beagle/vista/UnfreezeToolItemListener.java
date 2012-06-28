@@ -16,19 +16,19 @@ import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class UnfreezeToolItemListener implements SelectionListener {
 
-  final ClassicTISBuffer visualElementBuffer;
+  final ClassicTISBuffer classicTISBuffer;
 
-  UnfreezeToolItemListener(ClassicTISBuffer visualElementBuffer) {
-    this.visualElementBuffer = visualElementBuffer;
+  UnfreezeToolItemListener(ClassicTISBuffer classicTISBuffer) {
+    this.classicTISBuffer = classicTISBuffer;
   }
 
   @Override
   public void widgetSelected(SelectionEvent event) {
     ToolItem toolItem = (ToolItem) event.widget;
     toolItem.setEnabled(false);
-    visualElementBuffer.table.deselectAll();
-    visualElementBuffer.setActive(true);
-    visualElementBuffer.clearCues();
+    classicTISBuffer.table.deselectAll();
+    classicTISBuffer.setActive(true);
+    classicTISBuffer.clearCues();
   }
 
   @Override

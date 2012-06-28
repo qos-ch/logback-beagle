@@ -30,8 +30,8 @@ public class MenuBuilder {
   final public static int SHOW_CALLERS_MENU_INDEX = 1;
   final public static int COPY_TO_CLIPBOARD_MENU_INDEX = 2;
 
-  static public Menu buildMenu(ClassicTISBuffer visualElementBuffer) {
-    Menu menu = new Menu(visualElementBuffer.getTable());
+  static public Menu buildMenu(ClassicTISBuffer classicTISBuffer) {
+    Menu menu = new Menu(classicTISBuffer.getTable());
 
     MenuItem jumpToCaller = new MenuItem(menu, SWT.PUSH);
     jumpToCaller.setText(MenuBuilder.JUMP_TO_CALLER_MENU_TEXT);
@@ -47,7 +47,7 @@ public class MenuBuilder {
     otherMenuItem.setImage(ResourceUtil.getImage(COPY_CLIPBAORD_IMG_KEY));
 
     if (menu != null) {
-      menu.addMenuListener(new DynamicMenuEnabler(visualElementBuffer));
+      menu.addMenuListener(new DynamicMenuEnabler(classicTISBuffer));
     }
 
     return menu;

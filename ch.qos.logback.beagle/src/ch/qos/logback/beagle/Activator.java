@@ -79,16 +79,16 @@ public class Activator extends AbstractUIPlugin {
     return imageDescriptorFromPlugin(PLUGIN_ID, path);
   }
 
-  public void logException(Exception exception) {
-    logException(exception, exception.getMessage());
+  public void logException(Throwable t) {
+    logException(t, t.getMessage());
   }
 
-  public void logException(Exception exception, String message) {
+  public void logException(Throwable t, String message) {
     if (bundleContext != null) {
       Bundle bundle = bundleContext.getBundle();
       ILog logger = Platform.getLog(bundle);
-      logger.log(new Status(IStatus.ERROR, bundle.getSymbolicName(), message,
-	  exception));
+      logger
+	  .log(new Status(IStatus.ERROR, bundle.getSymbolicName(), message, t));
     }
   }
 }

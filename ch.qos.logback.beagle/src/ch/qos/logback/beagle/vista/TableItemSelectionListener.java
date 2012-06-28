@@ -23,7 +23,7 @@ import ch.qos.logback.beagle.visual.ITableItemStub;
 public class TableItemSelectionListener implements SelectionListener {
 
   Table table;
-  ClassicTISBuffer visualElementBuffer;
+  ClassicTISBuffer classicTISBuffer;
   TableItem lastSelection;
   ToolItem unfreezeButton;
 
@@ -31,7 +31,7 @@ public class TableItemSelectionListener implements SelectionListener {
       ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
     this.table = table;
-    this.visualElementBuffer = visualElementBuffer;
+    this.classicTISBuffer = visualElementBuffer;
     this.unfreezeButton = unfreezeButton;
   }
 
@@ -46,14 +46,14 @@ public class TableItemSelectionListener implements SelectionListener {
     TableItem currentlySelectedTI = (TableItem) e.item;
     final int indexOfCurrentSel = table.indexOf(currentlySelectedTI);
 
-    visualElementBuffer.setActive(false);
+    classicTISBuffer.setActive(false);
     unfreezeButton.setEnabled(true);
     lastSelection = currentlySelectedTI;
 
-    visualElementBuffer.clearCues();
-    ITableItemStub visualElem = visualElementBuffer.get(indexOfCurrentSel);
+    classicTISBuffer.clearCues();
+    ITableItemStub visualElem = classicTISBuffer.get(indexOfCurrentSel);
     if (visualElem.supportsJump() && table.getSelectionCount() == 1) {
-      visualElementBuffer.jumpCue.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
+      classicTISBuffer.jumpCue.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
     }
   }
 }

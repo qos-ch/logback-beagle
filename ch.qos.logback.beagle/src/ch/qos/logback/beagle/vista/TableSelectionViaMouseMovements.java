@@ -23,18 +23,29 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     MouseMoveListener, MouseTrackListener {
 
   final Table table;
-  final ClassicTISBuffer visualElementBuffer;
+  final ClassicTISBuffer classicTISBuffer;
   int anchorIndex = Constants.NA;
   int lastIndex = Constants.NA;
   SelectionScroller scroller;
 
-  TableSelectionViaMouseMovements(ClassicTISBuffer visualElementBuffer) {
-    this.visualElementBuffer = visualElementBuffer;
-    this.table = visualElementBuffer.table;
+  TableSelectionViaMouseMovements(ClassicTISBuffer classicTISBuffer) {
+    this.classicTISBuffer = classicTISBuffer;
+    this.table = classicTISBuffer.table;
   }
 
   @Override
   public void mouseDoubleClick(MouseEvent e) {
+    
+    int clickedIndex = MouseEventUtil.computeIndex(table, e);
+    
+    int[] currentSelectionIndices = table.getSelectionIndices();
+    if(currentSelectionIndices.length == 1) {
+      if(currentSelectionIndices[0] == clickedIndex) {
+	  System.out.println("********* unlocked scroll");
+	 classicTISBuffer.setActive(true);
+	 // TODO disable the scroll toolitem
+      }
+    }
   }
 
   @Override
@@ -56,7 +67,6 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   @Override
   public void mouseUp(MouseEvent e) {
-    // MouseEventUtil.dump("************** mouseUp ", e);
     if (scroller != null) {
       disableScroller();
     }
@@ -87,7 +97,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     }
 
     if (table.getSelectionCount() > 1) {
-      visualElementBuffer.clearCues();
+      classicTISBuffer.clearCues();
     }
 
     lastIndex = currentIndex;

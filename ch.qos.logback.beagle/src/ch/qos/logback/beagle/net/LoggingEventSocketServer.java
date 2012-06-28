@@ -11,7 +11,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.Activator;
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * 
@@ -27,11 +28,11 @@ public class LoggingEventSocketServer implements Runnable, Listener {
 
   private boolean stop = false;
 
-  final ClassicTISBuffer classicTISBuffer;
+  final ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer;
   List<LoggingEventSocketReader> socketReaderList = new ArrayList<LoggingEventSocketReader>();
 
-  public LoggingEventSocketServer(ClassicTISBuffer classicTISBuffer) {
-    this.classicTISBuffer = classicTISBuffer;
+  public LoggingEventSocketServer(ITableItemStubBuffer<ILoggingEvent> classicTISBuffer) {
+    this.iTableItemStubBuffer = classicTISBuffer;
   }
 
   /**
@@ -52,7 +53,7 @@ public class LoggingEventSocketServer implements Runnable, Listener {
       while (!stop) {
 	Socket socket = serverSocket.accept();
 	LoggingEventSocketReader lesr = new LoggingEventSocketReader(socket,
-	    classicTISBuffer);
+	    iTableItemStubBuffer);
 	socketReaderList.add(lesr);
 	new Thread(lesr).start();
       }
@@ -74,13 +75,13 @@ public class LoggingEventSocketServer implements Runnable, Listener {
   }
 
   /**
-     * 
-     */
+    * Stop this thread as well as any child threads. 
+    */
   public void stop() {
     try {
       if (serverSocket != null)
 	serverSocket.close();
-      for(LoggingEventSocketReader lesr: socketReaderList) {
+      for (LoggingEventSocketReader lesr : socketReaderList) {
 	lesr.stop();
       }
       stop = true;
