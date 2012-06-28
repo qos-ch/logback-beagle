@@ -5,7 +5,10 @@ Bundle-SymbolicName: ch.qos.logback.beagle;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ch.qos.logback.beagle.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.jdt.core;bundle-version="3.7.3",
+ org.eclipse.core.resources;bundle-version="3.7.101",
+ org.eclipse.ui.ide;bundle-version="3.7.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,lib/slf4j-api-1.6.6.jar,lib/logback-core-1.0.4.jar,lib/logback-classic-1.0.4.jar,lib/logback-classic-1.0.4-tests.jar

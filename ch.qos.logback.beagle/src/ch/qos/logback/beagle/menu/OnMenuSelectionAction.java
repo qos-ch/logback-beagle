@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
+import ch.qos.logback.beagle.util.EditorUtil;
 import ch.qos.logback.beagle.util.SelectionUtil;
 import ch.qos.logback.beagle.visual.CallerDataTIS;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
@@ -58,6 +59,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     StackTraceElement ste = iVisualElement.getJumpData();
     if (ste != null) {
       System.out.println("Jump to " + ste.getClassName());
+      EditorUtil.openInEditor(ste);
     }
   }
 
