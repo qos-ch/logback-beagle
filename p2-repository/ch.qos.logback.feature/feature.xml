@@ -21,7 +21,7 @@
    </url>
 
    <includes
-         id="org.slf4j"
+         id="org.slf4j.feature"
          version="0.0.0"/>
 
    <plugin
