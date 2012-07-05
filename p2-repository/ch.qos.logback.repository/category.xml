@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/ch.qos.logback.feature_1.0.6.jar" id="ch.qos.logback.feature" version="1.0.6">
+      <category name="Logback"/>
+   </feature>
+   <feature url="features/org.slf4j_1.6.6.jar" id="org.slf4j" version="1.6.6">
+      <category name="SLF4J"/>
+   </feature>
+   <category-def name="Logback" label="Logback"/>
+   <category-def name="SLF4J" label="SLF4J"/>
+</site>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.qos.logback.feature"
+      label="Logback Feature"
+      version="1.0.6">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="Logback Update Site" url="http://logback.qos.ch/eclipse"/>
+   </url>
+
+   <includes
+         id="org.slf4j"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.qos.logback.access"
+         download-size="0"
+         install-size="0"
+         version="1.0.6"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.classic"
+         download-size="0"
+         install-size="0"
+         version="1.0.6"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.core"
+         download-size="0"
+         install-size="0"
+         version="1.0.6"
+         unpack="false"/>
+
+</feature>
