@@ -5,11 +5,16 @@
       <category name="Logback"/>
    </feature>
 
+   <feature url="features/ch.qos.logback.beagle.feature_1.0.0.qualifier.jar" id="ch.qos.logback.beagle.feature" version="1.0.0.qualifier">
+      <category name="Logback Beagle"/>
+   </feature>
+
 <!--   <feature url="features/org.slf4j.feature_1.6.6.jar" id="org.slf4j.feature" version="1.6.6">
       <category name="SLF4J"/>
    </feature>
 -->
 
+   <category-def name="Logback Beagle" label="Logback Beagle"/>
    <category-def name="Logback" label="Logback"/>
    <category-def name="SLF4J" label="SLF4J"/>
 </site>

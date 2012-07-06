@@ -3,7 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
 
 
-
   <groupId>ch.qos.logback.eclipse</groupId>
   <artifactId>parent</artifactId>
   <version>1.0.6-SNAPSHOT</version>
@@ -61,6 +60,19 @@
     </plugins>
   </build>  
 
+
+  <repositories>
+    <repository>
+      <id>indigo</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/indigo/</url>
+    </repository>
+    <repository>
+      <id>swtbot</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
+    </repository>
+  </repositories>
 </project>
 
 
