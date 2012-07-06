@@ -14,6 +14,7 @@
   </properties>
 
   <modules>
+    <module>org.slf4j.feature</module>
     <module>ch.qos.logback.feature</module>
     <module>ch.qos.logback.repository</module>
   </modules>
