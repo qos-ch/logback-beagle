@@ -25,26 +25,28 @@
          id="org.slf4j.feature"
          version="0.0.0"/>
 -->
-   <plugin
-         id="ch.qos.logback.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+    <plugin id="ch.qos.logback.core"
+            download-size="0"
+            install-size="0"
+            version="0.0.0"
+            unpack="false"/>
 
-<!--
-   <plugin
-         id="ch.qos.logback.logback-classic"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <plugin id="ch.qos.logback.classic"
+           download-size="0"
+           install-size="0"
+           version="0.0.0"
+           unpack="false"/>
 
-   <plugin
-         id="ch.qos.logback.-access"
-         download-size="0"
-         install-size="0"
-         version="1.0.6"
-         unpack="false"/>
--->
+   <!-- Ignore ch.qos.logback.access for time being due to unsatisfied dependencies isted below: 
+        javax.servlet.http, 
+        org.apache.catalina, org.apache.catalina.connector, org.apache.catalina.valves, 
+        org.eclipse.jetty.http, org.eclipse.jetty.server, org.eclipse.jetty.util.component
+   <plugin id="ch.qos.logback.access"
+           download-size="0"
+           install-size="0"
+           version="0.0.0"
+           unpack="false"/>
+   -->
+
+
 </feature>

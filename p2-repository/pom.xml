@@ -27,7 +27,6 @@
 			<version>${logback.version}</version>
 		</dependency>
 
-<!--
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -40,7 +39,7 @@
 			<artifactId>logback-access</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
--->
+
 	</dependencies>
 
   <build>
