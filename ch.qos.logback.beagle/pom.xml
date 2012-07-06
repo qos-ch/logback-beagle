@@ -13,4 +13,12 @@
   <version>1.0.0.qualifier</version>
   <packaging>eclipse-plugin</packaging>
 
+  <build>
+    <resources>
+      <resource>
+       <directory>icons/</directory>
+     </resource>
+   </resources>
+ </build>
+
 </project> 
