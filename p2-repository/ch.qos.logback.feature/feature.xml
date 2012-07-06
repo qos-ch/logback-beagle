@@ -2,7 +2,7 @@
 <feature
       id="ch.qos.logback.feature"
       label="Logback Feature"
-      version="1.0.6">
+      version="1.0.6.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -20,29 +20,31 @@
       <update label="Logback Update Site" url="http://logback.qos.ch/eclipse"/>
    </url>
 
-   <includes
+<!--  
+ <includes
          id="org.slf4j.feature"
          version="0.0.0"/>
-
-   <plugin
-         id="ch.qos.logback.access"
-         download-size="0"
-         install-size="0"
-         version="1.0.6"
-         unpack="false"/>
-
-   <plugin
-         id="ch.qos.logback.classic"
-         download-size="0"
-         install-size="0"
-         version="1.0.6"
-         unpack="false"/>
-
+-->
    <plugin
          id="ch.qos.logback.core"
          download-size="0"
          install-size="0"
-         version="1.0.6"
+         version="0.0.0"
          unpack="false"/>
 
+<!--
+   <plugin
+         id="ch.qos.logback.logback-classic"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.-access"
+         download-size="0"
+         install-size="0"
+         version="1.0.6"
+         unpack="false"/>
+-->
 </feature>

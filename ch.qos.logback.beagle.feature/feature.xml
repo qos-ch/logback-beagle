@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ch.qos.logback.beagle.feature"
-      label="Logback Beagle Feature"
+      id="ch.qos.logback.beagle.feature"
+      label="Logback Beagle Feature"
       version="1.0.0.qualifier"
       provider-name="http://logback.qos.ch">
 
@@ -34,4 +34,4 @@
          version="0.0.0"
          unpack="false"/>
 
-</feature>
+</feature>

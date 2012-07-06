@@ -1,0 +1,68 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+
+
+  <groupId>ch.qos.logback.eclipse</groupId>
+  <artifactId>parent</artifactId>
+  <version>1.0.6-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <logback.version>1.0.6</logback.version>
+    <tycho-version>0.15.0</tycho-version>
+  </properties>
+
+  <modules>
+    <module>ch.qos.logback.feature</module>
+    <module>ch.qos.logback.repository</module>
+  </modules>
+
+	<dependencies>
+		<!-- The artifact is an OSGi bundle not built by Tycho. -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+<!--
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+-->
+	</dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <pomDependencies>consider</pomDependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>  
+
+</project>
+
+
+
