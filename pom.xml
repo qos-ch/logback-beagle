@@ -42,6 +42,13 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>ch.qos.logback.beagle</groupId>
+        <artifactId>ch.qos.logback.beagle</artifactId>
+        <version>1.0.0.qualifier</version>
+      </dependency>
+
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-core</artifactId>
@@ -53,13 +60,20 @@
         <artifactId>logback-classic</artifactId>
         <version>${logback.version}</version>
       </dependency>
-      
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+        <type>test-jar</type>
+      </dependency>
       
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-access</artifactId>
         <version>${logback.version}</version>
       </dependency>
+    
     </dependencies>
   </dependencyManagement>
 
