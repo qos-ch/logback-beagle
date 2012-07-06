@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/ch.qos.logback.beagle.feature_1.0.0.qualifier.jar" id="ch.qos.logback.beagle.feature" version="1.0.0.qualifier">
-      <category name="Logback Beagle"/>
-   </feature>
-   <category-def name="Logback Beagle" label="Logback Beagle"/>
-</site>

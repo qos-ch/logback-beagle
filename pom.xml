@@ -9,6 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
+    <logback.version>1.0.6</logback.version>
     <tycho-version>0.15.0</tycho-version>
   </properties>
 
@@ -23,14 +24,44 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
     </repository>
+
+    <repository>
+      <id>logback</id>
+      <layout>p2</layout>
+      <url>http://logback.qos.ch/eclipse</url>
+    </repository>
   </repositories>
 
   <modules>
-    <module>ch.qos.logback.beagle.repository</module>
     <module>ch.qos.logback.beagle.feature</module>
     <module>ch.qos.logback.beagle</module>
-    <module>ch.qos.logback.beagle.tests</module>
+    <!--<module>ch.qos.logback.beagle.tests</module>-->
+    <module>p2-repository</module>
   </modules>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      
+      
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-access</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <plugins>
@@ -47,6 +78,7 @@
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho-version}</version>
         <configuration>
+          <pomDependencies>consider</pomDependencies>
           <target>
             <artifact>
               <groupId>ch.qos.logback.beagle</groupId>

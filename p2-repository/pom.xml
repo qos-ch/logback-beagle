@@ -3,15 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
 
+  <parent>
+    <groupId>ch.qos.logback.beagle</groupId>
+    <artifactId>ch.qos.logback.beagle.parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+
   <groupId>ch.qos.logback.eclipse</groupId>
   <artifactId>parent</artifactId>
   <version>1.0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <properties>
-    <logback.version>1.0.6</logback.version>
-    <tycho-version>0.15.0</tycho-version>
-  </properties>
 
   <modules>
     <module>org.slf4j.feature</module>
@@ -19,61 +21,24 @@
     <module>ch.qos.logback.repository</module>
   </modules>
 
-	<dependencies>
-		<!-- The artifact is an OSGi bundle not built by Tycho. -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-access</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-
-	</dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
-        <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho-version}</version>
-        <configuration>
-          <pomDependencies>consider</pomDependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>  
-
-
-  <repositories>
-    <repository>
-      <id>indigo</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/indigo/</url>
-    </repository>
-    <repository>
-      <id>swtbot</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
-    </repository>
-  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+      
+      
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-access</artifactId>
+    </dependency>
+  </dependencies>
 </project>
 
 
