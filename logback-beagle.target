@@ -4,21 +4,26 @@
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.jdt.feature.group" version="3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1"/>
-      <repository location="http://download.eclipse.org/releases/indigo"/>
+      <!--<repository location="http://download.eclipse.org/releases/indigo"/>-->
+      <repository location="file:/tmp/mirror/"/>
     </location>
     
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
       <unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-      <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+
+      <!--  <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>-->
+      <repository location="file:/tmp/swtbotMirror/"/>
     </location>
 
     <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="ch.qos.logback.core" version="0.0.0"/>
       <unit id="ch.qos.logback.classic" version="0.0.0"/>
       <unit id="slf4j.api" version="0.0.0"/>
+      <!--<repository location="file:/tmp/logbackMirror/"/>-->
       <repository location="http://logback.qos.ch/eclipse/"/>
     </location>
+
   </locations>
   <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>

@@ -4,12 +4,11 @@
 
 
   <parent>
-    <groupId>ch.qos.logback.eclipse</groupId>
-    <artifactId>parent</artifactId>
+    <groupId>ch.qos.logback.repository</groupId>
+    <artifactId>repository-parent</artifactId>
     <version>1.0.6-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.slf4j.eclipse</groupId>
   <artifactId>org.slf4j.feature</artifactId>
   <version>1.6.6-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>

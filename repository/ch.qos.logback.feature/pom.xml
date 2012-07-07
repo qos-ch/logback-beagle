@@ -4,23 +4,13 @@
 
 
   <parent>
-    <groupId>ch.qos.logback.beagle</groupId>
-    <artifactId>ch.qos.logback.beagle.parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>ch.qos.logback.repository</groupId>
+    <artifactId>repository-parent</artifactId>
+    <version>1.0.6-SNAPSHOT</version>
   </parent>
 
-
-  <groupId>ch.qos.logback.eclipse</groupId>
-  <artifactId>parent</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>org.slf4j.feature</module>
-    <module>ch.qos.logback.feature</module>
-    <module>ch.qos.logback.repository</module>
-  </modules>
-
+  <artifactId>ch.qos.logback.feature</artifactId>
+  <packaging>eclipse-feature</packaging>
 
   <dependencies>
     <dependency>
@@ -39,6 +29,7 @@
       <artifactId>logback-access</artifactId>
     </dependency>
   </dependencies>
+
 </project>
 
 

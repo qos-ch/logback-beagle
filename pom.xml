@@ -19,6 +19,7 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/releases/indigo/</url>
     </repository>
+
     <repository>
       <id>swtbot</id>
       <layout>p2</layout>
@@ -36,7 +37,7 @@
     <module>ch.qos.logback.beagle.feature</module>
     <module>ch.qos.logback.beagle</module>
     <!--<module>ch.qos.logback.beagle.tests</module>-->
-    <module>p2-repository</module>
+    <module>repository</module>
   </modules>
 
 
@@ -93,7 +94,7 @@
         <version>${tycho-version}</version>
         <configuration>
           <pomDependencies>consider</pomDependencies>
-          <target>
+<!--          <target>
             <artifact>
               <groupId>ch.qos.logback.beagle</groupId>
               <artifactId>ch.qos.logback.beagle.parent</artifactId>
@@ -101,6 +102,7 @@
               <classifier>logback-beagle</classifier>
             </artifact>
           </target>
+-->
         </configuration>
       </plugin>
     </plugins>

@@ -2,11 +2,12 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>ch.qos.logback.eclipse</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.6-SNAPSHOT</version>
-	</parent>
+
+  <parent>
+    <groupId>ch.qos.logback.repository</groupId>
+    <artifactId>repository-parent</artifactId>
+    <version>1.0.6-SNAPSHOT</version>
+  </parent>
 
 	<artifactId>ch.qos.logback.repository</artifactId>
 	<packaging>eclipse-repository</packaging>
