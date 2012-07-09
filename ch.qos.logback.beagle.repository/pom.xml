@@ -1,7 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
          xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
 
   <parent>
     <groupId>ch.qos.logback.beagle</groupId>
@@ -9,20 +9,8 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
+  <artifactId>ch.qos.logback.beagle.repository</artifactId>
+  <version>1.0.0.qualifier</version>
+  <packaging>eclipse-repository</packaging>
 
-  <groupId>ch.qos.logback.repository</groupId>
-  <artifactId>repository-parent</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
-  <name>logback p2-repository parent</name>
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>org.slf4j.feature</module>
-    <module>ch.qos.logback.feature</module>
-    <module>ch.qos.logback.repository</module>
-  </modules>
-
-</project>
-
-
-
+</project> 

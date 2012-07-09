@@ -29,54 +29,18 @@
     <repository>
       <id>logback</id>
       <layout>p2</layout>
-      <url>http://logback.qos.ch/eclipse</url>
+      <url>http://logback.qos.ch/p2/proper</url>
     </repository>
   </repositories>
 
   <modules>
     <module>ch.qos.logback.beagle.feature</module>
     <module>ch.qos.logback.beagle</module>
+    <module>ch.qos.logback.beagle.repository</module>
     <!--<module>ch.qos.logback.beagle.tests</module>-->
-    <module>repository</module>
   </modules>
 
 
-  <dependencyManagement>
-    <dependencies>
-
-      <dependency>
-        <groupId>ch.qos.logback.beagle</groupId>
-        <artifactId>ch.qos.logback.beagle</artifactId>
-        <version>1.0.0.qualifier</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-      
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-        <type>test-jar</type>
-      </dependency>
-      
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-access</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-    
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <plugins>
