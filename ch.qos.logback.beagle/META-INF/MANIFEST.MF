@@ -14,4 +14,11 @@ Require-Bundle: org.eclipse.core.runtime,
  slf4j.api;bundle-version="1.6.6"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: ch.qos.logback.beagle,
+ ch.qos.logback.beagle.menu,
+ ch.qos.logback.beagle.net,
+ ch.qos.logback.beagle.util,
+ ch.qos.logback.beagle.views,
+ ch.qos.logback.beagle.vista,
+ ch.qos.logback.beagle.visual
 Bundle-ClassPath: .

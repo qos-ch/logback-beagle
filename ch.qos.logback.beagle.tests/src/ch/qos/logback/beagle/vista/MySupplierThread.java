@@ -7,7 +7,9 @@
  * the Eclipse Foundation.
  */
 package ch.qos.logback.beagle.vista;
-
+/*
+ * code commented because of missing ch.qos.logback.classic.corpus 
+ *
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,3 +68,4 @@ public class MySupplierThread extends Thread implements Listener {
   }
 
 }
+*/
