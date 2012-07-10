@@ -7,16 +7,13 @@
  * the Eclipse Foundation.
  */
 package ch.qos.logback.beagle;
-/*
- * code commented because of missing ch.qos.logback.classic.corpus 
- *
+
 import java.io.IOException;
 import java.util.List;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 
-/
 import ch.qos.logback.classic.corpus.Corpus;
 import ch.qos.logback.classic.corpus.CorpusModel;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -58,6 +55,4 @@ public class LoggingEventBuilder {
     }
   }
 
-
 }
-*/

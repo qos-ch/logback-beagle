@@ -7,9 +7,7 @@
  * the Eclipse Foundation.
  */
 package ch.qos.logback.beagle.vista;
-/*
- * code commented because of missing ch.qos.logback.classic.corpus 
- *
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Display;
@@ -52,4 +50,3 @@ public class MyMain {
   }
 
 }
-*/
