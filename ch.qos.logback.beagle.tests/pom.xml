@@ -12,4 +12,12 @@
   <artifactId>ch.qos.logback.beagle.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
 
+  <build>
+    <resources>
+      <resource>
+       <directory>resources/</directory>
+     </resource>
+   </resources>
+ </build>
+
 </project> 
