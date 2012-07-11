@@ -27,5 +27,14 @@
     <contexts file="contexts.xml">
     </contexts>
   </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           category="org.eclipse.debug.ui.DebugPreferencePage"
+           class="ch.qos.logback.beagle.WorkbenchPreferences"
+           id="ch.qos.logback.beagle.preferences"
+           name="Beagle">
+     </page>
+  </extension>
 
 </plugin>
