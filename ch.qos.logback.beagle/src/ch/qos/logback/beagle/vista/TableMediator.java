@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.ToolItem;
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.menu.MenuBuilder;
-import ch.qos.logback.beagle.preferences.PreferencesChangeListenter;
-import ch.qos.logback.beagle.preferences.WorkbenchPreferences;
+import ch.qos.logback.beagle.preferences.BeaglePreferencesChangeListenter;
+import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
@@ -37,11 +37,11 @@ public class TableMediator {
 
   public Table table;
   public ClassicTISBuffer classicTISBuffer;
-  public PreferencesChangeListenter preferencesChangeListenter; 
+  public BeaglePreferencesChangeListenter preferencesChangeListenter;
   final Composite parent;
   public final PatternLayout layout = new PatternLayout();
   private LoggerContext loggerContext = new LoggerContext();
-  
+
   public TableMediator(Composite parent) {
     this.parent = parent;
     init();
@@ -49,7 +49,7 @@ public class TableMediator {
 
   private void init() {
     loggerContext.setName("beagle");
-    
+
     table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
 	| SWT.MULTI | SWT.BORDER);
     table.setFont(ResourceUtil.FONT);
@@ -101,16 +101,17 @@ public class TableMediator {
 
     table.addControlListener(new TableControlListener(charWidth));
 
-    
     initLayout(layout);
-    classicTISBuffer = new ClassicTISBuffer(layout, table);
+    int bufSize = getBufferSize();
+    classicTISBuffer = new ClassicTISBuffer(layout, table, bufSize);
     classicTISBuffer.diffCue = diffCueLabel;
     classicTISBuffer.jumpCue = jumpCueLabel;
-    
-    preferencesChangeListenter = new PreferencesChangeListenter(layout, classicTISBuffer);
-   
 
-    // when the table is cleared visualElementBuffer's handleEvent method will re-populate the item
+    preferencesChangeListenter = new BeaglePreferencesChangeListenter(layout,
+	classicTISBuffer);
+
+    // when the table is cleared visualElementBuffer's handleEvent method will
+    // re-populate the item
     table.addListener(SWT.SetData, classicTISBuffer);
     table.addDisposeListener(classicTISBuffer);
 
@@ -128,20 +129,31 @@ public class TableMediator {
     table.addMouseListener(myMouseListener);
     table.addMouseTrackListener(myMouseListener);
 
-    table.addMouseMoveListener(new TimeDifferenceMouseListener(
-	classicTISBuffer));
+    table
+	.addMouseMoveListener(new TimeDifferenceMouseListener(classicTISBuffer));
 
     Menu menu = MenuBuilder.buildMenu(classicTISBuffer);
     MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
     table.setMenu(menu);
     table.setItemCount(0);
   }
-  
+
+  int getBufferSize() {
+    int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
+    if (Activator.INSTANCE != null) {
+      IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
+      result = pStore.getInt(BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE);
+    }
+    return result;
+  }
   private void initLayout(PatternLayout layout) {
-     layout.setContext(loggerContext);
-     IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
-     String pattern =  pStore.getString(WorkbenchPreferences.PATTERN_PREFERENCE);
-     layout.setPattern(pattern);
-     layout.start();
+    layout.setContext(loggerContext);
+    String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
+    if (Activator.INSTANCE != null) {
+      IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
+      pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
+    }
+    layout.setPattern(pattern);
+    layout.start();
   }
 }

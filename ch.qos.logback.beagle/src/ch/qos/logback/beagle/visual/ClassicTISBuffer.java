@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -45,17 +44,24 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   final Display display;
 
   boolean active = true;
-
   volatile boolean disposed = false;
 
-  
   public Label diffCue;
   public Label jumpCue;
 
-  public ClassicTISBuffer(PatternLayout layout, Table table) {
+  private int bufferSize;
+  private int dropSize;
+  public ClassicTISBuffer(PatternLayout layout, Table table, int bufferSize) {
     this.table = table;    
     this.display = table.getDisplay();
     this.layout = layout;
+    this.bufferSize = bufferSize;
+    this.dropSize = bufferSize/10;
+  }
+  
+  public void setBufferSize(int size) {
+    this.bufferSize = size;
+    this.dropSize = Math.min(1024, bufferSize/10);
   }
 
   /**
@@ -172,7 +178,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void addVisualElementInChunks(final List<ITableItemStub> veList) {
-    int maxChunk = Constants.CLEAN_COUNT / 5;
+    int maxChunk = dropSize / 5;
     int rangeStart = 0;
     int size = veList.size();
     while (rangeStart < size) {
@@ -199,8 +205,8 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void contactIfTooBig() {
-    if (tisList.size() >= Constants.MAX) {
-      tisList.subList(0, Constants.CLEAN_COUNT).clear();
+    if (tisList.size() >= bufferSize) {
+      tisList.subList(0, dropSize).clear();
       display.syncExec(new ResetTablePostContractionRunnable());
     }
   }
@@ -255,7 +261,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
       int topIndex = table.getTopIndex();
       table.clearAll();
       table.setItemCount(tisList.size());
-      table.setTopIndex(topIndex - Constants.CLEAN_COUNT);
+      table.setTopIndex(topIndex - dropSize);
     }
   }
 
