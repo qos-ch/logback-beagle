@@ -58,15 +58,6 @@
         <version>${tycho-version}</version>
         <configuration>
           <pomDependencies>consider</pomDependencies>
-<!--          <target>
-            <artifact>
-              <groupId>ch.qos.logback.beagle</groupId>
-              <artifactId>ch.qos.logback.beagle.parent</artifactId>
-              <version>1.0.0-SNAPSHOT</version>
-              <classifier>logback-beagle</classifier>
-            </artifact>
-          </target>
--->
         </configuration>
       </plugin>
     </plugins>

@@ -31,10 +31,14 @@
         point="org.eclipse.ui.preferencePages">
      <page
            category="org.eclipse.debug.ui.DebugPreferencePage"
-           class="ch.qos.logback.beagle.WorkbenchPreferences"
+           class="ch.qos.logback.beagle.preferences.WorkbenchPreferences"
            id="ch.qos.logback.beagle.preferences"
            name="Beagle">
      </page>
   </extension>
+
+  <extension point="org.eclipse.core.runtime.preferences">
+     <initializer class="ch.qos.logback.beagle.preferences.PreferenceInitializer"/>
+   </extension>
 
 </plugin>

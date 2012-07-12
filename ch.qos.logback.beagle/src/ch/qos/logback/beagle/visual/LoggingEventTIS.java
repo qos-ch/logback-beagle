@@ -13,32 +13,24 @@ import org.eclipse.swt.graphics.Image;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
 public class LoggingEventTIS extends TableItemStubBase {
 
-  public ILoggingEvent getILoggingEvent() {
-    return iLoggingEvent;
-  }
 
-  static PatternLayout LAYOUT = new PatternLayout();
-
-  static {
-    LoggerContext c = new LoggerContext();
-    c.setName("bogus");
-    LAYOUT.setContext(c);
-    LAYOUT.setPattern("%-23.20d %-5level %-21([%t]) %-30logger{30} - %m%nopex");
-    LAYOUT.start();
-  }
-
+  final PatternLayout layout;
   final ILoggingEvent iLoggingEvent;
   final Color color;
 
-  public LoggingEventTIS(ILoggingEvent event, Color color) {
+  public LoggingEventTIS(PatternLayout layout, ILoggingEvent event, Color color) {
+    this.layout = layout;
     this.iLoggingEvent = event;
     this.color = color;
+  }
+
+  public ILoggingEvent getILoggingEvent() {
+    return iLoggingEvent;
   }
 
   @Override
@@ -59,7 +51,7 @@ public class LoggingEventTIS extends TableItemStubBase {
 
   @Override
   public String getText() {
-    return LAYOUT.doLayout(iLoggingEvent);
+    return layout.doLayout(iLoggingEvent);
   }
 
   @Override

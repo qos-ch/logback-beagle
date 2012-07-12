@@ -8,6 +8,7 @@
  */
 package ch.qos.logback.beagle.vista;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -19,11 +20,16 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.menu.MenuBuilder;
+import ch.qos.logback.beagle.preferences.PreferencesChangeListenter;
+import ch.qos.logback.beagle.preferences.WorkbenchPreferences;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.PatternLayout;
 
 public class TableMediator {
 
@@ -31,16 +37,19 @@ public class TableMediator {
 
   public Table table;
   public ClassicTISBuffer classicTISBuffer;
+  public PreferencesChangeListenter preferencesChangeListenter; 
   final Composite parent;
-
+  public final PatternLayout layout = new PatternLayout();
+  private LoggerContext loggerContext = new LoggerContext();
+  
   public TableMediator(Composite parent) {
     this.parent = parent;
     init();
   }
 
   private void init() {
+    loggerContext.setName("beagle");
     
-
     table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
 	| SWT.MULTI | SWT.BORDER);
     table.setFont(ResourceUtil.FONT);
@@ -92,9 +101,14 @@ public class TableMediator {
 
     table.addControlListener(new TableControlListener(charWidth));
 
-    classicTISBuffer = new ClassicTISBuffer(table);
+    
+    initLayout(layout);
+    classicTISBuffer = new ClassicTISBuffer(layout, table);
     classicTISBuffer.diffCue = diffCueLabel;
     classicTISBuffer.jumpCue = jumpCueLabel;
+    
+    preferencesChangeListenter = new PreferencesChangeListenter(layout, classicTISBuffer);
+   
 
     // when the table is cleared visualElementBuffer's handleEvent method will re-populate the item
     table.addListener(SWT.SetData, classicTISBuffer);
@@ -121,5 +135,13 @@ public class TableMediator {
     MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
     table.setMenu(menu);
     table.setItemCount(0);
+  }
+  
+  private void initLayout(PatternLayout layout) {
+     layout.setContext(loggerContext);
+     IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
+     String pattern =  pStore.getString(WorkbenchPreferences.PATTERN_PREFERENCE);
+     layout.setPattern(pattern);
+     layout.start();
   }
 }

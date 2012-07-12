@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 
@@ -39,18 +40,22 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   int count = 0;
 
   public final Table table;
+  private final PatternLayout layout;
+  
   final Display display;
 
   boolean active = true;
 
   volatile boolean disposed = false;
 
+  
   public Label diffCue;
   public Label jumpCue;
 
-  public ClassicTISBuffer(Table table) {
-    this.table = table;
+  public ClassicTISBuffer(PatternLayout layout, Table table) {
+    this.table = table;    
     this.display = table.getDisplay();
+    this.layout = layout;
   }
 
   /**
@@ -85,7 +90,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     if (count % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    veList.add(new LoggingEventTIS(event, c));
+    veList.add(new LoggingEventTIS(layout, event, c));
 
     IThrowableProxy tp = event.getThrowableProxy();
 
@@ -138,9 +143,13 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     display.syncExec(new ResetTableRunnable());
   }
 
+  public void resetTable() {
+    display.syncExec(new ResetTableRunnable());
+  }
+
   public void add(final CallerDataTIS cdVisualElement, int index) {
     tisList.add(index, cdVisualElement);
-    display.syncExec(new ResetTableRunnable());
+   resetTable();
   }
 
   /**

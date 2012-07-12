@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.vista.TableMediator;
@@ -35,41 +36,51 @@ import ch.qos.logback.beagle.vista.TableMediator;
 
 public class BeagleView extends ViewPart {
 
-    //
-    TableMediator tableMediator;
+  //
+  TableMediator tableMediator;
 
-    /**
-     * 
-     * @param parent
-     */
-    @Override
-    public void createPartControl(Composite parent) {
+  /**
+   * 
+   * @param parent
+   */
+  @Override
+  public void createPartControl(Composite parent) {
 
-        parent.setLayout(new FormLayout());
+    parent.setLayout(new FormLayout());
 
-        // initialize Beagle table
-        ResourceUtil.init(parent.getDisplay());
-        tableMediator = new TableMediator(parent);
+    // initialize Beagle table
+    ResourceUtil.init(parent.getDisplay());
+    tableMediator = new TableMediator(parent);
 
-        // start Beagle socket server
-        LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
-                tableMediator.classicTISBuffer);
-        Thread serverThread = new Thread(loggingEventSocketServer);
-        serverThread.start();
+    Activator.INSTANCE.getPreferenceStore().addPropertyChangeListener(
+	tableMediator.preferencesChangeListenter);
 
-        // stop Beagle socket server, if user dispose the view
-        parent.addListener(SWT.Dispose, loggingEventSocketServer);
+    // start Beagle socket server
+    LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
+	tableMediator.classicTISBuffer);
+    Thread serverThread = new Thread(loggingEventSocketServer);
+    serverThread.start();
 
-        PlatformUI.getWorkbench().getHelpSystem()
-                .setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
+    // stop Beagle socket server, if user dispose the view
+    parent.addListener(SWT.Dispose, loggingEventSocketServer);
 
-    }
+    PlatformUI.getWorkbench().getHelpSystem()
+	.setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setFocus() {
-        tableMediator.table.setFocus();
-    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFocus() {
+    tableMediator.table.setFocus();
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+    Activator.INSTANCE.getPreferenceStore().removePropertyChangeListener(
+	tableMediator.preferencesChangeListenter);
+  }
 }
