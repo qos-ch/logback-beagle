@@ -50,6 +50,10 @@ public class BeaglePreferencesChangeListenter implements IPropertyChangeListener
   private void updateLayoutPattern(PropertyChangeEvent event) {
     String newPattern = (String) event.getNewValue();
     if(newPattern != null) {
+      // the pattern is not responsible for printing Exceptions
+      if(!newPattern.contains("%nopex")) 
+	newPattern += "%nopex";
+
       layout.setPattern(newPattern);
       layout.start();
       classicTISBuffer.resetTable();

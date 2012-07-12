@@ -153,6 +153,9 @@ public class TableMediator {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
+    // the layout should not print exceptions
+    if(!pattern.contains("%nopex")) 
+      pattern += "%nopex";
     layout.setPattern(pattern);
     layout.start();
   }
