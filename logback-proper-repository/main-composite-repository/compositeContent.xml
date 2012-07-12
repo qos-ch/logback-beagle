@@ -1,13 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
-<repository name='"Logback Main Eclipse Repository"'
+
+<repository name='&quot;Logback Site&quot;'
     type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository'
     version='1.0.0'>
-  <properties size='1'>
-    <property name='p2.timestamp' value='1243822502499'/>
+  <properties size='2'>
+    <property name='p2.timestamp'  value='1342121808000'/>
+    <property name='p2.compressed' value='true'/>
   </properties>
   <children size='2'>
-    <child location='http://logback.qos.ch/p2/proper'/>
-    <child location='http://logback.qos.ch/p2/beagle'/>
+    <child location='proper'/>
+    <child location='beagle'/>
   </children>
 </repository>

@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?compositeArtifactRepository version='1.0.0'?>
-<repository name='"Logback Main Eclipse Repository"'
-    type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' 
-    version='1.0.0'>
-  <properties size='1'>
-    <property name='p2.timestamp' value='1243822502440'/>
+<repository name='&quot;Logback Site&quot;' type='org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository' version='1.0.0'>
+  <properties size='2'>
+    <property name='p2.compressed' value='true'/>
+    <property name='p2.timestamp' value='1308009856420'/>
   </properties>
   <children size='2'>
-    <child location='http://logback.qos.ch/p2/proper'/>
-    <child location='http://logback.qos.ch/p2/beagle'/>
+    <child location='proper'/>
+    <child location='beagle'/>
   </children>
+</repository>
