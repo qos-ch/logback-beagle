@@ -159,18 +159,18 @@ public class TableMediator {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
-    Converter<ILoggingEvent> head = null;
+    Converter<ILoggingEvent> tmpHead = null;
     try {
       Parser<ILoggingEvent> p = new Parser<ILoggingEvent>(pattern);
       p.setContext(loggerContext);
       Node t = p.parse();
-      head = p.compile(t, PatternLayout.defaultConverterMap);
+      tmpHead = p.compile(t, PatternLayout.defaultConverterMap);
       ch.qos.logback.beagle.util.ConverterUtil.setContextForConverters(
-	  loggerContext, head);
-      ConverterUtil.startConverters(this.head);
+	  loggerContext, tmpHead);
+      ConverterUtil.startConverters(tmpHead);
     } catch (ScanException e) {
       Activator.INSTANCE.logException(e, e.getMessage());
     }
-    return head;
+    return tmpHead;
   }
 }
