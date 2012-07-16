@@ -8,6 +8,8 @@
  */
 package ch.qos.logback.beagle.views;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -20,20 +22,10 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.vista.TableMediator;
 
 /**
- * This sample class demonstrates how to plug-in a new workbench view. The view
- * shows data obtained from the model. The sample creates a dummy model on the
- * fly, but a real implementation would connect to the model available either in
- * this or another plug-in (e.g. the workspace). The view is connected to the
- * model using a content provider.
- * <p>
- * The view uses a label provider to define how model objects should be
- * presented in the view. Each view can present the same model objects using
- * different labels and icons, if needed. Alternatively, a single label provider
- * can be shared between views in order to ensure that objects of the same type
- * are presented in the same way everywhere.
- * <p>
+ * 
+ * @author Christian Trutz
+ * 
  */
-
 public class BeagleView extends ViewPart {
 
   //
@@ -52,12 +44,17 @@ public class BeagleView extends ViewPart {
     ResourceUtil.init(parent.getDisplay());
     tableMediator = new TableMediator(parent);
 
+    GridTableViewer gridTableViewer = new GridTableViewer(tableMediator.grid);
+    gridTableViewer.setLabelProvider(new BeagleLabelProvider());
+    gridTableViewer.setContentProvider(new ArrayContentProvider());
+    gridTableViewer.setInput(tableMediator);
+
     Activator.INSTANCE.getPreferenceStore().addPropertyChangeListener(
-	tableMediator.preferencesChangeListenter);
+        tableMediator.preferencesChangeListenter);
 
     // start Beagle socket server
     LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
-	tableMediator.classicTISBuffer);
+        tableMediator.classicTISBuffer);
     Thread serverThread = new Thread(loggingEventSocketServer);
     serverThread.start();
 
@@ -65,7 +62,7 @@ public class BeagleView extends ViewPart {
     parent.addListener(SWT.Dispose, loggingEventSocketServer);
 
     PlatformUI.getWorkbench().getHelpSystem()
-	.setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
+        .setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
   }
 
@@ -81,6 +78,6 @@ public class BeagleView extends ViewPart {
   public void dispose() {
     super.dispose();
     Activator.INSTANCE.getPreferenceStore().removePropertyChangeListener(
-	tableMediator.preferencesChangeListenter);
+        tableMediator.preferencesChangeListenter);
   }
 }
