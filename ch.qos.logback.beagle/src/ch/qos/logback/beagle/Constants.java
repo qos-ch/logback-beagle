@@ -13,6 +13,9 @@ public class Constants {
 
   final public static int ICON_SIZE = 16;
 
+  
+  final public static String COLUMN_SIZE_DIALOG_SETTINGS_PREFIX = "COLUMN_SIZE_DIALOG_SETTINGS_PREFIX_";
+  
   //public static int MAX = 20*1000;
 
   //public static int CLEAN_COUNT = MAX / 10;

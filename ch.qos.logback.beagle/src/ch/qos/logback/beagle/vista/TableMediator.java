@@ -8,6 +8,7 @@
  */
 package ch.qos.logback.beagle.vista;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -93,10 +94,10 @@ public class TableMediator {
     formData.bottom = new FormAttachment(toolbar, -5);
 
     grid.setLayoutData(formData);
-//    GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
-//    tableColumn.setText("");
-//    tableColumn.setWidth(100);
-//    tableColumn.pack();
+    // GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
+    // tableColumn.setText("");
+    // tableColumn.setWidth(100);
+    // tableColumn.pack();
     grid.setHeaderVisible(true);
     grid.setLinesVisible(false);
 
@@ -110,8 +111,8 @@ public class TableMediator {
     classicTISBuffer.diffCue = diffCueLabel;
     classicTISBuffer.jumpCue = jumpCueLabel;
 
-    preferencesChangeListenter = new BeaglePreferencesChangeListenter(converterFacade,
-	classicTISBuffer);
+    preferencesChangeListenter = new BeaglePreferencesChangeListenter(
+	converterFacade, classicTISBuffer);
 
     // when the table is cleared visualElementBuffer's handleEvent method will
     // re-populate the item
@@ -141,16 +142,18 @@ public class TableMediator {
   }
 
   private void createColumns(Grid grid2) {
-    GridColumn column0 = new GridColumn(grid,SWT.NONE);
+    GridColumn column0 = new GridColumn(grid, SWT.NONE);
     column0.setWidth(24);
-    
-    for(Converter<ILoggingEvent> c: converterFacade.getConverterList()) {
-      GridColumn column = new GridColumn(grid,SWT.NONE);
-      column.setText(converterFacade.computeConverterName(c));
-      column.setWidth(100);
-    }  
+
+    for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
+      GridColumn column = new GridColumn(grid, SWT.NONE);
+      String columnName = converterFacade.computeConverterName(c);
+
+      column.setText(columnName);
+      column.setWidth(getColumnSizeDialogSetting(columnName, 100));
+      column.addControlListener(new ColumnControlListener(columnName));
+    }
   }
-  
 
   int getBufferSize() {
     int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
@@ -161,6 +164,20 @@ public class TableMediator {
     return result;
   }
 
+  int getColumnSizeDialogSetting(String columnName, int defaultValue) {
+    if (Activator.INSTANCE == null)
+      return defaultValue;
+    IDialogSettings dialogSettings = Activator.INSTANCE.getDialogSettings();
+    try {
+      int val =  dialogSettings.getInt(Constants.COLUMN_SIZE_DIALOG_SETTINGS_PREFIX
+	  + columnName);
+      System.out.println("width for "+columnName+": "+val);
+      return val;
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
+  }
+
   private void initConverterFacade() {
     converterFacade.setContext(loggerContext);
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
@@ -169,9 +186,9 @@ public class TableMediator {
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
     // the layout should not print exceptions
-    if(!pattern.contains("%nopex")) 
+    if (!pattern.contains("%nopex"))
       pattern += "%nopex";
     converterFacade.setPattern(pattern);
     converterFacade.start();
-  }  
+  }
 }
