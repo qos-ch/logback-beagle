@@ -5,7 +5,7 @@
 
   <groupId>ch.qos.logback.beagle</groupId>
   <artifactId>ch.qos.logback.beagle.parent</artifactId>
-  <version>1.0.0.qualifier</version>
+  <version>1.1.0.qualifier</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -24,6 +24,12 @@
       <id>swtbot</id>
       <layout>p2</layout>
       <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
+    </repository>
+
+    <repository>
+      <id>nebula</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/technology/nebula/snapshot</url>
     </repository>
 
     <repository>
