@@ -47,8 +47,8 @@ public class SelectionScroller implements Runnable {
     start = selectionIndices[0];
     end = selectionIndices[selectionIndices.length - 1];
     this.direction = direction;
-    System.out.println("Scroller start=" + start + ", end=" + end
-	+ ", direction " + direction);
+    //System.out.println("Scroller start=" + start + ", end=" + end
+	//+ ", direction " + direction);
   }
 
   void incrementEnd() {

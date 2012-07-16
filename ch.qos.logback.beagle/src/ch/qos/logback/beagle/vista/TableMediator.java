@@ -29,13 +29,8 @@ import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.Converter;
-import ch.qos.logback.core.pattern.ConverterUtil;
-import ch.qos.logback.core.pattern.parser.Node;
-import ch.qos.logback.core.pattern.parser.Parser;
-import ch.qos.logback.core.pattern.parser.ScanException;
 
 public class TableMediator {
 
@@ -45,7 +40,7 @@ public class TableMediator {
   public ClassicTISBuffer classicTISBuffer;
   public BeaglePreferencesChangeListenter preferencesChangeListenter;
   final Composite parent;
-  public Converter<ILoggingEvent> head;
+  public ConverterFacade converterFacade = new ConverterFacade();
   private LoggerContext loggerContext = new LoggerContext();
 
   public TableMediator(Composite parent) {
@@ -98,22 +93,24 @@ public class TableMediator {
     formData.bottom = new FormAttachment(toolbar, -5);
 
     grid.setLayoutData(formData);
-    GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
-    tableColumn.setText("");
-    tableColumn.setWidth(100);
-    tableColumn.pack();
-    grid.setHeaderVisible(false);
+//    GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
+//    tableColumn.setText("");
+//    tableColumn.setWidth(100);
+//    tableColumn.pack();
+    grid.setHeaderVisible(true);
     grid.setLinesVisible(false);
 
     grid.addControlListener(new TableControlListener(charWidth));
 
-    head = buildConverters();
+    initConverterFacade();
+    createColumns(grid);
+    grid.pack();
     int bufSize = getBufferSize();
-    classicTISBuffer = new ClassicTISBuffer(head, grid, bufSize);
+    classicTISBuffer = new ClassicTISBuffer(converterFacade, grid, bufSize);
     classicTISBuffer.diffCue = diffCueLabel;
     classicTISBuffer.jumpCue = jumpCueLabel;
 
-    preferencesChangeListenter = new BeaglePreferencesChangeListenter(null,
+    preferencesChangeListenter = new BeaglePreferencesChangeListenter(converterFacade,
 	classicTISBuffer);
 
     // when the table is cleared visualElementBuffer's handleEvent method will
@@ -143,6 +140,18 @@ public class TableMediator {
     grid.setItemCount(0);
   }
 
+  private void createColumns(Grid grid2) {
+    GridColumn column0 = new GridColumn(grid,SWT.NONE);
+    column0.setWidth(24);
+    
+    for(Converter<ILoggingEvent> c: converterFacade.getConverterList()) {
+      GridColumn column = new GridColumn(grid,SWT.NONE);
+      column.setText(converterFacade.computeConverterName(c));
+      column.setWidth(100);
+    }  
+  }
+  
+
   int getBufferSize() {
     int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
@@ -152,25 +161,17 @@ public class TableMediator {
     return result;
   }
 
-  private Converter<ILoggingEvent> buildConverters() {
-
+  private void initConverterFacade() {
+    converterFacade.setContext(loggerContext);
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
-    Converter<ILoggingEvent> tmpHead = null;
-    try {
-      Parser<ILoggingEvent> p = new Parser<ILoggingEvent>(pattern);
-      p.setContext(loggerContext);
-      Node t = p.parse();
-      tmpHead = p.compile(t, PatternLayout.defaultConverterMap);
-      ch.qos.logback.beagle.util.ConverterUtil.setContextForConverters(
-	  loggerContext, tmpHead);
-      ConverterUtil.startConverters(tmpHead);
-    } catch (ScanException e) {
-      Activator.INSTANCE.logException(e, e.getMessage());
-    }
-    return tmpHead;
-  }
+    // the layout should not print exceptions
+    if(!pattern.contains("%nopex")) 
+      pattern += "%nopex";
+    converterFacade.setPattern(pattern);
+    converterFacade.start();
+  }  
 }

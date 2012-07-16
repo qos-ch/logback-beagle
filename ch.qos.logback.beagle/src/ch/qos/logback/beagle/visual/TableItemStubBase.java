@@ -11,11 +11,12 @@ package ch.qos.logback.beagle.visual;
 
 import org.eclipse.nebula.widgets.grid.GridItem;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.pattern.Converter;
+
 abstract public class TableItemStubBase implements ITableItemStub {
 
-  public void populate(GridItem ti) {
-    ti.setText(getText());
-    ti.setBackground(this.getBackgroundColor());
-    ti.setImage(this.getImage());  
+  public void populate(Converter<ILoggingEvent> head, GridItem gridItem) {
+    
   }
 }

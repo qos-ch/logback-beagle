@@ -78,11 +78,10 @@ public class HideMain {
 	// System.out.println("widgetSelected");
 	if (showOne) {
 	  comp1.moveAbove(null);
-	  System.out.println("moving one above");
+	  //System.out.println("moving one above");
 	} else {
 	  comp2.moveAbove(null);
-
-	  System.out.println("moving two above");
+	  //System.out.println("moving two above");
 	}
 	showOne = !showOne;
       }

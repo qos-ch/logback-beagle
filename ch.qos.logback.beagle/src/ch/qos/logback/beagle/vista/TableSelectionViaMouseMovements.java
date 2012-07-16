@@ -55,11 +55,11 @@ public class TableSelectionViaMouseMovements implements MouseListener,
       return;
     }
     anchorIndex = result;
-    System.out.println("mouseDown anchorIndex " + anchorIndex);
+    //System.out.println("mouseDown anchorIndex " + anchorIndex);
   }
 
   void disableScroller() {
-    System.out.println("disabling scroller");
+    //System.out.println("disabling scroller");
     table.setCapture(false);
     table.getDisplay().timerExec(-1, scroller);
     scroller = null;
@@ -112,14 +112,14 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   @Override
   public void mouseExit(MouseEvent e) {
-    MouseEventUtil.dump("************** mouseExit event ***********", e);
+    //MouseEventUtil.dump("************** mouseExit event ***********", e);
 
     if (MouseEventUtil.isButtonHeldDown(e)) {
       if (scroller != null) {
-	System.out.println("xxxxxxxxxxx already in capture mode");
+	//System.out.println("xxxxxxxxxxx already in capture mode");
 	return;
       }
-      System.out.println("********* entering capture mode");
+      //System.out.println("********* entering capture mode");
       SelectionScroller.Direction direction = e.y < 0 ? SelectionScroller.Direction.UP
 	  : SelectionScroller.Direction.DOWN;
       table.setCapture(true);

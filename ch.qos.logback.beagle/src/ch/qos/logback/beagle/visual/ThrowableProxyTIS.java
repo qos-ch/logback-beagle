@@ -8,21 +8,24 @@
  */
 package ch.qos.logback.beagle.visual;
 
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
+import ch.qos.logback.beagle.vista.ConverterFacade;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 
-public class ThrowableProxyTIS extends TableItemStubBase {
+public class ThrowableProxyTIS implements ITableItemStub {
 
   // static Color COLOR = new Color(null, 209, 193, 245);
-  static Color EXCEPTION_COLOR = new Color(null, 221, 221, 255);
+  static Color EXCEPTION_COLOR = new Color(null, 241, 241, 255);
 
   static final public int INDEX_FOR_INITIAL_LINE = -1;
   static final public String TAB_SUBSTITUTE = "   ";
 
+  ConverterFacade converterFacade;
   final IThrowableProxy itp;
   final int index;
   final StackTraceElementProxy[] stepArray;
@@ -30,7 +33,8 @@ public class ThrowableProxyTIS extends TableItemStubBase {
 
   final Color color;
 
-  public ThrowableProxyTIS(IThrowableProxy itp, int index, Color color) {
+  public ThrowableProxyTIS(ConverterFacade converterFacade, IThrowableProxy itp, int index, Color color) {
+    this.converterFacade = converterFacade;
     this.itp = itp;
     this.index = index;
     this.stepArray = itp.getStackTraceElementProxyArray();
@@ -40,8 +44,8 @@ public class ThrowableProxyTIS extends TableItemStubBase {
 
   @Override
   public Color getBackgroundColor() {
-    // return EXCEPTION_COLOR;
-    return color;
+    return EXCEPTION_COLOR;
+    //return color;
   }
 
   @Override
@@ -81,6 +85,14 @@ public class ThrowableProxyTIS extends TableItemStubBase {
   @Override
   public boolean supportsJump() {
     return (index >= 0);
+  }
+
+  @Override
+  public void populate(GridItem gridItem) {
+    int columnCount = converterFacade.getColumnCount();
+    gridItem.setText(1, getText());
+    gridItem.setColumnSpan(1, columnCount-1);
+    gridItem.setBackground(1, EXCEPTION_COLOR);
   }
 
 }

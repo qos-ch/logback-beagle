@@ -8,32 +8,35 @@
  */
 package ch.qos.logback.beagle.visual;
 
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-public class CallerDataTIS extends TableItemStubBase {
+import ch.qos.logback.beagle.vista.ConverterFacade;
+
+public class CallerDataTIS implements ITableItemStub {
 
   static Color CALLER_DATACOLOR = new Color(null, 193, 230, 253);
 
+  ConverterFacade converterFacade;
   final StackTraceElement stackTraceElement;
   final int index;
 
-  public CallerDataTIS(StackTraceElement stackTraceElement, int index) {
+  public CallerDataTIS(ConverterFacade converterFacade, StackTraceElement stackTraceElement, int index) {
+    this.converterFacade = converterFacade;
     this.stackTraceElement = stackTraceElement;
     this.index = index;
   }
 
-  @Override
+
   public Color getBackgroundColor() {
     return CALLER_DATACOLOR;
   }
 
-  @Override
   public Image getImage() {
     return null;
   }
 
-  @Override
   public String getText() {
     String prefix = " |-- ";
     if (index == 0) {
@@ -42,16 +45,24 @@ public class CallerDataTIS extends TableItemStubBase {
     return prefix + " at " + stackTraceElement.toString();
   }
 
-  @Override
   public StackTraceElement getJumpData() {
     return new StackTraceElement(stackTraceElement.getClassName(),
 	stackTraceElement.getMethodName(), stackTraceElement.getFileName(),
 	stackTraceElement.getLineNumber());
   }
 
-  @Override
   public boolean supportsJump() {
     return true;
+  }
+
+
+  @Override
+  public void populate(GridItem gridItem) {
+    int columnCount = converterFacade.getColumnCount();
+    gridItem.setText(0, getText());
+    gridItem.setColumnSpan(0, columnCount-1);
+    gridItem.setBackground(0, getBackgroundColor());
+    
   }
 
 }

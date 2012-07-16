@@ -8,23 +8,25 @@
  */
 package ch.qos.logback.beagle.visual;
 
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.vista.ConverterFacade;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.Converter;
 
-public class LoggingEventTIS extends TableItemStubBase {
+public class LoggingEventTIS implements ITableItemStub {
 
-
-  final Converter<ILoggingEvent> head;
+  final ConverterFacade converterFacade;
   final ILoggingEvent iLoggingEvent;
   final Color color;
 
-  public LoggingEventTIS(Converter<ILoggingEvent> head, ILoggingEvent event, Color color) {
-    this.head = head;
+  public LoggingEventTIS(ConverterFacade head, ILoggingEvent event,
+      Color color) {
+    this.converterFacade = head;
     this.iLoggingEvent = event;
     this.color = color;
   }
@@ -36,6 +38,16 @@ public class LoggingEventTIS extends TableItemStubBase {
   @Override
   public Color getBackgroundColor() {
     return color;
+  }
+
+  public void populate(GridItem gridItem) {
+    gridItem.setImage(0, getImage());
+    int i = 1;
+    for(Converter<ILoggingEvent> c: converterFacade.getConverterList()) {
+      gridItem.setText(i, c.convert(iLoggingEvent));
+      gridItem.setBackground(i, getBackgroundColor());
+      i++;
+    }
   }
 
   @Override
@@ -51,7 +63,7 @@ public class LoggingEventTIS extends TableItemStubBase {
 
   @Override
   public String getText() {
-    return head.convert(iLoggingEvent);
+    return converterFacade.getConverterList().get(0).convert(iLoggingEvent);
   }
 
   @Override

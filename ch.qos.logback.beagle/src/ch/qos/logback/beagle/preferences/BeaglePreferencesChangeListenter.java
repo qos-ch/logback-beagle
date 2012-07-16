@@ -11,8 +11,8 @@ package ch.qos.logback.beagle.preferences;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
+import ch.qos.logback.beagle.vista.ConverterFacade;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
-import ch.qos.logback.classic.PatternLayout;
 
 /**
  * This IPropertyChangeListener reacts to preference changes and updates BeagleView accordingly. 
@@ -23,10 +23,10 @@ import ch.qos.logback.classic.PatternLayout;
 public class BeaglePreferencesChangeListenter implements IPropertyChangeListener {
 
   final ClassicTISBuffer classicTISBuffer;
-  final PatternLayout layout;
+  final ConverterFacade converterFacade;
   
-  public BeaglePreferencesChangeListenter(PatternLayout layout, ClassicTISBuffer classicTISBuffer) {
-    this.layout = layout;
+  public BeaglePreferencesChangeListenter(ConverterFacade converterFacade, ClassicTISBuffer classicTISBuffer) {
+    this.converterFacade = converterFacade;
     this.classicTISBuffer = classicTISBuffer;
   }
 
@@ -44,7 +44,6 @@ public class BeaglePreferencesChangeListenter implements IPropertyChangeListener
   private void updateBufferSize(PropertyChangeEvent event) {
     int newBufferSize = (Integer) event.getNewValue();
     classicTISBuffer.setBufferSize(newBufferSize);
-    System.out.println("new buffer size = "+newBufferSize);
   }
 
   private void updateLayoutPattern(PropertyChangeEvent event) {
@@ -54,8 +53,8 @@ public class BeaglePreferencesChangeListenter implements IPropertyChangeListener
       if(!newPattern.contains("%nopex")) 
 	newPattern += "%nopex";
 
-      layout.setPattern(newPattern);
-      layout.start();
+      converterFacade.setPattern(newPattern);
+      converterFacade.start();
       classicTISBuffer.resetTable();
     }
   }

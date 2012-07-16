@@ -37,8 +37,8 @@ public class TableItemSelectionListener implements SelectionListener {
 
   @Override
   public void widgetDefaultSelected(SelectionEvent e) {
-    System.out.println("MySelectionListener.widgetDefaultSelected called with "
-	+ e);
+    //System.out.println("MySelectionListener.widgetDefaultSelected called with "
+	//+ e);
   }
 
   @Override

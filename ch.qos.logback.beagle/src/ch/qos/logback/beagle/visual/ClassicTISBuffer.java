@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.vista.ConverterFacade;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
-import ch.qos.logback.core.pattern.Converter;
 
 public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     Listener, DisposeListener {
@@ -39,7 +39,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   int count = 0;
 
   public final Grid table;
-  private final Converter<ILoggingEvent> head;
+  private final ConverterFacade converterFacade;
   
   final Display display;
 
@@ -51,12 +51,17 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   private int bufferSize;
   private int dropSize;
-  public ClassicTISBuffer(Converter<ILoggingEvent> head, Grid table, int bufferSize) {
+  public ClassicTISBuffer(ConverterFacade head, Grid table, int bufferSize) {
     this.table = table;    
     this.display = table.getDisplay();
-    this.head = head;
+    this.converterFacade = head;
     this.bufferSize = bufferSize;
     this.dropSize = bufferSize/10;
+  }
+  
+  
+  public ConverterFacade getConverterFacade() {
+    return converterFacade;
   }
   
   public void setBufferSize(int size) {
@@ -96,20 +101,20 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     if (count % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    veList.add(new LoggingEventTIS(head, event, c));
+    veList.add(new LoggingEventTIS(converterFacade, event, c));
 
     IThrowableProxy tp = event.getThrowableProxy();
 
     while (tp != null) {
       IThrowableProxy itp = event.getThrowableProxy();
-      veList.add(new ThrowableProxyTIS(itp,
+      veList.add(new ThrowableProxyTIS(converterFacade, itp,
 	  ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-	veList.add(new ThrowableProxyTIS(itp, i, c));
+	veList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-	veList.add(new ThrowableProxyTIS(itp, stackDepth, c));
+	veList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
@@ -230,7 +235,6 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   public ITableItemStub get(int index) {
     if (index >= tisList.size()) {
-      System.out.println("EventBuffer.get invoked with index=" + index);
       return null;
     } else {
       return tisList.get(index);
@@ -240,7 +244,6 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   @Override
   public void widgetDisposed(DisposeEvent e) {
     disposed = true;
-    System.out.println("***widgetDisposed called");
   }
 
   public Grid getTable() {

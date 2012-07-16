@@ -31,18 +31,16 @@ import ch.qos.logback.core.CoreConstants;
 
 public class OnMenuSelectionAction implements SelectionListener {
 
-  final Grid table;
+  final Grid grid;
   final ClassicTISBuffer classicTISBuffer;
 
   public OnMenuSelectionAction(ClassicTISBuffer classicTISBuffer) {
     this.classicTISBuffer = classicTISBuffer;
-    this.table = classicTISBuffer.getTable();
+    this.grid = classicTISBuffer.getTable();
   }
 
   @Override
   public void widgetDefaultSelected(SelectionEvent e) {
-    System.out.println("MyMenuListener.widgetDefaultSelected");
-
   }
 
   int menuItemToIndex(MenuItem menuItem) {
@@ -58,7 +56,6 @@ public class OnMenuSelectionAction implements SelectionListener {
   private void handleMenuJump(ITableItemStub iVisualElement) {
     StackTraceElement ste = iVisualElement.getJumpData();
     if (ste != null) {
-      System.out.println("Jump to " + ste.getClassName());
       EditorUtil.openInEditor(ste);
     }
   }
@@ -75,7 +72,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 	}
 
 	for (int i = 0; i < callerDataArray.length; i++) {
-	  CallerDataTIS callerDataTIS = new CallerDataTIS(callerDataArray[i], i);
+	  CallerDataTIS callerDataTIS = new CallerDataTIS(classicTISBuffer.getConverterFacade(),  callerDataArray[i], i);
 	  classicTISBuffer.add(callerDataTIS, index + 1 + i);
 	}
       }
@@ -92,7 +89,7 @@ public class OnMenuSelectionAction implements SelectionListener {
   private void handleCopyToClipboard(Display display) {
     final Clipboard cb = new Clipboard(display);
     TextTransfer textTransfer = TextTransfer.getInstance();
-    String text = selectionToText(table);
+    String text = selectionToText(grid);
     cb.setContents(new Object[] { text }, new Transfer[] { textTransfer });
     cb.dispose();
   }
@@ -101,7 +98,7 @@ public class OnMenuSelectionAction implements SelectionListener {
   public void widgetSelected(SelectionEvent e) {
     MenuItem mi = (MenuItem) e.widget;
 
-    int index = SelectionUtil.getUniqueSelection(table);
+    int index = SelectionUtil.getUniqueSelection(grid);
 
     ITableItemStub iVisualElement = null;
     if (index != Constants.NA) {
@@ -117,7 +114,7 @@ public class OnMenuSelectionAction implements SelectionListener {
       break;
 
     case MenuBuilder.COPY_TO_CLIPBOARD_MENU_INDEX:
-      System.out.println("**** Clipboard");
+      //System.out.println("**** Clipboard");
       handleCopyToClipboard(e.display);
       break;
     default:
@@ -127,7 +124,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 
   String selectionToText(Grid t) {
     StringBuilder buf = new StringBuilder();
-    int[] selIndices = table.getSelectionIndices();
+    int[] selIndices = grid.getSelectionIndices();
     Arrays.sort(selIndices);
     for (int index : selIndices) {
       ITableItemStub ve = classicTISBuffer.get(index);

@@ -16,8 +16,8 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.ScrollBar;
 
 /**
- * Reacts to changes in the window size of the table it listens to. This table
- * is assumed to have a single column. The reactions consists of updating the
+ * Reacts to changes in the window size of the grid it listens to. This grid is
+ * assumed to have multiple columns. The reactions consists of updating the
  * width of this column which ultimately enables or disables a horizontal scroll
  * bar.
  * 
@@ -35,32 +35,49 @@ public class TableControlListener implements ControlListener {
 
   @Override
   public void controlMoved(ControlEvent e) {
-    // we don't care about moving the table
+    // we don't care about moving the grid
   }
 
   @Override
   public void controlResized(ControlEvent e) {
-    Grid table = (Grid) e.widget;
-    adjustTableWidth(table);
+    Grid grid = (Grid) e.widget;
+    adjustTableWidth(grid);
   }
 
   /**
-   * Adjust the size of the table assuming it contains only a single column.
+   * Adjust the size of the grid assuming it contains only a single column.
    * 
-   * @param table
+   * @param grid
    */
-  private void adjustTableWidth(Grid table) {
-    int visibleTableWidth = computeVisibleTableWidth(table);
-    int maxItemWidth = computeMaxItemWidth(table);
+  private void adjustTableWidth(Grid grid) {
+    int lastColumnIndex = grid.getColumnCount() - 1;
+    if (lastColumnIndex <= 0)
+      return;
 
-    int targetWidth = Math.max(visibleTableWidth, maxItemWidth);
-    GridColumn tableCol = table.getColumn(0);
-    tableCol.setWidth(targetWidth);
+    int visibleTableWidth = computeVisibleTableWidth(grid);
+    int totalWidthOfOtherColumns = computeWidthOfAllColumnExceptLast(grid);
+    
+    //int maxItemWidth = computeMaxItemWidth(grid);
+
+    int targetWidth = Math.max(100, visibleTableWidth - totalWidthOfOtherColumns);
+    GridColumn gridColumn = grid.getColumn(lastColumnIndex);
+    gridColumn.setWidth(targetWidth);
   }
 
-  private int computeMaxItemWidth(Grid table) {
+  private int computeWidthOfAllColumnExceptLast(Grid grid) {
+    int total = 0;
+
+    for (int i = 0; i < grid.getColumnCount() - 1; i++) {
+      GridColumn gridColumn = grid.getColumn(i);
+      total += gridColumn.getWidth();
+    }
+
+    return total;
+  }
+
+  private int computeMaxItemWidth(Grid grid) {
     int maxItemWidth = 0;
-    for (GridItem ti : table.getItems()) {
+    for (GridItem ti : grid.getItems()) {
       int itemWidth = ti.getText().length() * charWidth;
       if (maxItemWidth < itemWidth) {
 	maxItemWidth = itemWidth;
@@ -69,9 +86,9 @@ public class TableControlListener implements ControlListener {
     return maxItemWidth;
   }
 
-  private int computeVisibleTableWidth(Grid table) {
-    ScrollBar sb = table.getVerticalBar();
-    int targetWidth = table.getSize().x;
+  private int computeVisibleTableWidth(Grid grid) {
+    ScrollBar sb = grid.getVerticalBar();
+    int targetWidth = grid.getSize().x;
 
     if (sb != null) {
       targetWidth -= sb.getSize().x;

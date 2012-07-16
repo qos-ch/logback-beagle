@@ -91,8 +91,8 @@ public class LoggingEventSocketServer implements Runnable, Listener {
 
   @Override
   public void handleEvent(Event event) {
-    System.out
-	.println("LoggingEventSocketServer dispose event occured. Stopping");
+    //System.out
+	//.println("LoggingEventSocketServer dispose event occured. Stopping");
     stop();
   }
 
