@@ -13,9 +13,12 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
@@ -43,6 +46,12 @@ public class BeagleView extends ViewPart {
     final List<ILoggingEvent> loggingEventBuffer = new LinkedList<ILoggingEvent>();
 
     gridTableViewer = new TableViewer(parent);
+    createColumn("Date", 200);
+    createColumn("Message", 200);
+    createColumn("Logger", 200);
+    Table gridTable = gridTableViewer.getTable();
+    gridTable.setHeaderVisible(true);
+    gridTable.setLinesVisible(true);
     gridTableViewer.setLabelProvider(new BeagleLabelProvider());
     gridTableViewer.setContentProvider(new ArrayContentProvider());
     gridTableViewer.setInput(loggingEventBuffer);
@@ -85,6 +94,13 @@ public class BeagleView extends ViewPart {
   public void setFocus() {
     if (gridTableViewer != null)
       gridTableViewer.getControl().setFocus();
+  }
+
+  private void createColumn(String name, int width) {
+    TableColumn column = new TableViewerColumn(gridTableViewer, SWT.NONE)
+        .getColumn();
+    column.setText(name);
+    column.setWidth(width);
   }
 
 }

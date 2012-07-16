@@ -8,9 +8,13 @@
  */
 package ch.qos.logback.beagle.views;
 
+import java.util.Date;
+
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+
+import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * @author Christian Trutz
@@ -20,7 +24,20 @@ public class BeagleLabelProvider extends LabelProvider implements
 
   @Override
   public String getColumnText(Object element, int columnIndex) {
-    return super.getText(element);
+    if (element instanceof ILoggingEvent) {
+      ILoggingEvent event = (ILoggingEvent) element;
+      switch (columnIndex) {
+      case 0:
+        return new Date(event.getTimeStamp()).toString();
+      case 1:
+        return event.getMessage();
+      case 2:
+        return event.getLoggerName();
+      default:
+        return null;
+      }
+    }
+    return null;
   }
 
   @Override
