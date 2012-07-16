@@ -9,14 +9,14 @@
 package ch.qos.logback.beagle.vista;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -30,16 +30,22 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.pattern.Converter;
+import ch.qos.logback.core.pattern.ConverterUtil;
+import ch.qos.logback.core.pattern.parser.Node;
+import ch.qos.logback.core.pattern.parser.Parser;
+import ch.qos.logback.core.pattern.parser.ScanException;
 
 public class TableMediator {
 
   static final int OFFSET_FROM_BUTTOM = -5;
 
-  public Table table;
+  public Grid grid;
   public ClassicTISBuffer classicTISBuffer;
   public BeaglePreferencesChangeListenter preferencesChangeListenter;
   final Composite parent;
-  public final PatternLayout layout = new PatternLayout();
+  public Converter<ILoggingEvent> head;
   private LoggerContext loggerContext = new LoggerContext();
 
   public TableMediator(Composite parent) {
@@ -50,12 +56,12 @@ public class TableMediator {
   private void init() {
     loggerContext.setName("beagle");
 
-    table = new Table(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
+    grid = new Grid(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
 	| SWT.MULTI | SWT.BORDER);
-    table.setFont(ResourceUtil.FONT);
+    grid.setFont(ResourceUtil.FONT);
 
-    int charHeight = MetricsUtil.computeCharHeight(table);
-    int charWidth = MetricsUtil.computeCharWidth(table);
+    int charHeight = MetricsUtil.computeCharHeight(grid);
+    int charWidth = MetricsUtil.computeCharWidth(grid);
 
     FormData formData;
     formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
@@ -91,51 +97,50 @@ public class TableMediator {
     formData.right = new FormAttachment(100, -5);
     formData.bottom = new FormAttachment(toolbar, -5);
 
-    table.setLayoutData(formData);
-    TableColumn tableColumn = new TableColumn(table, SWT.NULL);
+    grid.setLayoutData(formData);
+    GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
     tableColumn.setText("");
     tableColumn.setWidth(100);
     tableColumn.pack();
-    table.setHeaderVisible(false);
-    table.setLinesVisible(false);
+    grid.setHeaderVisible(false);
+    grid.setLinesVisible(false);
 
-    table.addControlListener(new TableControlListener(charWidth));
+    grid.addControlListener(new TableControlListener(charWidth));
 
-    initLayout(layout);
+    head = buildConverters();
     int bufSize = getBufferSize();
-    classicTISBuffer = new ClassicTISBuffer(layout, table, bufSize);
+    classicTISBuffer = new ClassicTISBuffer(head, grid, bufSize);
     classicTISBuffer.diffCue = diffCueLabel;
     classicTISBuffer.jumpCue = jumpCueLabel;
 
-    preferencesChangeListenter = new BeaglePreferencesChangeListenter(layout,
+    preferencesChangeListenter = new BeaglePreferencesChangeListenter(null,
 	classicTISBuffer);
 
     // when the table is cleared visualElementBuffer's handleEvent method will
     // re-populate the item
-    table.addListener(SWT.SetData, classicTISBuffer);
-    table.addDisposeListener(classicTISBuffer);
+    grid.addListener(SWT.SetData, classicTISBuffer);
+    grid.addDisposeListener(classicTISBuffer);
 
     UnfreezeToolItemListener unfreezeButtonListener = new UnfreezeToolItemListener(
 	classicTISBuffer);
     unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
 
     TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
-	table, classicTISBuffer, unfreezeToolItem, unfreezeButtonListener);
-    table.addSelectionListener(tableItemSelectionListener);
+	grid, classicTISBuffer, unfreezeToolItem, unfreezeButtonListener);
+    grid.addSelectionListener(tableItemSelectionListener);
 
     TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
 	classicTISBuffer);
-    table.addMouseMoveListener(myMouseListener);
-    table.addMouseListener(myMouseListener);
-    table.addMouseTrackListener(myMouseListener);
+    grid.addMouseMoveListener(myMouseListener);
+    grid.addMouseListener(myMouseListener);
+    grid.addMouseTrackListener(myMouseListener);
 
-    table
-	.addMouseMoveListener(new TimeDifferenceMouseListener(classicTISBuffer));
+    grid.addMouseMoveListener(new TimeDifferenceMouseListener(classicTISBuffer));
 
     Menu menu = MenuBuilder.buildMenu(classicTISBuffer);
     MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
-    table.setMenu(menu);
-    table.setItemCount(0);
+    grid.setMenu(menu);
+    grid.setItemCount(0);
   }
 
   int getBufferSize() {
@@ -146,17 +151,26 @@ public class TableMediator {
     }
     return result;
   }
-  private void initLayout(PatternLayout layout) {
-    layout.setContext(loggerContext);
+
+  private Converter<ILoggingEvent> buildConverters() {
+
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
-    // the layout should not print exceptions
-    if(!pattern.contains("%nopex")) 
-      pattern += "%nopex";
-    layout.setPattern(pattern);
-    layout.start();
+    Converter<ILoggingEvent> head = null;
+    try {
+      Parser<ILoggingEvent> p = new Parser<ILoggingEvent>(pattern);
+      p.setContext(loggerContext);
+      Node t = p.parse();
+      head = p.compile(t, PatternLayout.defaultConverterMap);
+      ch.qos.logback.beagle.util.ConverterUtil.setContextForConverters(
+	  loggerContext, head);
+      ConverterUtil.startConverters(this.head);
+    } catch (ScanException e) {
+      Activator.INSTANCE.logException(e, e.getMessage());
+    }
+    return head;
   }
 }

@@ -8,19 +8,19 @@
  */
 package ch.qos.logback.beagle.util;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.widgets.Table;
 
 public class MetricsUtil {
 
-  public static int computeCharWidth(Table table) {
+  public static int computeCharWidth(Grid table) {
     GC gc = new GC(table);
     FontMetrics fm = gc.getFontMetrics();
     return fm.getAverageCharWidth();
   }
 
-  public static int computeCharHeight(Table table) {
+  public static int computeCharHeight(Grid table) {
     GC gc = new GC(table);
     FontMetrics fm = gc.getFontMetrics();
     return fm.getHeight();

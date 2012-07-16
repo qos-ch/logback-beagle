@@ -10,10 +10,10 @@ package ch.qos.logback.beagle.vista;
 
 import static ch.qos.logback.beagle.util.ResourceUtil.JUMP_IMG_KEY;
 
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
@@ -22,12 +22,12 @@ import ch.qos.logback.beagle.visual.ITableItemStub;
 
 public class TableItemSelectionListener implements SelectionListener {
 
-  Table table;
+  Grid table;
   ClassicTISBuffer classicTISBuffer;
-  TableItem lastSelection;
+  GridItem lastSelection;
   ToolItem unfreezeButton;
 
-  TableItemSelectionListener(Table table,
+  TableItemSelectionListener(Grid table,
       ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
     this.table = table;
@@ -43,7 +43,9 @@ public class TableItemSelectionListener implements SelectionListener {
 
   @Override
   public void widgetSelected(SelectionEvent e) {
-    TableItem currentlySelectedTI = (TableItem) e.item;
+    GridItem currentlySelectedTI = (GridItem) e.item;
+    if(currentlySelectedTI == null) 
+      return;
     final int indexOfCurrentSel = table.indexOf(currentlySelectedTI);
 
     classicTISBuffer.setActive(false);

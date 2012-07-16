@@ -10,8 +10,8 @@ package ch.qos.logback.beagle.vista;
 
 import java.util.Arrays;
 
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridItem;
 
 import ch.qos.logback.beagle.util.SelectionUtil;
 
@@ -32,13 +32,13 @@ public class SelectionScroller implements Runnable {
     DOWN, UP;
   }
 
-  final Table table;
+  final Grid table;
   int start;
   int end;
   final Direction direction;
   int anchorIndex;
 
-  public SelectionScroller(Table table, int anchorIndex, Direction direction) {
+  public SelectionScroller(Grid table, int anchorIndex, Direction direction) {
 
     this.anchorIndex = anchorIndex;
     this.table = table;
@@ -111,7 +111,7 @@ public class SelectionScroller implements Runnable {
 	targetItemIndex = start;
       }
     }
-    TableItem ti = table.getItem(targetItemIndex);
+    GridItem ti = table.getItem(targetItemIndex);
     table.showItem(ti);
     table.getDisplay().timerExec(DELAY, this);
   }

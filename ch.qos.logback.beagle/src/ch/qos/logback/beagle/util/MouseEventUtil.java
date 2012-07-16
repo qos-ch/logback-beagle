@@ -8,11 +8,11 @@
  */
 package ch.qos.logback.beagle.util;
 
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 
 final public class MouseEventUtil {
 
@@ -24,17 +24,17 @@ final public class MouseEventUtil {
     return ((e.stateMask & SWT.BUTTON1) != 0);
   }
 
-  public static int computeIndex(Table table, MouseEvent e) {
-    TableItem ti = MouseEventUtil.getTableItemForEvent_XFree(table, e);
+  public static int computeIndex(Grid table, MouseEvent e) {
+    GridItem ti = MouseEventUtil.getTableItemForEvent_XFree(table, e);
     if (ti == null) {
       return -1;
     }
     return table.indexOf(ti);
   }
 
-  private static TableItem getTableItemForEvent_XFree(Table table, MouseEvent e) {
+  private static GridItem getTableItemForEvent_XFree(Grid table, MouseEvent e) {
     Point point = new Point(10, e.y);
-    TableItem ti = table.getItem(point);
+    GridItem ti = table.getItem(point);
     return ti;
   }
 }

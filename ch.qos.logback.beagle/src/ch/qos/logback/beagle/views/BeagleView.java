@@ -65,7 +65,7 @@ public class BeagleView extends ViewPart {
     parent.addListener(SWT.Dispose, loggingEventSocketServer);
 
     PlatformUI.getWorkbench().getHelpSystem()
-	.setHelp(tableMediator.table, "ch.qos.logback.beagle.viewer");
+	.setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
   }
 
@@ -74,7 +74,7 @@ public class BeagleView extends ViewPart {
    */
   @Override
   public void setFocus() {
-    tableMediator.table.setFocus();
+    tableMediator.grid.setFocus();
   }
 
   @Override

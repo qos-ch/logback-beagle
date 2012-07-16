@@ -8,12 +8,12 @@
  */
 package ch.qos.logback.beagle.vista;
 
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 /**
  * Reacts to changes in the window size of the table it listens to. This table
@@ -40,7 +40,7 @@ public class TableControlListener implements ControlListener {
 
   @Override
   public void controlResized(ControlEvent e) {
-    Table table = (Table) e.widget;
+    Grid table = (Grid) e.widget;
     adjustTableWidth(table);
   }
 
@@ -49,18 +49,18 @@ public class TableControlListener implements ControlListener {
    * 
    * @param table
    */
-  private void adjustTableWidth(Table table) {
+  private void adjustTableWidth(Grid table) {
     int visibleTableWidth = computeVisibleTableWidth(table);
     int maxItemWidth = computeMaxItemWidth(table);
 
     int targetWidth = Math.max(visibleTableWidth, maxItemWidth);
-    TableColumn tableCol = table.getColumn(0);
+    GridColumn tableCol = table.getColumn(0);
     tableCol.setWidth(targetWidth);
   }
 
-  private int computeMaxItemWidth(Table table) {
+  private int computeMaxItemWidth(Grid table) {
     int maxItemWidth = 0;
-    for (TableItem ti : table.getItems()) {
+    for (GridItem ti : table.getItems()) {
       int itemWidth = ti.getText().length() * charWidth;
       if (maxItemWidth < itemWidth) {
 	maxItemWidth = itemWidth;
@@ -69,7 +69,7 @@ public class TableControlListener implements ControlListener {
     return maxItemWidth;
   }
 
-  private int computeVisibleTableWidth(Table table) {
+  private int computeVisibleTableWidth(Grid table) {
     ScrollBar sb = table.getVerticalBar();
     int targetWidth = table.getSize().x;
 

@@ -15,16 +15,17 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.pattern.Converter;
 
 public class LoggingEventTIS extends TableItemStubBase {
 
 
-  final PatternLayout layout;
+  final Converter<ILoggingEvent> head;
   final ILoggingEvent iLoggingEvent;
   final Color color;
 
-  public LoggingEventTIS(PatternLayout layout, ILoggingEvent event, Color color) {
-    this.layout = layout;
+  public LoggingEventTIS(Converter<ILoggingEvent> head, ILoggingEvent event, Color color) {
+    this.head = head;
     this.iLoggingEvent = event;
     this.color = color;
   }
@@ -51,7 +52,7 @@ public class LoggingEventTIS extends TableItemStubBase {
 
   @Override
   public String getText() {
-    return layout.doLayout(iLoggingEvent);
+    return head.convert(iLoggingEvent);
   }
 
   @Override

@@ -10,6 +10,7 @@ package ch.qos.logback.beagle.menu;
 
 import java.util.Arrays;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -18,7 +19,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.EditorUtil;
@@ -31,7 +31,7 @@ import ch.qos.logback.core.CoreConstants;
 
 public class OnMenuSelectionAction implements SelectionListener {
 
-  final Table table;
+  final Grid table;
   final ClassicTISBuffer classicTISBuffer;
 
   public OnMenuSelectionAction(ClassicTISBuffer classicTISBuffer) {
@@ -125,7 +125,7 @@ public class OnMenuSelectionAction implements SelectionListener {
     }
   }
 
-  String selectionToText(Table t) {
+  String selectionToText(Grid t) {
     StringBuilder buf = new StringBuilder();
     int[] selIndices = table.getSelectionIndices();
     Arrays.sort(selIndices);

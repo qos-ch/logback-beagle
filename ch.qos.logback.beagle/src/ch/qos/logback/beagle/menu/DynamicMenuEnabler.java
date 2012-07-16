@@ -8,11 +8,11 @@
  */
 package ch.qos.logback.beagle.menu;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.MenuListener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.SelectionUtil;
@@ -23,7 +23,7 @@ import ch.qos.logback.beagle.visual.LoggingEventTIS;
 
 public class DynamicMenuEnabler implements MenuListener {
 
-  final Table table;
+  final Grid table;
   final ClassicTISBuffer visualElementBuffer;
 
   public DynamicMenuEnabler(ClassicTISBuffer visualElementBuffer) {

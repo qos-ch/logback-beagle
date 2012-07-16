@@ -8,11 +8,11 @@
  */
 package ch.qos.logback.beagle.vista;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
@@ -22,7 +22,7 @@ import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 public class TableSelectionViaMouseMovements implements MouseListener,
     MouseMoveListener, MouseTrackListener {
 
-  final Table table;
+  final Grid table;
   final ClassicTISBuffer classicTISBuffer;
   int anchorIndex = Constants.NA;
   int lastIndex = Constants.NA;

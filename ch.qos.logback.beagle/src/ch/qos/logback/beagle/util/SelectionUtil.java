@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
@@ -20,7 +21,7 @@ public class SelectionUtil {
 
   final static int[] EMTPY_INT_ARRAY = new int[0];
 
-  public static int getUniqueSelection(Table table) {
+  public static int getUniqueSelection(Grid table) {
     if (table.getSelectionCount() != 1) {
       return Constants.NA;
     } else {
@@ -53,7 +54,7 @@ public class SelectionUtil {
     return result;
   }
 
-  public static void selectRange(Table table, int rangeStart, int rangeEnd) {
+  public static void selectRange(Grid table, int rangeStart, int rangeEnd) {
     int[] currentSelectionIndices = table.getSelectionIndices();
     Arrays.sort(currentSelectionIndices);
 

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -20,13 +22,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.core.pattern.Converter;
 
 public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     Listener, DisposeListener {
@@ -38,8 +39,8 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   int count = 0;
 
-  public final Table table;
-  private final PatternLayout layout;
+  public final Grid table;
+  private final Converter<ILoggingEvent> head;
   
   final Display display;
 
@@ -51,10 +52,10 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   private int bufferSize;
   private int dropSize;
-  public ClassicTISBuffer(PatternLayout layout, Table table, int bufferSize) {
+  public ClassicTISBuffer(Converter<ILoggingEvent> head, Grid table, int bufferSize) {
     this.table = table;    
     this.display = table.getDisplay();
-    this.layout = layout;
+    this.head = head;
     this.bufferSize = bufferSize;
     this.dropSize = bufferSize/10;
   }
@@ -71,7 +72,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     if (event.type != SWT.SetData) {
       throw new IllegalStateException("Unexpected event type " + event.type);
     }
-    TableItem item = (TableItem) event.item;
+    GridItem item = (GridItem) event.item;
 
     int index = event.index;
     // ignore out of bounds requests
@@ -96,7 +97,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     if (count % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    veList.add(new LoggingEventTIS(layout, event, c));
+    veList.add(new LoggingEventTIS(head, event, c));
 
     IThrowableProxy tp = event.getThrowableProxy();
 
@@ -243,14 +244,14 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     System.out.println("***widgetDisposed called");
   }
 
-  public Table getTable() {
+  public Grid getTable() {
     return table;
   }
 
   // ------------------------- ResetTableRunnable class
   private final class ResetTableRunnable implements Runnable {
     public void run() {
-      table.clearAll();
+      table.clearAll(true);
       table.setItemCount(tisList.size());
     }
   }
@@ -259,7 +260,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private final class ResetTablePostContractionRunnable implements Runnable {
     public void run() {
       int topIndex = table.getTopIndex();
-      table.clearAll();
+      table.clearAll(true);
       table.setItemCount(tisList.size());
       table.setTopIndex(topIndex - dropSize);
     }
@@ -278,9 +279,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 	return;
       }
 
-      TableItem ti = null;
+      GridItem ti = null;
       for (ITableItemStub tis : tisList) {
-	ti = new TableItem(table, SWT.NONE);
+	ti = new GridItem(table, SWT.NONE);
 	if (disposed) {
 	  return;
 	}

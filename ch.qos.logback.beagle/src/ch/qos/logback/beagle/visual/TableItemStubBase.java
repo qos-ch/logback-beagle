@@ -9,11 +9,11 @@
 package ch.qos.logback.beagle.visual;
 
 
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.nebula.widgets.grid.GridItem;
 
 abstract public class TableItemStubBase implements ITableItemStub {
 
-  public void populate(TableItem ti) {
+  public void populate(GridItem ti) {
     ti.setText(getText());
     ti.setBackground(this.getBackgroundColor());
     ti.setImage(this.getImage());  

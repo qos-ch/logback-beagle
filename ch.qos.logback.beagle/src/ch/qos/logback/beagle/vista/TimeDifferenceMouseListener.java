@@ -8,10 +8,10 @@
  */
 package ch.qos.logback.beagle.vista;
 
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
@@ -21,7 +21,7 @@ import ch.qos.logback.beagle.visual.LoggingEventTIS;
 
 public class TimeDifferenceMouseListener implements MouseMoveListener {
 
-  final Table table;
+  final Grid table;
   final ClassicTISBuffer visualElementBuffer;
   final Label diffCue;
 
