@@ -8,18 +8,19 @@
  */
 package ch.qos.logback.beagle.views;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
-import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.TableMediator;
+import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * 
@@ -28,8 +29,7 @@ import ch.qos.logback.beagle.vista.TableMediator;
  */
 public class BeagleView extends ViewPart {
 
-  //
-  TableMediator tableMediator;
+  private TableViewer gridTableViewer = null;
 
   /**
    * 
@@ -38,31 +38,43 @@ public class BeagleView extends ViewPart {
   @Override
   public void createPartControl(Composite parent) {
 
-    parent.setLayout(new FormLayout());
+    parent.setLayout(new FillLayout());
 
-    // initialize Beagle table
-    ResourceUtil.init(parent.getDisplay());
-    tableMediator = new TableMediator(parent);
+    final List<ILoggingEvent> loggingEventBuffer = new LinkedList<ILoggingEvent>();
 
-    GridTableViewer gridTableViewer = new GridTableViewer(tableMediator.grid);
+    gridTableViewer = new TableViewer(parent);
     gridTableViewer.setLabelProvider(new BeagleLabelProvider());
     gridTableViewer.setContentProvider(new ArrayContentProvider());
-    gridTableViewer.setInput(tableMediator);
-
-    Activator.INSTANCE.getPreferenceStore().addPropertyChangeListener(
-        tableMediator.preferencesChangeListenter);
+    gridTableViewer.setInput(loggingEventBuffer);
 
     // start Beagle socket server
     LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
-        tableMediator.classicTISBuffer);
+        new ITableItemStubBuffer<ILoggingEvent>() {
+
+          @Override
+          public void add(List<ILoggingEvent> eventList) {
+            loggingEventBuffer.addAll(eventList);
+            gridTableViewer.getControl().getDisplay().asyncExec(new Runnable() {
+
+              @Override
+              public void run() {
+                gridTableViewer.setInput(loggingEventBuffer);
+              }
+            });
+          }
+
+          @Override
+          public void add(ILoggingEvent event) {
+            LinkedList<ILoggingEvent> tmpList = new LinkedList<ILoggingEvent>();
+            tmpList.add(event);
+            this.add(tmpList);
+          }
+        });
     Thread serverThread = new Thread(loggingEventSocketServer);
     serverThread.start();
 
     // stop Beagle socket server, if user dispose the view
     parent.addListener(SWT.Dispose, loggingEventSocketServer);
-
-    PlatformUI.getWorkbench().getHelpSystem()
-        .setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
   }
 
@@ -71,13 +83,8 @@ public class BeagleView extends ViewPart {
    */
   @Override
   public void setFocus() {
-    tableMediator.grid.setFocus();
+    if (gridTableViewer != null)
+      gridTableViewer.getControl().setFocus();
   }
 
-  @Override
-  public void dispose() {
-    super.dispose();
-    Activator.INSTANCE.getPreferenceStore().removePropertyChangeListener(
-        tableMediator.preferencesChangeListenter);
-  }
 }
