@@ -24,7 +24,8 @@ public class LoggingEventBuilder {
 
   static LoggerContext Logger_Context = new LoggerContext();
   static Logger LOGGER = Logger_Context.getLogger("xx");
-
+  static String LONG_TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum lectus augue, pulvinar quis cursus nec, imperdiet nec ante. Cras sit amet arcu et enim adipiscing pellentesque. Suspendisse mi felis, dictum a lobortis nec, placerat in diam. Proin lobortis tortor at nunc facilisis aliquet. Praesent eget dignissim orci. Ut iaculis bibendum.";
+	
   int count = 0;
 
   CorpusModel corpusModel;
@@ -50,7 +51,10 @@ public class LoggingEventBuilder {
   private void shape() {
     for (int i = 0; i < internalBuffer.length; i++) {
       PubLoggingEventVO le = (PubLoggingEventVO) internalBuffer[i];
-      le.message = "msg " + count;
+      if(i % 20 == 0) 
+    	  le.message = LONG_TEXT;
+    	  else
+    	  le.message = "msg " + count;
       count++;
     }
   }

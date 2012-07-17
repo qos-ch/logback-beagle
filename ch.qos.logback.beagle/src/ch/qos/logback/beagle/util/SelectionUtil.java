@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.nebula.widgets.grid.Grid;
-import org.eclipse.swt.widgets.Table;
 
 import ch.qos.logback.beagle.Constants;
 

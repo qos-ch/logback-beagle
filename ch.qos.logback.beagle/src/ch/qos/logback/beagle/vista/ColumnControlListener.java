@@ -9,8 +9,6 @@ import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
 
 public class ColumnControlListener implements ControlListener {
-
-  
   
   final String columnName;
   ColumnControlListener(String columnName) {
@@ -25,13 +23,9 @@ public class ColumnControlListener implements ControlListener {
 
   @Override
   public void controlResized(ControlEvent e) {
-    
     GridColumn column = (GridColumn) e.widget;
-    System.out.println("ColumnControlListener new col width for "+columnName+" "+column.getWidth());
-    
+    //System.out.println("ColumnControlListener new col width for "+columnName+" "+column.getWidth());
     saveColumnSize(column.getWidth());
-    
-    
   }
 
   private void saveColumnSize(int width) {

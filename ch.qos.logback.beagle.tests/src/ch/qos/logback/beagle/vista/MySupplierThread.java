@@ -9,59 +9,56 @@
 package ch.qos.logback.beagle.vista;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.LoggingEventBuilder;
-import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
 public class MySupplierThread extends Thread implements Listener {
 
-  ITableItemStubBuffer<ILoggingEvent> tisBuffer;
-  List<ILoggingEvent> internalList = new ArrayList<ILoggingEvent>();
-  boolean disposed = false;
 
-  public MySupplierThread(ITableItemStubBuffer<ILoggingEvent> tisBuffer) {
-    this.tisBuffer = tisBuffer;
-  }
+	final BlockingQueue<ILoggingEvent> blockingQueue;
+	boolean disposed = false;
 
-  public void run() {
+	public MySupplierThread(BlockingQueue<ILoggingEvent> blockingQueue) {
+		this.blockingQueue = blockingQueue;
+	}
 
-    LoggingEventBuilder leb = null;
-    try {
-      leb = new LoggingEventBuilder();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    while (!disposed) {
-      try {
-	Thread.sleep(100);
-      } catch (InterruptedException e1) {
-      }
-      // bursts of 2
-      int burstSize = 2;
-      for (int i = 0; i < burstSize; i++) {
-	ILoggingEvent le = null;
-	le = leb.buildLoggingEvent();
-	internalList.add(le);
-      }
-      externalSync();
-    }
-    System.out.println("exiting MySupplierThread");
-  }
+	public void run() {
 
-  void externalSync() {
-    tisBuffer.add(internalList);
-    internalList.clear();
-  }
+		LoggingEventBuilder leb = null;
+		try {
+			leb = new LoggingEventBuilder();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		while (!disposed) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e1) {
+			}
+			// bursts of 2
+			int burstSize = 2;
+			for (int i = 0; i < burstSize; i++) {
+				ILoggingEvent le = null;
+				le = leb.buildLoggingEvent();
+				try {
+					blockingQueue.put(le);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("exiting MySupplierThread");
+	}
 
-  @Override
-  public void handleEvent(Event event) {
-    disposed = true;
-    System.out.println("dispose event occured");
-  }
+	@Override
+	public void handleEvent(Event event) {
+		disposed = true;
+		System.out.println("dispose event occured");
+	}
 }

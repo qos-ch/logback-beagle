@@ -27,7 +27,7 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
 
   public static final String PATTERN_PREFERENCE = "ch.qos.logback.beagle.Pattern"; 
-  public static final String PATTERN_PREFERENCE_DEFAULT_VALUE = "%date %-5level [%-24thread] %-48logger{48} - %message";
+  public static final String PATTERN_PREFERENCE_DEFAULT_VALUE = "%date %-5level %([%-24thread] %-48logger{48}) - %message";
 
   public static final String BUFFER_SIZE_PREFERENCE = "ch.qos.logback.beagle.BufferSize"; 
   public static final int BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE  = 20000;

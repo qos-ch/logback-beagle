@@ -9,7 +9,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <logback.version>1.0.6</logback.version>
+    <logback.version>1.0.7-SNAPSHOT</logback.version>
     <tycho-version>0.15.0</tycho-version>
   </properties>
 

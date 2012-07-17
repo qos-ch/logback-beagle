@@ -22,7 +22,7 @@ import ch.qos.logback.beagle.visual.ITableItemStub;
 
 public class TableItemSelectionListener implements SelectionListener {
 
-  Grid table;
+  Grid grid;
   ClassicTISBuffer classicTISBuffer;
   GridItem lastSelection;
   ToolItem unfreezeButton;
@@ -30,7 +30,7 @@ public class TableItemSelectionListener implements SelectionListener {
   TableItemSelectionListener(Grid table,
       ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
-    this.table = table;
+    this.grid = table;
     this.classicTISBuffer = visualElementBuffer;
     this.unfreezeButton = unfreezeButton;
   }
@@ -46,15 +46,19 @@ public class TableItemSelectionListener implements SelectionListener {
     GridItem currentlySelectedTI = (GridItem) e.item;
     if(currentlySelectedTI == null) 
       return;
-    final int indexOfCurrentSel = table.indexOf(currentlySelectedTI);
-
+    final int indexOfCurrentSel = grid.indexOf(currentlySelectedTI);
+    
     classicTISBuffer.setActive(false);
     unfreezeButton.setEnabled(true);
     lastSelection = currentlySelectedTI;
 
     classicTISBuffer.clearCues();
-    ITableItemStub visualElem = classicTISBuffer.get(indexOfCurrentSel);
-    if (visualElem.supportsJump() && table.getSelectionCount() == 1) {
+    ITableItemStub iTableItemStub = classicTISBuffer.get(indexOfCurrentSel);
+    if(iTableItemStub == null)
+      return;
+    System.out.println("iTableItemStub:"+iTableItemStub.getText());
+    
+    if (iTableItemStub.supportsJump() && grid.getSelectionCount() == 1) {
       classicTISBuffer.jumpCue.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
     }
   }

@@ -2,7 +2,7 @@
 <feature
       id="ch.qos.logback.feature"
       label="Logback Feature"
-      version="1.0.6.qualifier">
+      version="1.0.7.qualifier">
 
    <description url="http://logback.qos.ch">
       This feature includes plugins for logback-core.jar and logback-classic.jar.

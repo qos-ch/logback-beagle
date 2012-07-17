@@ -31,7 +31,8 @@ public class LoggingEventSocketServer implements Runnable, Listener {
   final ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer;
   List<LoggingEventSocketReader> socketReaderList = new ArrayList<LoggingEventSocketReader>();
 
-  public LoggingEventSocketServer(ITableItemStubBuffer<ILoggingEvent> classicTISBuffer) {
+  public LoggingEventSocketServer(
+      ITableItemStubBuffer<ILoggingEvent> classicTISBuffer) {
     this.iTableItemStubBuffer = classicTISBuffer;
   }
 
@@ -52,8 +53,11 @@ public class LoggingEventSocketServer implements Runnable, Listener {
       serverSocket = new ServerSocket(port);
       while (!stop) {
 	Socket socket = serverSocket.accept();
-	LoggingEventSocketReader lesr = new LoggingEventSocketReader(socket,
+	EventConsumerThread eventConsumerThread = new EventConsumerThread(
 	    iTableItemStubBuffer);
+	eventConsumerThread.start();
+	LoggingEventSocketReader lesr = new LoggingEventSocketReader(socket,
+	    eventConsumerThread.getBlockingQueue());
 	socketReaderList.add(lesr);
 	new Thread(lesr).start();
       }
@@ -75,8 +79,8 @@ public class LoggingEventSocketServer implements Runnable, Listener {
   }
 
   /**
-    * Stop this thread as well as any child threads. 
-    */
+   * Stop this thread as well as any child threads.
+   */
   public void stop() {
     try {
       if (serverSocket != null)
@@ -91,8 +95,8 @@ public class LoggingEventSocketServer implements Runnable, Listener {
 
   @Override
   public void handleEvent(Event event) {
-    //System.out
-	//.println("LoggingEventSocketServer dispose event occured. Stopping");
+    // System.out
+    // .println("LoggingEventSocketServer dispose event occured. Stopping");
     stop();
   }
 

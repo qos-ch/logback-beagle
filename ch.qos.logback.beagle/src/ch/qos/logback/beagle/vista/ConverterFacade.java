@@ -10,6 +10,7 @@ import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Context;
+import ch.qos.logback.core.pattern.CompositeConverter;
 import ch.qos.logback.core.pattern.Converter;
 import ch.qos.logback.core.pattern.ConverterUtil;
 import ch.qos.logback.core.pattern.LiteralConverter;
@@ -17,13 +18,12 @@ import ch.qos.logback.core.pattern.parser.Node;
 import ch.qos.logback.core.pattern.parser.Parser;
 import ch.qos.logback.core.pattern.parser.ScanException;
 
-public class ConverterFacade  {
+public class ConverterFacade {
 
   String pattern;
-  private Converter<ILoggingEvent>  head;
+  private Converter<ILoggingEvent> head;
   Context context;
   List<Converter<ILoggingEvent>> converterList = new ArrayList<Converter<ILoggingEvent>>();
-
 
   public void start() {
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
@@ -36,21 +36,18 @@ public class ConverterFacade  {
       p.setContext(context);
       Node t = p.parse();
       head = p.compile(t, PatternLayout.defaultConverterMap);
-      ch.qos.logback.beagle.util.ConverterUtil.setContextForConverters(
-	  context, head);
+      ch.qos.logback.beagle.util.ConverterUtil.setContextForConverters(context,
+	  head);
       ConverterUtil.startConverters(head);
       fillConverterList();
     } catch (ScanException e) {
       Activator.INSTANCE.logException(e, e.getMessage());
     }
   }
-  
-
 
   public List<Converter<ILoggingEvent>> getConverterList() {
     return converterList;
   }
-
 
   public int getColumnCount() {
     return converterList.size();
@@ -60,18 +57,15 @@ public class ConverterFacade  {
     this.converterList = converterList;
   }
 
-
-
   private void fillConverterList() {
     Converter<ILoggingEvent> c = head;
-    while(c != null) {
-      if(!(c instanceof LiteralConverter)) {
+    while (c != null) {
+      if (!(c instanceof LiteralConverter)) {
 	converterList.add(c);
       }
       c = c.getNext();
     }
   }
-
 
   public String getPattern() {
     return pattern;
@@ -80,16 +74,37 @@ public class ConverterFacade  {
   public void setPattern(String pattern) {
     this.pattern = pattern;
   }
-  
+
   public Context getContext() {
     return context;
   }
 
   public void setContext(Context context) {
     this.context = context;
-  }  
-  
+  }
+
   String computeConverterName(Converter<ILoggingEvent> c) {
+    if (c instanceof CompositeConverter) {
+      return computeCompositeConverterName((CompositeConverter<ILoggingEvent>) c);
+    } else {
+      return computeSimpleConverterName(c);
+    }
+
+  }
+
+  private String computeCompositeConverterName(
+      CompositeConverter<ILoggingEvent> compositeConverter) {
+    StringBuilder nameSB = new StringBuilder("composite");
+    Converter<ILoggingEvent> child = compositeConverter.getChildConverter();
+    while (child != null) {
+      if (!(child instanceof LiteralConverter))
+	nameSB.append('_').append(computeSimpleConverterName(child));
+      child = child.getNext();
+    }
+    return nameSB.toString();
+  }
+
+  private String computeSimpleConverterName(Converter<ILoggingEvent> c) {
     String className = c.getClass().getSimpleName();
     int index = className.indexOf("Converter");
     if (index == -1) {

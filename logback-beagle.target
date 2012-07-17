@@ -17,7 +17,7 @@
       <unit id="ch.qos.logback.core" version="0.0.0"/>
       <unit id="ch.qos.logback.classic" version="0.0.0"/>
       <unit id="slf4j.api" version="0.0.0"/>
-      <repository location="http://logback.qos.ch/p2/proper/"/>
+      <repository location="http://logback.qos.ch/p2/proper-nightly/"/>
     </location>
     
     <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">

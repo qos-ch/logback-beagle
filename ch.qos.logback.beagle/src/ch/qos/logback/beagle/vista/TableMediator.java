@@ -30,6 +30,7 @@ import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.pattern.MessageConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.Converter;
 
@@ -94,12 +95,9 @@ public class TableMediator {
     formData.bottom = new FormAttachment(toolbar, -5);
 
     grid.setLayoutData(formData);
-    // GridColumn tableColumn = new GridColumn(grid, SWT.NULL);
-    // tableColumn.setText("");
-    // tableColumn.setWidth(100);
-    // tableColumn.pack();
     grid.setHeaderVisible(true);
     grid.setLinesVisible(false);
+    grid.setAutoHeight(true);
 
     grid.addControlListener(new TableControlListener(charWidth));
 
@@ -148,10 +146,13 @@ public class TableMediator {
     for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
       GridColumn column = new GridColumn(grid, SWT.NONE);
       String columnName = converterFacade.computeConverterName(c);
-
       column.setText(columnName);
       column.setWidth(getColumnSizeDialogSetting(columnName, 100));
       column.addControlListener(new ColumnControlListener(columnName));
+
+      if (c instanceof MessageConverter) {
+	column.setWordWrap(true);
+      }
     }
   }
 
@@ -169,9 +170,9 @@ public class TableMediator {
       return defaultValue;
     IDialogSettings dialogSettings = Activator.INSTANCE.getDialogSettings();
     try {
-      int val =  dialogSettings.getInt(Constants.COLUMN_SIZE_DIALOG_SETTINGS_PREFIX
-	  + columnName);
-      System.out.println("width for "+columnName+": "+val);
+      int val = dialogSettings
+	  .getInt(Constants.COLUMN_SIZE_DIALOG_SETTINGS_PREFIX + columnName);
+      System.out.println("width for " + columnName + ": " + val);
       return val;
     } catch (NumberFormatException e) {
       return defaultValue;

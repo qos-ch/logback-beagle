@@ -24,8 +24,7 @@ public class LoggingEventTIS implements ITableItemStub {
   final ILoggingEvent iLoggingEvent;
   final Color color;
 
-  public LoggingEventTIS(ConverterFacade head, ILoggingEvent event,
-      Color color) {
+  public LoggingEventTIS(ConverterFacade head, ILoggingEvent event, Color color) {
     this.converterFacade = head;
     this.iLoggingEvent = event;
     this.color = color;
@@ -43,7 +42,7 @@ public class LoggingEventTIS implements ITableItemStub {
   public void populate(GridItem gridItem) {
     gridItem.setImage(0, getImage());
     int i = 1;
-    for(Converter<ILoggingEvent> c: converterFacade.getConverterList()) {
+    for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
       gridItem.setText(i, c.convert(iLoggingEvent));
       gridItem.setBackground(i, getBackgroundColor());
       i++;
