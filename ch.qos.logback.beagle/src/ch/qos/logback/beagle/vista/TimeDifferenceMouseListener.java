@@ -27,7 +27,7 @@ public class TimeDifferenceMouseListener implements MouseMoveListener {
 
   TimeDifferenceMouseListener(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
-    this.table = visualElementBuffer.table;
+    this.table = visualElementBuffer.grid;
     this.diffCue = visualElementBuffer.diffCue;
   }
 

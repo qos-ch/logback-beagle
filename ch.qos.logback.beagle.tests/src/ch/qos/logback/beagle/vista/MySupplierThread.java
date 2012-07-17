@@ -19,10 +19,10 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 
 public class MySupplierThread extends Thread implements Listener {
 
-
 	final BlockingQueue<ILoggingEvent> blockingQueue;
 	boolean disposed = false;
-
+	static int LIMIT = 10000;
+	
 	public MySupplierThread(BlockingQueue<ILoggingEvent> blockingQueue) {
 		this.blockingQueue = blockingQueue;
 	}
@@ -35,7 +35,8 @@ public class MySupplierThread extends Thread implements Listener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		while (!disposed) {
+		int count = 0;
+		while (!disposed && count++ < LIMIT) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e1) {

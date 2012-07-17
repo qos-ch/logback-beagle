@@ -38,35 +38,34 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   int count = 0;
 
-  public final Grid table;
+  public final Grid grid;
   private final ConverterFacade converterFacade;
-  
+
   final Display display;
 
   boolean active = true;
   volatile boolean disposed = false;
 
   public Label diffCue;
-  public Label jumpCue;
 
   private int bufferSize;
   private int dropSize;
+
   public ClassicTISBuffer(ConverterFacade head, Grid table, int bufferSize) {
-    this.table = table;    
+    this.grid = table;
     this.display = table.getDisplay();
     this.converterFacade = head;
     this.bufferSize = bufferSize;
-    this.dropSize = bufferSize/10;
+    this.dropSize = bufferSize / 10;
   }
-  
-  
+
   public ConverterFacade getConverterFacade() {
     return converterFacade;
   }
-  
+
   public void setBufferSize(int size) {
     this.bufferSize = size;
-    this.dropSize = Math.min(1024, bufferSize/10);
+    this.dropSize = Math.min(1024, bufferSize / 10);
   }
 
   /**
@@ -90,10 +89,10 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   /**
    * Convert an ILoggingEvent to a list of IVisualElement.
    * 
-   * @param veList
+   * @param tisList
    * @param event
    */
-  private void loggingEventToVisualElement(List<ITableItemStub> veList,
+  private void loggingEventToVisualElement(List<ITableItemStub> tisList,
       ILoggingEvent event) {
 
     count++;
@@ -101,20 +100,20 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     if (count % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    veList.add(new LoggingEventTIS(converterFacade, event, c));
+    tisList.add(new LoggingEventTIS(converterFacade, event, c));
 
     IThrowableProxy tp = event.getThrowableProxy();
 
     while (tp != null) {
       IThrowableProxy itp = event.getThrowableProxy();
-      veList.add(new ThrowableProxyTIS(converterFacade, itp,
+      tisList.add(new ThrowableProxyTIS(converterFacade, itp,
 	  ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-	veList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
+	tisList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-	veList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
+	tisList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
@@ -160,7 +159,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   public void add(final CallerDataTIS cdVisualElement, int index) {
     tisList.add(index, cdVisualElement);
-   resetTable();
+    resetTable();
   }
 
   /**
@@ -173,30 +172,16 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     for (ILoggingEvent iLoggingEvent : loggingEventList) {
       loggingEventToVisualElement(visualElementList, iLoggingEvent);
     }
-    addVisualElementInChunks(visualElementList);
+    addVisualElements(visualElementList);
   }
 
   public void add(final ILoggingEvent iLoggingEvent) {
     List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
     loggingEventToVisualElement(visualElementList, iLoggingEvent);
-    addVisualElementInChunks(visualElementList);
+    addVisualElements(visualElementList);
   }
 
-  private void addVisualElementInChunks(final List<ITableItemStub> veList) {
-    int maxChunk = dropSize / 5;
-    int rangeStart = 0;
-    int size = veList.size();
-    while (rangeStart < size) {
-      int rangeEnd = rangeStart + maxChunk;
-      if (rangeEnd > size) {
-	rangeEnd = size;
-      }
-      addVisualElement(veList.subList(rangeStart, rangeEnd));
-      rangeStart = rangeEnd;
-    }
-  }
-
-  private void addVisualElement(final List<ITableItemStub> veList) {
+  private void addVisualElements(final List<ITableItemStub> veList) {
     if (disposed) {
       return;
     }
@@ -230,7 +215,6 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   public void clearCues() {
     diffCue.setText("");
-    jumpCue.setImage(null);
   }
 
   public ITableItemStub get(int index) {
@@ -247,24 +231,28 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   public Grid getTable() {
-    return table;
+    return grid;
   }
 
   // ------------------------- ResetTableRunnable class
   private final class ResetTableRunnable implements Runnable {
     public void run() {
-      table.clearAll(true);
-      table.setItemCount(tisList.size());
+      grid.clearAll(true);
+      grid.setItemCount(tisList.size());
     }
   }
 
   // ------------------------- ResetTablePostContractionRunnable class
   private final class ResetTablePostContractionRunnable implements Runnable {
     public void run() {
-      int topIndex = table.getTopIndex();
-      table.clearAll(true);
-      table.setItemCount(tisList.size());
-      table.setTopIndex(topIndex - dropSize);
+      int topIndex = grid.getTopIndex();
+      
+      grid.remove(0, dropSize-1);
+      
+      if(grid.getItemCount() != tisList.size()) 
+	System.out.println("size mismatch gridSize="+grid.getItemCount()+" tisListSize"+ tisList.size());
+      //grid.clearAll(true);
+      grid.setTopIndex(topIndex - dropSize);
     }
   }
 
@@ -283,7 +271,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
       GridItem ti = null;
       for (ITableItemStub tis : tisList) {
-	ti = new GridItem(table, SWT.NONE);
+	ti = new GridItem(grid, SWT.NONE);
 	if (disposed) {
 	  return;
 	}
@@ -291,7 +279,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
       }
 
       if (isActive() && ti != null) {
-	table.showItem(ti);
+	grid.showItem(ti);
       }
     }
   }

@@ -30,7 +30,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   TableSelectionViaMouseMovements(ClassicTISBuffer classicTISBuffer) {
     this.classicTISBuffer = classicTISBuffer;
-    this.table = classicTISBuffer.table;
+    this.table = classicTISBuffer.grid;
   }
 
   @Override

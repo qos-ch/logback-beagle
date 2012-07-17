@@ -8,17 +8,13 @@
  */
 package ch.qos.logback.beagle.vista;
 
-import static ch.qos.logback.beagle.util.ResourceUtil.JUMP_IMG_KEY;
-
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.ToolItem;
 
-import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
-import ch.qos.logback.beagle.visual.ITableItemStub;
 
 public class TableItemSelectionListener implements SelectionListener {
 
@@ -37,8 +33,6 @@ public class TableItemSelectionListener implements SelectionListener {
 
   @Override
   public void widgetDefaultSelected(SelectionEvent e) {
-    //System.out.println("MySelectionListener.widgetDefaultSelected called with "
-	//+ e);
   }
 
   @Override
@@ -46,20 +40,11 @@ public class TableItemSelectionListener implements SelectionListener {
     GridItem currentlySelectedTI = (GridItem) e.item;
     if(currentlySelectedTI == null) 
       return;
-    final int indexOfCurrentSel = grid.indexOf(currentlySelectedTI);
     
     classicTISBuffer.setActive(false);
     unfreezeButton.setEnabled(true);
     lastSelection = currentlySelectedTI;
-
     classicTISBuffer.clearCues();
-    ITableItemStub iTableItemStub = classicTISBuffer.get(indexOfCurrentSel);
-    if(iTableItemStub == null)
-      return;
-    System.out.println("iTableItemStub:"+iTableItemStub.getText());
     
-    if (iTableItemStub.supportsJump() && grid.getSelectionCount() == 1) {
-      classicTISBuffer.jumpCue.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
-    }
   }
 }

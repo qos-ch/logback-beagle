@@ -62,17 +62,14 @@ public class TableMediator {
 
     FormData formData;
     formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
-    Label jumpCueLabel = new Label(parent, SWT.LEFT);
     formData.left = new FormAttachment(0, charWidth);
     formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
-    jumpCueLabel.setLayoutData(formData);
 
     formData = new FormData(30 * charWidth, charHeight);
     Label diffCueLabel = new Label(parent, SWT.LEFT);
-    formData.left = new FormAttachment(jumpCueLabel, charWidth);
     formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
     diffCueLabel.setLayoutData(formData);
-    diffCueLabel.setText("xxxxxxxxxxxxx");
+    diffCueLabel.setText("");
 
     ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
     formData = new FormData();
@@ -104,15 +101,14 @@ public class TableMediator {
     initConverterFacade();
     createColumns(grid);
     grid.pack();
-    int bufSize = getBufferSize();
+    int bufSize = getPreferredBufferSize();
     classicTISBuffer = new ClassicTISBuffer(converterFacade, grid, bufSize);
     classicTISBuffer.diffCue = diffCueLabel;
-    classicTISBuffer.jumpCue = jumpCueLabel;
-
+    
     preferencesChangeListenter = new BeaglePreferencesChangeListenter(
 	converterFacade, classicTISBuffer);
 
-    // when the table is cleared visualElementBuffer's handleEvent method will
+    // when the table is cleared classicTISBuffer's handleEvent method will
     // re-populate the item
     grid.addListener(SWT.SetData, classicTISBuffer);
     grid.addDisposeListener(classicTISBuffer);
@@ -156,7 +152,7 @@ public class TableMediator {
     }
   }
 
-  int getBufferSize() {
+  int getPreferredBufferSize() {
     int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
@@ -186,9 +182,6 @@ public class TableMediator {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
       pattern = pStore.getString(BeaglePreferencesPage.PATTERN_PREFERENCE);
     }
-    // the layout should not print exceptions
-    if (!pattern.contains("%nopex"))
-      pattern += "%nopex";
     converterFacade.setPattern(pattern);
     converterFacade.start();
   }
