@@ -127,8 +127,8 @@ public class OnMenuSelectionAction implements SelectionListener {
     int[] selIndices = grid.getSelectionIndices();
     Arrays.sort(selIndices);
     for (int index : selIndices) {
-      ITableItemStub ve = classicTISBuffer.get(index);
-      buf.append(ve.getText());
+      ITableItemStub iTableItemStub = classicTISBuffer.get(index);
+      buf.append(iTableItemStub.getText());
       buf.append(CoreConstants.LINE_SEPARATOR);
     }
     return buf.toString();

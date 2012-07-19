@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.ConverterFacade;
+import ch.qos.logback.beagle.view.ConverterFacade;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 
@@ -51,9 +51,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private int bufferSize;
   private int dropSize;
 
-  public ClassicTISBuffer(ConverterFacade head, Grid table, int bufferSize) {
-    this.grid = table;
-    this.display = table.getDisplay();
+  public ClassicTISBuffer(ConverterFacade head, Grid grid, int bufferSize) {
+    this.grid = grid;
+    this.display = grid.getDisplay();
     this.converterFacade = head;
     this.bufferSize = bufferSize;
     this.dropSize = computeDropSize(bufferSize);
@@ -248,7 +248,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     return scrollingEnabled;
   }
 
-  public void setSCrollingEnabled(boolean scrollingEnabled) {
+  public void setScrollingEnabled(boolean scrollingEnabled) {
     this.scrollingEnabled = scrollingEnabled;
   }
 

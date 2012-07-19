@@ -11,7 +11,7 @@ package ch.qos.logback.beagle.preferences;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
-import ch.qos.logback.beagle.vista.TableMediator;
+import ch.qos.logback.beagle.view.TableMediator;
 
 /**
  * This IPropertyChangeListener reacts to preference changes and updates BeagleView accordingly. 

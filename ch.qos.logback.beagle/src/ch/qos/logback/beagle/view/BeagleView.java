@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.views;
+package ch.qos.logback.beagle.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormLayout;
@@ -17,7 +17,6 @@ import org.eclipse.ui.part.ViewPart;
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.TableMediator;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view

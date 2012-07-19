@@ -13,7 +13,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.ConverterFacade;
+import ch.qos.logback.beagle.view.ConverterFacade;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.Converter;
@@ -62,7 +62,7 @@ public class LoggingEventTIS implements ITableItemStub {
 
   @Override
   public String getText() {
-    return converterFacade.getConverterList().get(0).convert(iLoggingEvent);
+    return converterFacade.convert(iLoggingEvent);
   }
 
   @Override

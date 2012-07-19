@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -29,7 +29,7 @@ public class TableControlListener implements ControlListener {
 
   final int charWidth;
 
-  TableControlListener(int charWidth) {
+  public TableControlListener(int charWidth) {
     this.charWidth = charWidth;
   }
 

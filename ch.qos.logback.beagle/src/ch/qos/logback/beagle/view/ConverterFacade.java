@@ -1,4 +1,4 @@
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +46,16 @@ public class ConverterFacade {
     }
   }
 
+  public String convert(ILoggingEvent event) {
+    StringBuilder sb = new StringBuilder();
+    Converter<ILoggingEvent> c = head;
+    while (c != null) {
+      sb.append(c.convert(event));
+      c = c.getNext();
+    }
+    return sb.toString();
+  }
+  
   public List<Converter<ILoggingEvent>> getConverterList() {
     return converterList;
   }

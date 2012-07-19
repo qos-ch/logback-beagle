@@ -5,8 +5,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
-import ch.qos.logback.beagle.views.BeagleView;
-import ch.qos.logback.beagle.vista.TableMediator;
+import ch.qos.logback.beagle.view.TableMediator;
+import ch.qos.logback.beagle.view.BeagleView;
 
 public class ViewClearActionDelegate implements IViewActionDelegate {
 

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ch.qos.logback.beagle.net.EventConsumerThread;
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.view.TableMediator;
 
 public class MyMain {
 

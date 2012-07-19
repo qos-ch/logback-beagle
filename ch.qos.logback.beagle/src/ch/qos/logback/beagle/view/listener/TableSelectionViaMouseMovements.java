@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MouseEvent;
@@ -17,6 +17,7 @@ import org.eclipse.swt.events.MouseTrackListener;
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
 import ch.qos.logback.beagle.util.SelectionUtil;
+import ch.qos.logback.beagle.view.SelectionScroller;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class TableSelectionViaMouseMovements implements MouseListener,
@@ -28,7 +29,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
   int lastIndex = Constants.NA;
   SelectionScroller scroller;
 
-  TableSelectionViaMouseMovements(ClassicTISBuffer classicTISBuffer) {
+  public TableSelectionViaMouseMovements(ClassicTISBuffer classicTISBuffer) {
     this.classicTISBuffer = classicTISBuffer;
     this.table = classicTISBuffer.grid;
   }
@@ -42,7 +43,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     if(currentSelectionIndices.length == 1) {
       if(currentSelectionIndices[0] == clickedIndex) {
 	  System.out.println("********* unlocked scroll");
-	 classicTISBuffer.setSCrollingEnabled(true);
+	 classicTISBuffer.setScrollingEnabled(true);
 	 // TODO disable the scroll toolitem
       }
     }
@@ -112,7 +113,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   @Override
   public void mouseExit(MouseEvent e) {
-    //MouseEventUtil.dump("************** mouseExit event ***********", e);
+     //MouseEventUtil.dump("************** mouseExit event ***********", e);
 
     if (MouseEventUtil.isButtonHeldDown(e)) {
       if (scroller != null) {

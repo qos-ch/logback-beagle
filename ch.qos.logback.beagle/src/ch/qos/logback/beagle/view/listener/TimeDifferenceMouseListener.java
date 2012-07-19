@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MouseEvent;
@@ -25,7 +25,7 @@ public class TimeDifferenceMouseListener implements MouseMoveListener {
   final ClassicTISBuffer visualElementBuffer;
   final Label diffCue;
 
-  TimeDifferenceMouseListener(ClassicTISBuffer visualElementBuffer) {
+  public TimeDifferenceMouseListener(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
     this.table = visualElementBuffer.grid;
     this.diffCue = visualElementBuffer.diffCue;

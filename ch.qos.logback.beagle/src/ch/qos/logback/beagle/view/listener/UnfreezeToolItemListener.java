@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -18,7 +18,7 @@ public class UnfreezeToolItemListener implements SelectionListener {
 
   final ClassicTISBuffer classicTISBuffer;
 
-  UnfreezeToolItemListener(ClassicTISBuffer classicTISBuffer) {
+  public UnfreezeToolItemListener(ClassicTISBuffer classicTISBuffer) {
     this.classicTISBuffer = classicTISBuffer;
   }
 
@@ -27,7 +27,7 @@ public class UnfreezeToolItemListener implements SelectionListener {
     ToolItem toolItem = (ToolItem) event.widget;
     toolItem.setEnabled(false);
     classicTISBuffer.grid.deselectAll();
-    classicTISBuffer.setSCrollingEnabled(true);
+    classicTISBuffer.setScrollingEnabled(true);
     classicTISBuffer.clearCues();
   }
 

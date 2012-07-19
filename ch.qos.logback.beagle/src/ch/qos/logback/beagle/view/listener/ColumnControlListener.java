@@ -1,4 +1,4 @@
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -11,7 +11,7 @@ import ch.qos.logback.beagle.Constants;
 public class ColumnControlListener implements ControlListener {
   
   final String columnName;
-  ColumnControlListener(String columnName) {
+  public ColumnControlListener(String columnName) {
     this.columnName = columnName;
   }
   

@@ -11,8 +11,8 @@
     <view name="Beagle"
           icon="icons/ch/qos/logback/beagle/icons/sailing-ship-16x16.png"
           category="ch.qos.logback.beagle"
-          class="ch.qos.logback.beagle.views.BeagleView"
-          id="ch.qos.logback.beagle.views.BeagleView">
+          class="ch.qos.logback.beagle.view.BeagleView"
+          id="ch.qos.logback.beagle.view.BeagleView">
     </view>
   </extension>
   <extension point="org.eclipse.ui.perspectiveExtensions">
@@ -21,7 +21,7 @@
       <view ratio="0.5"
             relative="org.eclipse.ui.views.TaskList"
             relationship="right"
-            id="ch.qos.logback.beagle.views.BeagleView">
+            id="ch.qos.logback.beagle.view.BeagleView">
       </view>
     </perspectiveExtension>
   </extension>
@@ -46,7 +46,7 @@
         point="org.eclipse.ui.viewActions">
      <viewContribution
            id="ch.qos.logback.beagle.viewContributionClear"
-           targetID="ch.qos.logback.beagle.views.BeagleView">
+           targetID="ch.qos.logback.beagle.view.BeagleView">
         <action
               class="ch.qos.logback.beagle.actions.ViewClearActionDelegate"
               icon="icons/ch/qos/logback/beagle/icons/clear_co.gif"

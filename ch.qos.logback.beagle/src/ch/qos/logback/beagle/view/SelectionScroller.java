@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view;
 
 import java.util.Arrays;
 
@@ -25,10 +25,10 @@ import ch.qos.logback.beagle.util.SelectionUtil;
  */
 public class SelectionScroller implements Runnable {
 
-  static int DELAY = 100;
+  public static int DELAY = 100;
   static int STEP_SIZE = 10;
 
-  enum Direction {
+  public enum Direction {
     DOWN, UP;
   }
 

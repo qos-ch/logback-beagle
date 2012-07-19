@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -28,6 +28,12 @@ import ch.qos.logback.beagle.preferences.BeaglePreferencesChangeListenter;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.view.listener.ColumnControlListener;
+import ch.qos.logback.beagle.view.listener.TableControlListener;
+import ch.qos.logback.beagle.view.listener.TableItemSelectionListener;
+import ch.qos.logback.beagle.view.listener.TableSelectionViaMouseMovements;
+import ch.qos.logback.beagle.view.listener.TimeDifferenceMouseListener;
+import ch.qos.logback.beagle.view.listener.UnfreezeToolItemListener;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.pattern.MessageConverter;

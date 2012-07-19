@@ -6,7 +6,7 @@
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation.
  */
-package ch.qos.logback.beagle.vista;
+package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -24,7 +24,7 @@ public class TableItemSelectionListener implements SelectionListener {
   ToolItem unfreezeButton;
 
   
-  TableItemSelectionListener(Grid table,
+  public TableItemSelectionListener(Grid table,
       ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
     this.grid = table;
@@ -43,7 +43,7 @@ public class TableItemSelectionListener implements SelectionListener {
     if(currentlySelectedTI == null) 
       return;
     
-    classicTISBuffer.setSCrollingEnabled(false);
+    classicTISBuffer.setScrollingEnabled(false);
     unfreezeButton.setEnabled(true);
     lastSelection = currentlySelectedTI;
     classicTISBuffer.clearCues();

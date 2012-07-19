@@ -12,7 +12,7 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
-import ch.qos.logback.beagle.vista.ConverterFacade;
+import ch.qos.logback.beagle.view.ConverterFacade;
 
 public class CallerDataTIS implements ITableItemStub {
 
