@@ -21,64 +21,64 @@ import ch.qos.logback.beagle.Activator;
 /**
  * 
  * @author ceki
- *
+ * 
  */
 public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
 
-  public static final String PATTERN_PREFERENCE = "ch.qos.logback.beagle.Pattern"; 
+  public static final String PATTERN_PREFERENCE = "ch.qos.logback.beagle.Pattern";
   public static final String PATTERN_PREFERENCE_DEFAULT_VALUE = "%date %-5level %thread %logger{48} - %message";
 
-  public static final String BUFFER_SIZE_PREFERENCE = "ch.qos.logback.beagle.BufferSize"; 
-  public static final int BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE  = 10*100;
+  public static final String BUFFER_SIZE_PREFERENCE = "ch.qos.logback.beagle.BufferSize";
+  public static final int BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE = 10 * 100;
   static final int MIN_BUFFER_SIZE = 100;
-  static final int MAX_BUFFER_SIZE = 100*1000;
-   
+  static final int MAX_BUFFER_SIZE = 100 * 1000;
+
   private StringFieldEditor patternEditor;
   private IntegerFieldEditor bufferSizeEditor;
-  
-  
+
   public BeaglePreferencesPage() {
     super(GRID);
     setPreferenceStore(Activator.INSTANCE.getPreferenceStore());
     setDescription("Beagle (logback console) settings:");
   }
 
-
-
   @Override
   public void init(IWorkbench workbench) {
   }
 
-
-  @Override protected void checkState() {
+  @Override
+  protected void checkState() {
     super.checkState();
-    if(!isValid()) return;
+    if (!isValid())
+      return;
     int val = bufferSizeEditor.getIntValue();
-    if(val <= MIN_BUFFER_SIZE) {
-      setErrorMessage("Buffer size must be greater than "+MIN_BUFFER_SIZE);
+    if (val <= MIN_BUFFER_SIZE) {
+      setErrorMessage("Buffer size must be greater than " + MIN_BUFFER_SIZE);
       setValid(false);
-    } else if(val > MAX_BUFFER_SIZE) {
-      setErrorMessage("Buffer size must be less than "+MAX_BUFFER_SIZE);
+    } else if (val > MAX_BUFFER_SIZE) {
+      setErrorMessage("Buffer size must be less than " + MAX_BUFFER_SIZE);
       setValid(false);
     }
   }
-  
+
   public void propertyChange(PropertyChangeEvent event) {
     super.propertyChange(event);
-   if(FieldEditor.VALUE.equals(event.getProperty())) {
-     if(event.getSource() == bufferSizeEditor) {
-       checkState();
-     }
-   }
+    if (FieldEditor.VALUE.equals(event.getProperty())) {
+      if (event.getSource() == bufferSizeEditor) {
+	checkState();
+      }
+    }
   }
-  
+
   @Override
   protected void createFieldEditors() {
-    patternEditor = new StringFieldEditor(PATTERN_PREFERENCE, "Log line pattern:", getFieldEditorParent());
+    patternEditor = new StringFieldEditor(PATTERN_PREFERENCE,
+	"Log line pattern:", getFieldEditorParent());
     addField(patternEditor);
-    
-    bufferSizeEditor = new IntegerFieldEditor(BUFFER_SIZE_PREFERENCE, "Buffer size (lines):", getFieldEditorParent());
+
+    bufferSizeEditor = new IntegerFieldEditor(BUFFER_SIZE_PREFERENCE,
+	"Buffer size (lines):", getFieldEditorParent());
     addField(bufferSizeEditor);
   }
 

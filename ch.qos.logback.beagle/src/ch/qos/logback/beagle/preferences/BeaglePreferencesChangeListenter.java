@@ -11,8 +11,7 @@ package ch.qos.logback.beagle.preferences;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
-import ch.qos.logback.beagle.vista.ConverterFacade;
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.vista.TableMediator;
 
 /**
  * This IPropertyChangeListener reacts to preference changes and updates BeagleView accordingly. 
@@ -22,12 +21,9 @@ import ch.qos.logback.beagle.visual.ClassicTISBuffer;
  */
 public class BeaglePreferencesChangeListenter implements IPropertyChangeListener {
 
-  final ClassicTISBuffer classicTISBuffer;
-  final ConverterFacade converterFacade;
-  
-  public BeaglePreferencesChangeListenter(ConverterFacade converterFacade, ClassicTISBuffer classicTISBuffer) {
-    this.converterFacade = converterFacade;
-    this.classicTISBuffer = classicTISBuffer;
+  TableMediator tableMidiator;
+  public BeaglePreferencesChangeListenter(TableMediator tableMidiator) {
+    this.tableMidiator = tableMidiator;
   }
 
   @Override
@@ -43,20 +39,12 @@ public class BeaglePreferencesChangeListenter implements IPropertyChangeListener
 
   private void updateBufferSize(PropertyChangeEvent event) {
     int newBufferSize = (Integer) event.getNewValue();
-    classicTISBuffer.setBufferSize(newBufferSize);
+    tableMidiator.setBufferSize(newBufferSize);
   }
 
   private void updateLayoutPattern(PropertyChangeEvent event) {
     String newPattern = (String) event.getNewValue();
-    if(newPattern != null) {
-      // the pattern is not responsible for printing Exceptions
-      if(!newPattern.contains("%nopex")) 
-	newPattern += "%nopex";
-
-      converterFacade.setPattern(newPattern);
-      converterFacade.start();
-      classicTISBuffer.resetTable();
-    }
+    tableMidiator.patternChange(newPattern);
   }
 
 }

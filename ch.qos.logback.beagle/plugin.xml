@@ -2,7 +2,9 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-  <extension point="org.eclipse.ui.views">
+  <extension
+        id="ch,"
+        point="org.eclipse.ui.views">
     <category name="Logback"
               id="ch.qos.logback.beagle">
     </category>
@@ -40,5 +42,32 @@
   <extension point="org.eclipse.core.runtime.preferences">
      <initializer class="ch.qos.logback.beagle.preferences.BeaglePreferenceInitializer"/>
    </extension>
+  <extension
+        point="org.eclipse.ui.viewActions">
+     <viewContribution
+           id="ch.qos.logback.beagle.viewContributionClear"
+           targetID="ch.qos.logback.beagle.views.BeagleView">
+        <action
+              class="ch.qos.logback.beagle.actions.ViewClearActionDelegate"
+              icon="icons/ch/qos/logback/beagle/icons/clear_co.gif"
+              id="ch.qos.logback.beagle.actions.clear"
+              label="clear"
+              style="push"
+              toolbarPath="top"
+              tooltip="Clear">
+        </action>
+        <action
+              class="ch.qos.logback.beagle.actions.ViewScrollLockActionDelegate"
+              disabledIcon="icons/ch/qos/logback/beagle/icons/lock_co_disabled.gif"
+              icon="icons/ch/qos/logback/beagle/icons/lock_co.gif"
+              id="ch.qos.logback.beagle.actions.scroll"
+              label="scroll"
+              style="toggle"
+              toolbarPath="top"
+              tooltip="Scroll lock/unlock">
+        </action>
+     </viewContribution>
+  </extension>
+
 
 </plugin>

@@ -23,12 +23,14 @@ public class TableItemSelectionListener implements SelectionListener {
   GridItem lastSelection;
   ToolItem unfreezeButton;
 
+  
   TableItemSelectionListener(Grid table,
       ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
       UnfreezeToolItemListener unfreezeButtonListener) {
     this.grid = table;
     this.classicTISBuffer = visualElementBuffer;
     this.unfreezeButton = unfreezeButton;
+    
   }
 
   @Override

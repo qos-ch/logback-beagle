@@ -38,6 +38,7 @@ public class TableMediator {
 
   static final int OFFSET_FROM_BUTTOM = -5;
 
+
   public Grid grid;
   public ClassicTISBuffer classicTISBuffer;
   public BeaglePreferencesChangeListenter preferencesChangeListenter;
@@ -97,16 +98,16 @@ public class TableMediator {
     grid.setAutoHeight(true);
 
     grid.addControlListener(new TableControlListener(charWidth));
-
+    
     initConverterFacade();
-    createColumns(grid);
-    grid.pack();
+    
     int bufSize = getPreferredBufferSize();
     classicTISBuffer = new ClassicTISBuffer(converterFacade, grid, bufSize);
+    createColumns();
     classicTISBuffer.diffCue = diffCueLabel;
+    grid.pack();
     
-    preferencesChangeListenter = new BeaglePreferencesChangeListenter(
-	converterFacade, classicTISBuffer);
+    preferencesChangeListenter = new BeaglePreferencesChangeListenter(this);
 
     // when the table is cleared classicTISBuffer's handleEvent method will
     // re-populate the item
@@ -135,23 +136,28 @@ public class TableMediator {
     grid.setItemCount(0);
   }
 
-  private void createColumns(Grid grid2) {
-    GridColumn column0 = new GridColumn(grid, SWT.NONE);
-    column0.setWidth(24);
+  public void setBufferSize(int size) {
+    classicTISBuffer.setBufferSize(size);
+  }
+  
 
-    for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
-      GridColumn column = new GridColumn(grid, SWT.NONE);
-      String columnName = converterFacade.computeConverterName(c);
-      column.setText(columnName);
-      column.setWidth(getColumnSizeDialogSetting(columnName, 100));
-      column.addControlListener(new ColumnControlListener(columnName));
-
-      if (c instanceof MessageConverter) {
-	column.setWordWrap(true);
-      }
+  void disposeOfExistingColumns() {
+    for(GridColumn column: grid.getColumns()) {
+      column.dispose();
     }
   }
-
+  
+  public void patternChange(String newPattern) {
+    if(newPattern != null) {
+      converterFacade.setPattern(newPattern);
+      converterFacade.start();
+      grid.removeAll();
+      disposeOfExistingColumns();
+      createColumns();
+      classicTISBuffer.rebuildGrid();
+    }
+  }
+  
   int getPreferredBufferSize() {
     int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
@@ -175,6 +181,24 @@ public class TableMediator {
     }
   }
 
+  public void createColumns() {
+    GridColumn column0 = new GridColumn(this.grid, SWT.NONE);
+    column0.setWidth(24);
+
+    for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
+      GridColumn column = new GridColumn(grid, SWT.NONE);
+      String columnName = converterFacade.computeConverterName(c);
+      column.setText(columnName);
+      column.setWidth(getColumnSizeDialogSetting(columnName, 100));
+      column.addControlListener(new ColumnControlListener(columnName));
+
+      if (c instanceof MessageConverter) {
+	column.setWordWrap(true);
+      }
+    }
+  }
+
+
   private void initConverterFacade() {
     converterFacade.setContext(loggerContext);
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
@@ -185,4 +209,6 @@ public class TableMediator {
     converterFacade.setPattern(pattern);
     converterFacade.start();
   }
+
+
 }

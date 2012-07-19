@@ -26,6 +26,7 @@ public class ConverterFacade {
   List<Converter<ILoggingEvent>> converterList = new ArrayList<Converter<ILoggingEvent>>();
 
   public void start() {
+    converterList.clear();
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
       IPreferenceStore pStore = Activator.INSTANCE.getPreferenceStore();
@@ -83,7 +84,7 @@ public class ConverterFacade {
     this.context = context;
   }
 
-  String computeConverterName(Converter<ILoggingEvent> c) {
+  public String computeConverterName(Converter<ILoggingEvent> c) {
     if (c instanceof CompositeConverter) {
       return computeCompositeConverterName((CompositeConverter<ILoggingEvent>) c);
     } else {

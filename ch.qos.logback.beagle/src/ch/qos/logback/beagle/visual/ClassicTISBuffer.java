@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -24,9 +25,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.vista.ColumnControlListener;
 import ch.qos.logback.beagle.vista.ConverterFacade;
+import ch.qos.logback.classic.pattern.MessageConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.core.pattern.Converter;
 
 public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     Listener, DisposeListener {
@@ -181,16 +185,16 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     addVisualElements(visualElementList);
   }
 
-  private void addVisualElements(final List<ITableItemStub> veList) {
+  private void addVisualElements(final List<ITableItemStub> newTISList) {
     if (disposed) {
       return;
     }
 
-    for (ITableItemStub ve : veList) {
+    for (ITableItemStub ve : newTISList) {
       tisList.add(ve);
     }
 
-    display.syncExec(new AddTableItemRunnable(veList));
+    display.syncExec(new AddTableItemRunnable(newTISList));
     contactIfTooBig();
   }
 
@@ -199,6 +203,10 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
       tisList.subList(0, dropSize).clear();
       display.syncExec(new ResetTablePostContractionRunnable());
     }
+  }
+
+  public void rebuildGrid() {
+    display.syncExec(new RebuildGridRunnable());
   }
 
   public boolean isActive() {
@@ -234,6 +242,23 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     return grid;
   }
 
+  void addNewItemsToGrid(List<ITableItemStub> aTISList) {
+    if (disposed) {
+      return;
+    }
+    GridItem gridItem = null;
+    for (ITableItemStub tis : aTISList) {
+      gridItem = new GridItem(grid, SWT.NONE);
+      if (disposed)
+	return;
+      tis.populate(gridItem);
+    }
+
+    if (isActive()) {
+      grid.showItem(gridItem);
+    }
+  }
+
   // ------------------------- ResetTableRunnable class
   private final class ResetTableRunnable implements Runnable {
     public void run() {
@@ -246,41 +271,35 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private final class ResetTablePostContractionRunnable implements Runnable {
     public void run() {
       int topIndex = grid.getTopIndex();
-      
-      grid.remove(0, dropSize-1);
-      
-      if(grid.getItemCount() != tisList.size()) 
-	System.out.println("size mismatch gridSize="+grid.getItemCount()+" tisListSize"+ tisList.size());
-      //grid.clearAll(true);
+
+      grid.remove(0, dropSize - 1);
+
+      if (grid.getItemCount() != tisList.size())
+	System.out.println("size mismatch gridSize=" + grid.getItemCount()
+	    + " tisListSize" + tisList.size());
+      // grid.clearAll(true);
       grid.setTopIndex(topIndex - dropSize);
     }
   }
 
   // ------------------------- AddTableItemRunnable class
   private final class AddTableItemRunnable implements Runnable {
-    private final List<ITableItemStub> tisList;
+    private final List<ITableItemStub> aTISList;
 
-    private AddTableItemRunnable(List<ITableItemStub> tisList) {
-      this.tisList = tisList;
+    private AddTableItemRunnable(List<ITableItemStub> aTISList) {
+      this.aTISList = aTISList;
     }
 
     public void run() {
-      if (disposed) {
-	return;
-      }
-
-      GridItem ti = null;
-      for (ITableItemStub tis : tisList) {
-	ti = new GridItem(grid, SWT.NONE);
-	if (disposed) {
-	  return;
-	}
-	tis.populate(ti);
-      }
-
-      if (isActive() && ti != null) {
-	grid.showItem(ti);
-      }
+      addNewItemsToGrid(aTISList);
     }
   }
+
+//------------------------- AddTableItemRunnable class
+  private final class RebuildGridRunnable implements Runnable {
+    public void run() {
+      addNewItemsToGrid(ClassicTISBuffer.this.tisList);
+    }
+  }
+
 }
