@@ -31,7 +31,7 @@ public class MenuBuilder {
   final public static int COPY_TO_CLIPBOARD_MENU_INDEX = 2;
 
   static public Menu buildMenu(ClassicTISBuffer classicTISBuffer) {
-    Menu menu = new Menu(classicTISBuffer.getTable());
+    Menu menu = new Menu(classicTISBuffer.getGrid());
 
     MenuItem jumpToCaller = new MenuItem(menu, SWT.PUSH);
     jumpToCaller.setText(MenuBuilder.JUMP_TO_CALLER_MENU_TEXT);

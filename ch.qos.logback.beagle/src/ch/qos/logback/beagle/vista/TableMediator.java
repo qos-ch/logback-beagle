@@ -154,7 +154,7 @@ public class TableMediator {
       grid.removeAll();
       disposeOfExistingColumns();
       createColumns();
-      classicTISBuffer.rebuildGrid();
+      classicTISBuffer.rebuildEmptyGrid();
     }
   }
   

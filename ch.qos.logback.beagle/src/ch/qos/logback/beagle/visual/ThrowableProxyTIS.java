@@ -90,9 +90,9 @@ public class ThrowableProxyTIS implements ITableItemStub {
   @Override
   public void populate(GridItem gridItem) {
     int columnCount = converterFacade.getColumnCount();
-    gridItem.setText(1, getText());
-    gridItem.setColumnSpan(1, columnCount-1);
-    gridItem.setBackground(1, EXCEPTION_COLOR);
+    gridItem.setText(DATA_COLUMNS_OFFSET, getText());
+    gridItem.setColumnSpan(DATA_COLUMNS_OFFSET, columnCount-1);
+    gridItem.setBackground(DATA_COLUMNS_OFFSET, EXCEPTION_COLOR);
   }
 
 }

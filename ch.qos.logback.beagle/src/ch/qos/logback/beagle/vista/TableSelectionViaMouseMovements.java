@@ -42,7 +42,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     if(currentSelectionIndices.length == 1) {
       if(currentSelectionIndices[0] == clickedIndex) {
 	  System.out.println("********* unlocked scroll");
-	 classicTISBuffer.setActive(true);
+	 classicTISBuffer.setSCrollingEnabled(true);
 	 // TODO disable the scroll toolitem
       }
     }

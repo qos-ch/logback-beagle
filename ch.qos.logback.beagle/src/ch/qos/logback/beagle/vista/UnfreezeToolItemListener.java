@@ -27,7 +27,7 @@ public class UnfreezeToolItemListener implements SelectionListener {
     ToolItem toolItem = (ToolItem) event.widget;
     toolItem.setEnabled(false);
     classicTISBuffer.grid.deselectAll();
-    classicTISBuffer.setActive(true);
+    classicTISBuffer.setSCrollingEnabled(true);
     classicTISBuffer.clearCues();
   }
 

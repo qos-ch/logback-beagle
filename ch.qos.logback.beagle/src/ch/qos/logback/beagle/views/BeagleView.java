@@ -68,6 +68,10 @@ public class BeagleView extends ViewPart {
 	.setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
   }
+  
+  public TableMediator getTableMediator() {
+    return tableMediator;
+  }
 
   /**
    * {@inheritDoc}

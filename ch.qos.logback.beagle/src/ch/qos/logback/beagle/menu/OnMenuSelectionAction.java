@@ -36,7 +36,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 
   public OnMenuSelectionAction(ClassicTISBuffer classicTISBuffer) {
     this.classicTISBuffer = classicTISBuffer;
-    this.grid = classicTISBuffer.getTable();
+    this.grid = classicTISBuffer.getGrid();
   }
 
   @Override
@@ -73,7 +73,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 
 	for (int i = 0; i < callerDataArray.length; i++) {
 	  CallerDataTIS callerDataTIS = new CallerDataTIS(classicTISBuffer.getConverterFacade(),  callerDataArray[i], i);
-	  classicTISBuffer.add(callerDataTIS, index + 1 + i);
+	  classicTISBuffer.addAtIndex(callerDataTIS, index + 1 + i);
 	}
       }
     } else {
@@ -82,7 +82,7 @@ public class OnMenuSelectionAction implements SelectionListener {
 	// the next entry is a CallerDataVisualElement
 	target++;
       }
-      classicTISBuffer.removeNeighboringCallerDataVisualElements(target);
+      classicTISBuffer.removeNeighboringItems(target);
     }
   }
 

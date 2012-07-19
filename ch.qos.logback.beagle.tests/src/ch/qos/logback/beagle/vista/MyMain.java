@@ -20,8 +20,7 @@ public class MyMain {
 
 	static final int OFFSET_FROM_BUTTOM = -5;
 
-	public static void main(String[] args) {
-		System.out.println("ccc");
+	public static void main(String[] args) {;
 		Display display = new Display();
 		ResourceUtil.init(display);
 

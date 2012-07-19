@@ -28,7 +28,7 @@ public class DynamicMenuEnabler implements MenuListener {
 
   public DynamicMenuEnabler(ClassicTISBuffer visualElementBuffer) {
     this.visualElementBuffer = visualElementBuffer;
-    this.table = visualElementBuffer.getTable();
+    this.table = visualElementBuffer.getGrid();
   }
 
   @Override

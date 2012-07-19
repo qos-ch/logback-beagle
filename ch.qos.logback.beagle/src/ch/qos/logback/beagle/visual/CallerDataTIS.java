@@ -18,6 +18,7 @@ public class CallerDataTIS implements ITableItemStub {
 
   static Color CALLER_DATACOLOR = new Color(null, 193, 230, 253);
 
+  
   ConverterFacade converterFacade;
   final StackTraceElement stackTraceElement;
   final int index;
@@ -59,9 +60,9 @@ public class CallerDataTIS implements ITableItemStub {
   @Override
   public void populate(GridItem gridItem) {
     int columnCount = converterFacade.getColumnCount();
-    gridItem.setText(0, getText());
-    gridItem.setColumnSpan(0, columnCount-1);
-    gridItem.setBackground(0, getBackgroundColor());
+    gridItem.setText(DATA_COLUMNS_OFFSET, getText());
+    gridItem.setColumnSpan(DATA_COLUMNS_OFFSET, columnCount-1);
+    gridItem.setBackground(DATA_COLUMNS_OFFSET, getBackgroundColor());
     
   }
 

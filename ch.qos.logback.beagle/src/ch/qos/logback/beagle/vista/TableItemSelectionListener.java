@@ -43,7 +43,7 @@ public class TableItemSelectionListener implements SelectionListener {
     if(currentlySelectedTI == null) 
       return;
     
-    classicTISBuffer.setActive(false);
+    classicTISBuffer.setSCrollingEnabled(false);
     unfreezeButton.setEnabled(true);
     lastSelection = currentlySelectedTI;
     classicTISBuffer.clearCues();

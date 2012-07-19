@@ -13,6 +13,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 
 public interface ITableItemStub {
+  
+  // data is printed on column 1
+  int DATA_COLUMNS_OFFSET = 1;
+  
   String getText();
   Color getBackgroundColor();
   Image getImage();

@@ -21,7 +21,7 @@ public class MySupplierThread extends Thread implements Listener {
 
 	final BlockingQueue<ILoggingEvent> blockingQueue;
 	boolean disposed = false;
-	static int LIMIT = 10000;
+	static int LIMIT = 1000;
 	
 	public MySupplierThread(BlockingQueue<ILoggingEvent> blockingQueue) {
 		this.blockingQueue = blockingQueue;

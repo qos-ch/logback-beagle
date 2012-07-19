@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.nebula.widgets.grid.Grid;
-import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -25,12 +24,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
-import ch.qos.logback.beagle.vista.ColumnControlListener;
 import ch.qos.logback.beagle.vista.ConverterFacade;
-import ch.qos.logback.classic.pattern.MessageConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
-import ch.qos.logback.core.pattern.Converter;
 
 public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     Listener, DisposeListener {
@@ -47,7 +43,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   final Display display;
 
-  boolean active = true;
+  boolean scrollingEnabled = true;
   volatile boolean disposed = false;
 
   public Label diffCue;
@@ -60,16 +56,26 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     this.display = table.getDisplay();
     this.converterFacade = head;
     this.bufferSize = bufferSize;
-    this.dropSize = bufferSize / 10;
+    this.dropSize = computeDropSize(bufferSize);
   }
 
   public ConverterFacade getConverterFacade() {
     return converterFacade;
   }
 
+  private int computeDropSize(int aBufferSize) {
+    return Math.min(1024, aBufferSize / 10);
+  }
+
+  /**
+   * Set the buffer size to new value. Ig the new buffer size is smaller then
+   * the old size, the buffer will reach the smaller size in multiple steps.
+   * 
+   * @param size
+   */
   public void setBufferSize(int size) {
     this.bufferSize = size;
-    this.dropSize = Math.min(1024, bufferSize / 10);
+    this.dropSize = computeDropSize(bufferSize);
   }
 
   /**
@@ -98,7 +104,6 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
    */
   private void loggingEventToVisualElement(List<ITableItemStub> tisList,
       ILoggingEvent event) {
-
     count++;
     Color c = null;
     if (count % 2 == 0) {
@@ -125,7 +130,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   static int MAX_EXTENT = 20;
 
-  int findBeginIndex(int middleIndex) {
+  private int findIndexOfFirstCallerItem(int middleIndex) {
     int limit = middleIndex - MAX_EXTENT >= 0 ? middleIndex - MAX_EXTENT : 0;
     int found = middleIndex;
     for (int i = middleIndex; i >= limit; i--) {
@@ -137,7 +142,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     return found;
   }
 
-  int findLastIndex(int middleIndex) {
+  private int findIndexOfLastCallerItem(int middleIndex) {
     int limit = middleIndex + MAX_EXTENT <= tisList.size() ? middleIndex
 	+ MAX_EXTENT : tisList.size();
     int found = middleIndex;
@@ -150,20 +155,27 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     return found;
   }
 
-  public void removeNeighboringCallerDataVisualElements(int index) {
-    int beginIndex = findBeginIndex(index);
-    int lastIndex = findLastIndex(index);
+  public void removeNeighboringItems(int index) {
+    int beginIndex = findIndexOfFirstCallerItem(index);
+    int lastIndex = findIndexOfLastCallerItem(index);
     tisList.subList(beginIndex, lastIndex + 1).clear();
-    display.syncExec(new ResetTableRunnable());
+    grid.remove(beginIndex, lastIndex);
+    assertSize();
+    display.syncExec(new RefreshGridRunnable());
   }
 
-  public void resetTable() {
-    display.syncExec(new ResetTableRunnable());
+  public void removeAll() {
+    tisList.clear();
+    grid.removeAll();
   }
 
-  public void add(final CallerDataTIS cdVisualElement, int index) {
-    tisList.add(index, cdVisualElement);
-    resetTable();
+  public void refreshGrid() {
+    display.syncExec(new RefreshGridRunnable());
+  }
+
+  public void addAtIndex(ITableItemStub iTableItemStub, int index) {
+    tisList.add(index, iTableItemStub);
+    refreshGrid();
   }
 
   /**
@@ -186,13 +198,11 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void addVisualElements(final List<ITableItemStub> newTISList) {
-    if (disposed) {
+    if (disposed)
       return;
-    }
 
-    for (ITableItemStub ve : newTISList) {
+    for (ITableItemStub ve : newTISList)
       tisList.add(ve);
-    }
 
     display.syncExec(new AddTableItemRunnable(newTISList));
     contactIfTooBig();
@@ -201,20 +211,12 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private void contactIfTooBig() {
     if (tisList.size() >= bufferSize) {
       tisList.subList(0, dropSize).clear();
-      display.syncExec(new ResetTablePostContractionRunnable());
+      display.syncExec(new AdjustGridPostContractionRunnable());
     }
   }
 
-  public void rebuildGrid() {
-    display.syncExec(new RebuildGridRunnable());
-  }
-
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
+  public void rebuildEmptyGrid() {
+    display.syncExec(new RebuildEmptyGridRunnable());
   }
 
   public int size() {
@@ -238,46 +240,57 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     disposed = true;
   }
 
-  public Grid getTable() {
+  public Grid getGrid() {
     return grid;
   }
 
-  void addNewItemsToGrid(List<ITableItemStub> aTISList) {
-    if (disposed) {
+  public boolean isScrollingEnabled() {
+    return scrollingEnabled;
+  }
+
+  public void setSCrollingEnabled(boolean scrollingEnabled) {
+    this.scrollingEnabled = scrollingEnabled;
+  }
+
+  private void addNewItemStubsToGrid(List<ITableItemStub> aTISList) {
+    if (disposed || aTISList.size() == 0) {
       return;
     }
-    GridItem gridItem = null;
+
+    GridItem lastGridItem = null;
     for (ITableItemStub tis : aTISList) {
-      gridItem = new GridItem(grid, SWT.NONE);
+      lastGridItem = new GridItem(grid, SWT.NONE);
       if (disposed)
 	return;
-      tis.populate(gridItem);
+      tis.populate(lastGridItem);
     }
 
-    if (isActive()) {
-      grid.showItem(gridItem);
+    if (isScrollingEnabled()) {
+      grid.showItem(lastGridItem);
     }
   }
 
-  // ------------------------- ResetTableRunnable class
-  private final class ResetTableRunnable implements Runnable {
+  void assertSize() {
+    if (grid.getItemCount() != tisList.size()) {
+      System.out.println("size mismatch gridSize=" + grid.getItemCount()
+	  + " tisListSize" + tisList.size());
+    }
+  }
+
+  // ------------------------- RefreshGridRunnable class
+  private final class RefreshGridRunnable implements Runnable {
     public void run() {
       grid.clearAll(true);
       grid.setItemCount(tisList.size());
     }
   }
 
-  // ------------------------- ResetTablePostContractionRunnable class
-  private final class ResetTablePostContractionRunnable implements Runnable {
+  // ------------------------- AdjustGridPostContractionRunnable class
+  private final class AdjustGridPostContractionRunnable implements Runnable {
     public void run() {
       int topIndex = grid.getTopIndex();
-
       grid.remove(0, dropSize - 1);
-
-      if (grid.getItemCount() != tisList.size())
-	System.out.println("size mismatch gridSize=" + grid.getItemCount()
-	    + " tisListSize" + tisList.size());
-      // grid.clearAll(true);
+      assertSize();
       grid.setTopIndex(topIndex - dropSize);
     }
   }
@@ -291,14 +304,14 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     }
 
     public void run() {
-      addNewItemsToGrid(aTISList);
+      addNewItemStubsToGrid(aTISList);
     }
   }
 
-//------------------------- AddTableItemRunnable class
-  private final class RebuildGridRunnable implements Runnable {
+  // ------------------------- RebuildEmptyGridRunnable class
+  private final class RebuildEmptyGridRunnable implements Runnable {
     public void run() {
-      addNewItemsToGrid(ClassicTISBuffer.this.tisList);
+      addNewItemStubsToGrid(ClassicTISBuffer.this.tisList);
     }
   }
 
