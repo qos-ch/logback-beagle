@@ -1,31 +1,46 @@
 package ch.qos.logback.beagle.view.listener;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
+import ch.qos.logback.beagle.util.TableUtil;
 
 public class ColumnControlListener implements ControlListener {
   
   final String columnName;
-  public ColumnControlListener(String columnName) {
+  final Grid grid;
+  int oldColumnSize = -1;
+  final boolean isColumnLast;
+  
+  public ColumnControlListener(Grid grid, String columnName, boolean isColumnLast) {
     this.columnName = columnName;
+    this.isColumnLast = isColumnLast;
+    this.grid = grid;
   }
   
   @Override
   public void controlMoved(ControlEvent e) {
-    // TODO Auto-generated method stub
-    
   }
 
   @Override
   public void controlResized(ControlEvent e) {
     GridColumn column = (GridColumn) e.widget;
-    //System.out.println("ColumnControlListener new col width for "+columnName+" "+column.getWidth());
-    saveColumnSize(column.getWidth());
+    System.out.println("ColumnControlListener new col width for "+columnName+" "+column.getWidth());
+    
+    int newSize = column.getWidth();
+    if(!isColumnLast && oldColumnSize > newSize) {
+      TableUtil.adjustWidthOfLastColumn(grid);
+    } else {
+      // for size of last column to all available space
+      TableUtil.adjustWidthOfLastColumn(grid);
+    }
+    oldColumnSize = newSize;
+    saveColumnSize(newSize);
   }
 
   private void saveColumnSize(int width) {

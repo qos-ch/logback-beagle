@@ -20,14 +20,12 @@ public class TableItemSelectionListener implements SelectionListener {
 
   ClassicTISBuffer classicTISBuffer;
   GridItem lastSelection;
-  ToolItem unfreezeButton;
+  ToolItem unfreezeToolItem;
   final TableMediator tableMediator;
   
-  public TableItemSelectionListener(TableMediator tableMediator,
-      ToolItem unfreezeButton) {
+  public TableItemSelectionListener(TableMediator tableMediator) {
     this.tableMediator = tableMediator;
-    this.unfreezeButton = unfreezeButton;
-    
+    this.unfreezeToolItem = tableMediator.getUnfreezeToolItem();
   }
 
   @Override
@@ -41,7 +39,7 @@ public class TableItemSelectionListener implements SelectionListener {
       return;
     
     tableMediator.classicTISBuffer.setScrollingEnabled(false);
-    unfreezeButton.setEnabled(true);
+    unfreezeToolItem.setEnabled(true);
     lastSelection = currentlySelectedGridItem;
     tableMediator.setTimeDifferenceLabelText("");
     

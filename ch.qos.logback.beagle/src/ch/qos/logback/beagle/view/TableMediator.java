@@ -8,6 +8,8 @@
  */
 package ch.qos.logback.beagle.view;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.nebula.widgets.grid.Grid;
@@ -84,22 +86,17 @@ public class TableMediator {
     LayoutDataHelper.make(timeDifferenceLabel, 12 * charWidth, charHeight)
 	.bottom(OFFSET_FROM_BUTTOM).rightOf(separator0Label, 10).set();
 
-    ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
-    LayoutDataHelper.make(toolbar).right(-5).bottom(-5).set();
+    ToolBar toolbar = buildToolbarAndItsItems();
 
-    this.unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
-    this.unfreezeToolItem.setEnabled(false);
-    this.unfreezeToolItem.setImage(ResourceUtil
-	.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
-    this.unfreezeToolItem.setToolTipText("release scroll lock");
-
+    // place grid
     LayoutDataHelper.make(grid).top(5).left(5).right(-5).above(toolbar, -1)
 	.set();
+    
     grid.setHeaderVisible(true);
     grid.setLinesVisible(false);
     grid.setAutoHeight(true);
 
-    grid.addControlListener(new TableControlListener(charWidth));
+    grid.addControlListener(new TableControlListener());
 
     initConverterFacade();
 
@@ -115,13 +112,9 @@ public class TableMediator {
     grid.addListener(SWT.SetData, classicTISBuffer);
     grid.addDisposeListener(classicTISBuffer);
 
-    UnfreezeToolItemListener unfreezeButtonListener = new UnfreezeToolItemListener(
-	this);
-    unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
+    unfreezeToolItem.addSelectionListener(new UnfreezeToolItemListener(this));
 
-    TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
-	this, unfreezeToolItem);
-    grid.addSelectionListener(tableItemSelectionListener);
+    grid.addSelectionListener(new TableItemSelectionListener(this));
 
     TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
 	this);
@@ -137,12 +130,30 @@ public class TableMediator {
     grid.setItemCount(0);
   }
 
+
   public Grid getGrid() {
     return grid;
   }
 
+  public ToolItem getUnfreezeToolItem() {
+    return unfreezeToolItem;
+  }
+  
   public void setBufferSize(int size) {
     classicTISBuffer.setBufferSize(size);
+  }
+  
+  private ToolBar buildToolbarAndItsItems() {
+    ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
+    // place the toolbar on the bottom-right corner
+    LayoutDataHelper.make(toolbar).right(-5).bottom(-5).set();
+
+    this.unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
+    this.unfreezeToolItem.setEnabled(false);
+    this.unfreezeToolItem.setImage(ResourceUtil
+	.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
+    this.unfreezeToolItem.setToolTipText("release scroll lock");
+    return toolbar;
   }
 
   void disposeOfExistingColumns() {
@@ -189,13 +200,18 @@ public class TableMediator {
     GridColumn column0 = new GridColumn(this.grid, SWT.NONE);
     column0.setWidth(24);
 
-    for (Converter<ILoggingEvent> c : converterFacade.getConverterList()) {
+    
+    List<Converter<ILoggingEvent>>  converterList = converterFacade.getConverterList();
+    int size = converterList.size();
+    
+    for (int i = 0; i < size; i++) {
+      Converter<ILoggingEvent> c = converterList.get(i);
       GridColumn column = new GridColumn(grid, SWT.NONE);
       String columnName = converterFacade.computeConverterName(c);
       column.setText(columnName);
       column.setWidth(getColumnSizeDialogSetting(columnName, 100));
-      column.addControlListener(new ColumnControlListener(columnName));
-
+      boolean isLast = (i == size -1);
+      column.addControlListener(new ColumnControlListener(grid, columnName, isLast));
       if (c instanceof MessageConverter) {
 	column.setWordWrap(true);
       }

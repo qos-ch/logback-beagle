@@ -8,6 +8,9 @@
  */
 package ch.qos.logback.beagle.util;
 
+import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 
 public class TableUtil {
@@ -17,5 +20,44 @@ public class TableUtil {
     int itemCount = table.getItemCount();
     return Math.min(table.getBounds().height / table.getItemHeight() + 2,
 	itemCount - start);
+  }
+  
+  
+  public static void adjustWidthOfLastColumn(Grid grid) {
+    int lastColumnIndex = grid.getColumnCount() - 1;
+    if (lastColumnIndex <= 0)
+      return;
+
+    int visibleTableWidth = computeVisibleTableWidth(grid);
+    int totalWidthOfOtherColumns = computeWidthOfAllColumnExceptLast(grid);
+    
+    int lastColumnAvailableWidth = visibleTableWidth - totalWidthOfOtherColumns - 4;
+    
+    // the target width should have a minimum. it should also be a few pixels smaller than
+    // the available width so as to avoid a horizontal scrollbar.
+    int lastColumnTargetWidth = Math.max(100, lastColumnAvailableWidth -4);
+    GridColumn gridColumn = grid.getColumn(lastColumnIndex);
+    gridColumn.setWidth(lastColumnTargetWidth);
+  }
+
+  public static int computeVisibleTableWidth(Grid grid) {
+    ScrollBar sb = grid.getVerticalBar();
+    int targetWidth = grid.getSize().x;
+
+    if (sb != null) {
+      targetWidth -= sb.getSize().x;
+    }
+    return targetWidth;
+  }
+  
+  public static int computeWidthOfAllColumnExceptLast(Grid grid) {
+    int total = 0;
+
+    for (int i = 0; i < grid.getColumnCount() - 1; i++) {
+      GridColumn gridColumn = grid.getColumn(i);
+      total += gridColumn.getWidth();
+    }
+
+    return total;
   }
 }
