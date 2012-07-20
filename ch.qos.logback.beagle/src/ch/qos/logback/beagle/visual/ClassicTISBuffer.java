@@ -20,11 +20,11 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.view.ConverterFacade;
+import ch.qos.logback.beagle.view.TableMediator;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 
@@ -36,25 +36,24 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   List<ITableItemStub> tisList = Collections
       .synchronizedList(new ArrayList<ITableItemStub>());
 
-  int count = 0;
+  private int lineCount = 0;
 
-  public final Grid grid;
+  private TableMediator tableMediator;
+  private final Grid grid;
   private final ConverterFacade converterFacade;
 
-  final Display display;
-
-  boolean scrollingEnabled = true;
-  volatile boolean disposed = false;
-
-  public Label diffCue;
+  private final Display display;
+  private boolean scrollingEnabled = true;
+  private volatile boolean disposed = false;
 
   private int bufferSize;
   private int dropSize;
 
-  public ClassicTISBuffer(ConverterFacade head, Grid grid, int bufferSize) {
-    this.grid = grid;
+  public ClassicTISBuffer(TableMediator tableMediator, int bufferSize) {
+    this.tableMediator = tableMediator;
+    this.grid = tableMediator.getGrid();
     this.display = grid.getDisplay();
-    this.converterFacade = head;
+    this.converterFacade = tableMediator.getConverterFacade();
     this.bufferSize = bufferSize;
     this.dropSize = computeDropSize(bufferSize);
   }
@@ -104,9 +103,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
    */
   private void loggingEventToVisualElement(List<ITableItemStub> tisList,
       ILoggingEvent event) {
-    count++;
+    lineCount++;
     Color c = null;
-    if (count % 2 == 0) {
+    if (lineCount % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
     tisList.add(new LoggingEventTIS(converterFacade, event, c));
@@ -188,16 +187,16 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     for (ILoggingEvent iLoggingEvent : loggingEventList) {
       loggingEventToVisualElement(visualElementList, iLoggingEvent);
     }
-    addVisualElements(visualElementList);
+    addGridItemStubs(visualElementList);
   }
 
   public void add(final ILoggingEvent iLoggingEvent) {
     List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
     loggingEventToVisualElement(visualElementList, iLoggingEvent);
-    addVisualElements(visualElementList);
+    addGridItemStubs(visualElementList);
   }
 
-  private void addVisualElements(final List<ITableItemStub> newTISList) {
+  private void addGridItemStubs(final List<ITableItemStub> newTISList) {
     if (disposed)
       return;
 
@@ -221,10 +220,6 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   public int size() {
     return tisList.size();
-  }
-
-  public void clearCues() {
-    diffCue.setText("");
   }
 
   public ITableItemStub get(int index) {
@@ -252,6 +247,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     this.scrollingEnabled = scrollingEnabled;
   }
 
+  // called by  display.syncExec!!
   private void addNewItemStubsToGrid(List<ITableItemStub> aTISList) {
     if (disposed || aTISList.size() == 0) {
       return;
@@ -265,6 +261,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
       tis.populate(lastGridItem);
     }
 
+    tableMediator.setTotalEventsLabelText(tisList.size() +" events");
+
+    
     if (isScrollingEnabled()) {
       grid.showItem(lastGridItem);
     }

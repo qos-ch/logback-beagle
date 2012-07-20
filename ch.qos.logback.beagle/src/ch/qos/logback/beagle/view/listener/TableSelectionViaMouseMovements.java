@@ -18,20 +18,20 @@ import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
 import ch.qos.logback.beagle.util.SelectionUtil;
 import ch.qos.logback.beagle.view.SelectionScroller;
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.view.TableMediator;
 
 public class TableSelectionViaMouseMovements implements MouseListener,
     MouseMoveListener, MouseTrackListener {
 
+  TableMediator tableMediator;
   final Grid table;
-  final ClassicTISBuffer classicTISBuffer;
   int anchorIndex = Constants.NA;
   int lastIndex = Constants.NA;
   SelectionScroller scroller;
 
-  public TableSelectionViaMouseMovements(ClassicTISBuffer classicTISBuffer) {
-    this.classicTISBuffer = classicTISBuffer;
-    this.table = classicTISBuffer.grid;
+  public TableSelectionViaMouseMovements(TableMediator tableMediator) {
+    this.tableMediator = tableMediator;
+    this.table = tableMediator.getGrid();
   }
 
   @Override
@@ -42,8 +42,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     int[] currentSelectionIndices = table.getSelectionIndices();
     if(currentSelectionIndices.length == 1) {
       if(currentSelectionIndices[0] == clickedIndex) {
-	  System.out.println("********* unlocked scroll");
-	 classicTISBuffer.setScrollingEnabled(true);
+	  tableMediator.classicTISBuffer.setScrollingEnabled(true);
 	 // TODO disable the scroll toolitem
       }
     }
@@ -56,11 +55,9 @@ public class TableSelectionViaMouseMovements implements MouseListener,
       return;
     }
     anchorIndex = result;
-    //System.out.println("mouseDown anchorIndex " + anchorIndex);
   }
 
   void disableScroller() {
-    //System.out.println("disabling scroller");
     table.setCapture(false);
     table.getDisplay().timerExec(-1, scroller);
     scroller = null;
@@ -98,7 +95,7 @@ public class TableSelectionViaMouseMovements implements MouseListener,
     }
 
     if (table.getSelectionCount() > 1) {
-      classicTISBuffer.clearCues();
+      tableMediator.setTimeDifferenceLabelText("");
     }
 
     lastIndex = currentIndex;
@@ -113,14 +110,11 @@ public class TableSelectionViaMouseMovements implements MouseListener,
 
   @Override
   public void mouseExit(MouseEvent e) {
-     //MouseEventUtil.dump("************** mouseExit event ***********", e);
-
     if (MouseEventUtil.isButtonHeldDown(e)) {
       if (scroller != null) {
-	//System.out.println("xxxxxxxxxxx already in capture mode");
 	return;
       }
-      //System.out.println("********* entering capture mode");
+      // entering capture mode
       SelectionScroller.Direction direction = e.y < 0 ? SelectionScroller.Direction.UP
 	  : SelectionScroller.Direction.DOWN;
       table.setCapture(true);

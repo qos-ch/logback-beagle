@@ -11,62 +11,63 @@ package ch.qos.logback.beagle.view.listener;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.widgets.Label;
 
 import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.util.MouseEventUtil;
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.view.TableMediator;
 import ch.qos.logback.beagle.visual.ITableItemStub;
 import ch.qos.logback.beagle.visual.LoggingEventTIS;
 
 public class TimeDifferenceMouseListener implements MouseMoveListener {
 
-  final Grid table;
-  final ClassicTISBuffer visualElementBuffer;
-  final Label diffCue;
-
-  public TimeDifferenceMouseListener(ClassicTISBuffer visualElementBuffer) {
-    this.visualElementBuffer = visualElementBuffer;
-    this.table = visualElementBuffer.grid;
-    this.diffCue = visualElementBuffer.diffCue;
+  TableMediator tableMediator;
+  Grid grid;
+  
+  public TimeDifferenceMouseListener(TableMediator tableMediator) {
+    this.tableMediator = tableMediator;
+    this.grid = tableMediator.getGrid();
   }
 
-  private void updateLabel(int selIndex, int otherIndex) {
-    ITableItemStub selVE = visualElementBuffer.get(selIndex);
-    ITableItemStub otherVE = visualElementBuffer.get(otherIndex);
-    if (!(selVE instanceof LoggingEventTIS)) {
-      return;
-    }
-    if (!(otherVE instanceof LoggingEventTIS)) {
-      return;
-    }
-    LoggingEventTIS selLE = (LoggingEventTIS) selVE;
-    LoggingEventTIS otherLE = (LoggingEventTIS) otherVE;
 
-    long diff = otherLE.getILoggingEvent().getTimeStamp()
-	- selLE.getILoggingEvent().getTimeStamp();
-
-    diffCue.setText(diff + "  ms");
-  }
 
   @Override
   public void mouseMove(MouseEvent e) {
+    // it does not make sense to measure time differemce of the mouse botton
+    // is held down
     if (MouseEventUtil.isButtonHeldDown(e)) {
       return;
     }
 
-    int selectionCount = table.getSelectionCount();
+    // we can't measure the time difference for multiple selections
+    int selectionCount = grid.getSelectionCount();
     if (selectionCount != 1) {
       return;
     }
 
-    int otherIndex = MouseEventUtil.computeIndex(table, e);
+    int otherIndex = MouseEventUtil.computeIndex(tableMediator.getGrid(), e);
     if (otherIndex == Constants.NA) {
       return;
     }
-    int selectionIndex = table.getSelectionIndex();
-    updateLabel(selectionIndex, otherIndex);
+    int selectionIndex = grid.getSelectionIndex();
+    updateTimeDifferenceLabel(selectionIndex, otherIndex);
 
   }
 
+  private void updateTimeDifferenceLabel(int selectedIndex, int mouseOverIndex) {
+    ITableItemStub selectedTIS = tableMediator.classicTISBuffer.get(selectedIndex);
+    ITableItemStub mouseOverTIS = tableMediator.classicTISBuffer.get(mouseOverIndex);
+    if (!(selectedTIS instanceof LoggingEventTIS)) {
+      return;
+    }
+    if (!(mouseOverTIS instanceof LoggingEventTIS)) {
+      return;
+    }
+    LoggingEventTIS selectedLETIS = (LoggingEventTIS) selectedTIS;
+    LoggingEventTIS mouseOverLETIS = (LoggingEventTIS) mouseOverTIS;
+
+    long diff = mouseOverLETIS.getILoggingEvent().getTimeStamp()
+	- selectedLETIS.getILoggingEvent().getTimeStamp();
+
+    tableMediator.setTimeDifferenceLabelText(diff + "  ms");
+  }
 }

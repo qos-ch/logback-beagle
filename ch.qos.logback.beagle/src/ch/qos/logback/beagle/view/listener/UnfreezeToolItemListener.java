@@ -12,23 +12,23 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.ToolItem;
 
-import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+import ch.qos.logback.beagle.view.TableMediator;
 
 public class UnfreezeToolItemListener implements SelectionListener {
 
-  final ClassicTISBuffer classicTISBuffer;
-
-  public UnfreezeToolItemListener(ClassicTISBuffer classicTISBuffer) {
-    this.classicTISBuffer = classicTISBuffer;
+  final TableMediator tableMediator;
+  
+  public UnfreezeToolItemListener(TableMediator tableMediator) {
+    this.tableMediator = tableMediator;
   }
 
   @Override
   public void widgetSelected(SelectionEvent event) {
     ToolItem toolItem = (ToolItem) event.widget;
     toolItem.setEnabled(false);
-    classicTISBuffer.grid.deselectAll();
-    classicTISBuffer.setScrollingEnabled(true);
-    classicTISBuffer.clearCues();
+    tableMediator.getGrid().deselectAll();
+    tableMediator.classicTISBuffer.setScrollingEnabled(true);
+    tableMediator.setTimeDifferenceLabelText("");
   }
 
   @Override

@@ -8,27 +8,24 @@
  */
 package ch.qos.logback.beagle.view.listener;
 
-import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.ToolItem;
 
+import ch.qos.logback.beagle.view.TableMediator;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class TableItemSelectionListener implements SelectionListener {
 
-  Grid grid;
   ClassicTISBuffer classicTISBuffer;
   GridItem lastSelection;
   ToolItem unfreezeButton;
-
+  final TableMediator tableMediator;
   
-  public TableItemSelectionListener(Grid table,
-      ClassicTISBuffer visualElementBuffer, ToolItem unfreezeButton,
-      UnfreezeToolItemListener unfreezeButtonListener) {
-    this.grid = table;
-    this.classicTISBuffer = visualElementBuffer;
+  public TableItemSelectionListener(TableMediator tableMediator,
+      ToolItem unfreezeButton) {
+    this.tableMediator = tableMediator;
     this.unfreezeButton = unfreezeButton;
     
   }
@@ -39,14 +36,14 @@ public class TableItemSelectionListener implements SelectionListener {
 
   @Override
   public void widgetSelected(SelectionEvent e) {
-    GridItem currentlySelectedTI = (GridItem) e.item;
-    if(currentlySelectedTI == null) 
+    GridItem currentlySelectedGridItem = (GridItem) e.item;
+    if(currentlySelectedGridItem == null) 
       return;
     
-    classicTISBuffer.setScrollingEnabled(false);
+    tableMediator.classicTISBuffer.setScrollingEnabled(false);
     unfreezeButton.setEnabled(true);
-    lastSelection = currentlySelectedTI;
-    classicTISBuffer.clearCues();
+    lastSelection = currentlySelectedGridItem;
+    tableMediator.setTimeDifferenceLabelText("");
     
   }
 }

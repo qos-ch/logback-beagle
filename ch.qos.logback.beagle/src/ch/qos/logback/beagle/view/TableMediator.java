@@ -13,8 +13,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -26,6 +24,7 @@ import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.menu.MenuBuilder;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesChangeListenter;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
+import ch.qos.logback.beagle.util.LayoutDataHelper;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.view.listener.ColumnControlListener;
@@ -42,77 +41,73 @@ import ch.qos.logback.core.pattern.Converter;
 
 public class TableMediator {
 
-  static final int OFFSET_FROM_BUTTOM = -5;
+  static final int OFFSET_FROM_BUTTOM = -10;
 
-
-  public Grid grid;
+  final Grid grid;
   public ClassicTISBuffer classicTISBuffer;
   public BeaglePreferencesChangeListenter preferencesChangeListenter;
+
   final Composite parent;
-  public ConverterFacade converterFacade = new ConverterFacade();
+  ConverterFacade converterFacade = new ConverterFacade();
   private LoggerContext loggerContext = new LoggerContext();
+  Label timeDifferenceLabel;
+  Label totalEventsLabel;
+  ToolItem unfreezeToolItem;
 
   public TableMediator(Composite parent) {
     this.parent = parent;
+    this.timeDifferenceLabel = new Label(parent, SWT.LEFT);
+    this.totalEventsLabel = new Label(parent, SWT.LEFT);
+    this.grid = new Grid(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
+	| SWT.MULTI | SWT.BORDER);
+
     init();
   }
 
   private void init() {
     loggerContext.setName("beagle");
 
-    grid = new Grid(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
-	| SWT.MULTI | SWT.BORDER);
     grid.setFont(ResourceUtil.FONT);
 
     int charHeight = MetricsUtil.computeCharHeight(grid);
     int charWidth = MetricsUtil.computeCharWidth(grid);
 
-    FormData formData;
-    formData = new FormData(Constants.ICON_SIZE, Constants.ICON_SIZE);
-    formData.left = new FormAttachment(0, charWidth);
-    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
+   
+    LayoutDataHelper.make(this.totalEventsLabel, 12 * charWidth, charHeight)
+	.left(charWidth).bottom(OFFSET_FROM_BUTTOM).set();
+    this.totalEventsLabel.setText("0 events");
 
-    formData = new FormData(30 * charWidth, charHeight);
-    Label diffCueLabel = new Label(parent, SWT.LEFT);
-    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
-    diffCueLabel.setLayoutData(formData);
-    diffCueLabel.setText("");
+    Label separator0Label = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
+    LayoutDataHelper.make(separator0Label, charWidth, charHeight)
+	.bottom(OFFSET_FROM_BUTTOM).rightOf(this.totalEventsLabel, 10).set();
+
+    LayoutDataHelper.make(timeDifferenceLabel, 12 * charWidth, charHeight)
+	.bottom(OFFSET_FROM_BUTTOM).rightOf(separator0Label, 10).set();
 
     ToolBar toolbar = new ToolBar(parent, SWT.HORIZONTAL);
-    formData = new FormData();
-    formData.right = new FormAttachment(100, -5);
-    formData.bottom = new FormAttachment(100, OFFSET_FROM_BUTTOM);
+    LayoutDataHelper.make(toolbar).right(-5).bottom(-5).set();
 
-    // formData.right = new FormAttachment(100, -5);
-    // formData.top = new FormAttachment(0, 5);
-    toolbar.setLayoutData(formData);
-    ToolItem unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
-    unfreezeToolItem.setEnabled(false);
-    unfreezeToolItem.setImage(ResourceUtil
+    this.unfreezeToolItem = new ToolItem(toolbar, SWT.PUSH);
+    this.unfreezeToolItem.setEnabled(false);
+    this.unfreezeToolItem.setImage(ResourceUtil
 	.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
-    unfreezeToolItem.setToolTipText("release scroll lock");
+    this.unfreezeToolItem.setToolTipText("release scroll lock");
 
-    formData = new FormData();
-    formData.top = new FormAttachment(0, 5);
-    formData.left = new FormAttachment(0, 5);
-    formData.right = new FormAttachment(100, -5);
-    formData.bottom = new FormAttachment(toolbar, -5);
-
-    grid.setLayoutData(formData);
+    LayoutDataHelper.make(grid).top(5).left(5).right(-5).above(toolbar, -1)
+	.set();
     grid.setHeaderVisible(true);
     grid.setLinesVisible(false);
     grid.setAutoHeight(true);
 
     grid.addControlListener(new TableControlListener(charWidth));
-    
+
     initConverterFacade();
-    
+
     int bufSize = getPreferredBufferSize();
-    classicTISBuffer = new ClassicTISBuffer(converterFacade, grid, bufSize);
+    classicTISBuffer = new ClassicTISBuffer(this, bufSize);
     createColumns();
-    classicTISBuffer.diffCue = diffCueLabel;
     grid.pack();
-    
+
     preferencesChangeListenter = new BeaglePreferencesChangeListenter(this);
 
     // when the table is cleared classicTISBuffer's handleEvent method will
@@ -121,20 +116,20 @@ public class TableMediator {
     grid.addDisposeListener(classicTISBuffer);
 
     UnfreezeToolItemListener unfreezeButtonListener = new UnfreezeToolItemListener(
-	classicTISBuffer);
+	this);
     unfreezeToolItem.addSelectionListener(unfreezeButtonListener);
 
     TableItemSelectionListener tableItemSelectionListener = new TableItemSelectionListener(
-	grid, classicTISBuffer, unfreezeToolItem, unfreezeButtonListener);
+	this, unfreezeToolItem);
     grid.addSelectionListener(tableItemSelectionListener);
 
     TableSelectionViaMouseMovements myMouseListener = new TableSelectionViaMouseMovements(
-	classicTISBuffer);
+	this);
     grid.addMouseMoveListener(myMouseListener);
     grid.addMouseListener(myMouseListener);
     grid.addMouseTrackListener(myMouseListener);
 
-    grid.addMouseMoveListener(new TimeDifferenceMouseListener(classicTISBuffer));
+    grid.addMouseMoveListener(new TimeDifferenceMouseListener(this));
 
     Menu menu = MenuBuilder.buildMenu(classicTISBuffer);
     MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
@@ -142,19 +137,22 @@ public class TableMediator {
     grid.setItemCount(0);
   }
 
+  public Grid getGrid() {
+    return grid;
+  }
+
   public void setBufferSize(int size) {
     classicTISBuffer.setBufferSize(size);
   }
-  
 
   void disposeOfExistingColumns() {
-    for(GridColumn column: grid.getColumns()) {
+    for (GridColumn column : grid.getColumns()) {
       column.dispose();
     }
   }
-  
+
   public void patternChange(String newPattern) {
-    if(newPattern != null) {
+    if (newPattern != null) {
       converterFacade.setPattern(newPattern);
       converterFacade.start();
       grid.removeAll();
@@ -163,7 +161,7 @@ public class TableMediator {
       classicTISBuffer.rebuildEmptyGrid();
     }
   }
-  
+
   int getPreferredBufferSize() {
     int result = BeaglePreferencesPage.BUFFER_SIZE_PREFERENCE_DEFAULT_VALUE;
     if (Activator.INSTANCE != null) {
@@ -204,7 +202,6 @@ public class TableMediator {
     }
   }
 
-
   private void initConverterFacade() {
     converterFacade.setContext(loggerContext);
     String pattern = BeaglePreferencesPage.PATTERN_PREFERENCE_DEFAULT_VALUE;
@@ -216,5 +213,16 @@ public class TableMediator {
     converterFacade.start();
   }
 
+  public void setTimeDifferenceLabelText(String str) {
+    timeDifferenceLabel.setText(str);
+  }
+
+  public void setTotalEventsLabelText(String str) {
+    totalEventsLabel.setText(str);
+  }
+
+  public ConverterFacade getConverterFacade() {
+    return converterFacade;
+  }
 
 }
