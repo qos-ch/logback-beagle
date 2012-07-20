@@ -8,10 +8,14 @@
  */
 package ch.qos.logback.beagle.util;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
+
+import ch.qos.logback.beagle.Activator;
+import ch.qos.logback.beagle.Constants;
 
 public class TableUtil {
 
@@ -22,12 +26,17 @@ public class TableUtil {
 	itemCount - start);
   }
   
+  public static void saveColumnWidth(String columnName, int width) {
+    IDialogSettings dialogSettings = Activator.INSTANCE.getDialogSettings();
+    dialogSettings.put(Constants.COLUMN_SIZE_DIALOG_SETTINGS_PREFIX+columnName, width);
+  }
   
-  public static void adjustWidthOfLastColumn(Grid grid) {
+  public static int adjustWidthOfLastColumn(Grid grid) {
     int lastColumnIndex = grid.getColumnCount() - 1;
     if (lastColumnIndex <= 0)
-      return;
+      return 0;
 
+    //System.out.println("Adjusting width of last column");
     int visibleTableWidth = computeVisibleTableWidth(grid);
     int totalWidthOfOtherColumns = computeWidthOfAllColumnExceptLast(grid);
     
@@ -38,6 +47,7 @@ public class TableUtil {
     int lastColumnTargetWidth = Math.max(100, lastColumnAvailableWidth -4);
     GridColumn gridColumn = grid.getColumn(lastColumnIndex);
     gridColumn.setWidth(lastColumnTargetWidth);
+    return lastColumnTargetWidth;
   }
 
   public static int computeVisibleTableWidth(Grid grid) {

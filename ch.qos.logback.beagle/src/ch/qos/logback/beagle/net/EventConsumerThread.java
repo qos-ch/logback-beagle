@@ -47,7 +47,7 @@ public class EventConsumerThread extends Thread implements Listener {
   private void handleNewEvents(List<ILoggingEvent> newEventList) {
     if(newEventList.size() == 0)
       return;
-    System.out.println("batch size "+newEventList.size());
+    //System.out.println("batch size "+newEventList.size());
     iTableItemStubBuffer.add(newEventList);
   }
 

@@ -14,7 +14,7 @@ public class ColumnControlListener implements ControlListener {
   
   final String columnName;
   final Grid grid;
-  int oldColumnSize = -1;
+  int oldColumnWidth = -1;
   final boolean isColumnLast;
   
   public ColumnControlListener(Grid grid, String columnName, boolean isColumnLast) {
@@ -30,16 +30,16 @@ public class ColumnControlListener implements ControlListener {
   @Override
   public void controlResized(ControlEvent e) {
     GridColumn column = (GridColumn) e.widget;
-    System.out.println("ColumnControlListener new col width for "+columnName+" "+column.getWidth());
+    //System.out.println("ColumnControlListener.controlResized column: "+columnName+", new width="+column.getWidth()+", old width"+oldColumnWidth);
     
     int newSize = column.getWidth();
-    if(!isColumnLast && oldColumnSize > newSize) {
+    if(!isColumnLast && oldColumnWidth > newSize) {
       TableUtil.adjustWidthOfLastColumn(grid);
     } else {
-      // for size of last column to all available space
+      // force width of last column to all available space
       TableUtil.adjustWidthOfLastColumn(grid);
     }
-    oldColumnSize = newSize;
+    oldColumnWidth = newSize;
     saveColumnSize(newSize);
   }
 
