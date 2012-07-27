@@ -30,7 +30,12 @@ public class ResourceUtil {
   public static String RELEASE_SCROLL_LOCK_IMG_KEY = "RELEASE_SCROLL_LOCK_IMG_KEY";
   public static String EXPAND_CALLERS_IMG_KEY = "EXPAND_CALLERS_IMG_KEY";
   public static String COPY_CLIPBAORD_IMG_KEY = "COPY_CLIPBAORD_IMG_KEY";
-  
+  public static String T_IMG_KEY = "T_IMG_KEY";
+  public static String D_IMG_KEY = "D_IMG_KEY";
+  public static String I_IMG_KEY = "I_IMG_KEY";
+  public static String W_IMG_KEY = "W_IMG_KEY";
+  public static String E_IMG_KEY = "E_IMG_KEY";
+
   public static String JUMP_IMG_KEY = "JUMP_IMG_KEY";
   public static Color GRAY;
   public static Font FONT;
@@ -48,14 +53,24 @@ public class ResourceUtil {
     putImage(ERROR_IMG_KEY, ERROR_IMG);
 
     putImage(RELEASE_SCROLL_LOCK_IMG_KEY,
-	loadImage(display, PATH_TO_ICONS + "play_doc.gif"));
+        loadImage(display, PATH_TO_ICONS + "play_doc.gif"));
 
     putImage(JUMP_IMG_KEY, loadImage(display, PATH_TO_ICONS + "book_open.png"));
     putImage(EXPAND_CALLERS_IMG_KEY,
-	loadImage(display, PATH_TO_ICONS + "preview-16x16.png"));
+        loadImage(display, PATH_TO_ICONS + "preview-16x16.png"));
     putImage(COPY_CLIPBAORD_IMG_KEY,
-	loadImage(display, PATH_TO_ICONS + "copy-16x16.png"));
+        loadImage(display, PATH_TO_ICONS + "copy-16x16.png"));
 
+    putImage(T_IMG_KEY,
+        loadImage(display, PATH_TO_ICONS + "T-16x16.png"));
+    putImage(D_IMG_KEY,
+        loadImage(display, PATH_TO_ICONS + "D-16x16.png"));
+    putImage(I_IMG_KEY,
+        loadImage(display, PATH_TO_ICONS + "I-16x16.png"));    
+    putImage(W_IMG_KEY,
+        loadImage(display, PATH_TO_ICONS + "W-16x16.png"));    
+    putImage(E_IMG_KEY,
+            loadImage(display, PATH_TO_ICONS + "E-16x16.png"));    
     FONT = new Font(null, "Courier", 10, SWT.NORMAL);
     GRAY = new Color(display, 245, 247, 248);
 
@@ -65,8 +80,7 @@ public class ResourceUtil {
     // URL url = ResourceUtil.class.getClassLoader().getResource(resourcePath);
     // ImageDescriptor iDescriptor = ImageDescriptor.createFromURL(url);
     ImageDescriptor iDescriptor = ImageDescriptor.createFromFile(
-	Constants.class,
-	resourcePath);
+        Constants.class, resourcePath);
     return iDescriptor.createImage();
   }
 
@@ -74,7 +88,7 @@ public class ResourceUtil {
       int scale) {
     Image image = loadImage(display, resourcePath);
     Image scaled = new Image(display, image.getImageData().scaledTo(scale,
-	scale));
+        scale));
     return scaled;
   }
 
@@ -93,7 +107,7 @@ public class ResourceUtil {
   public static void dispose() {
     for (Image img : IMAGE_MAP.values()) {
       if (img != null) {
-	img.dispose();
+        img.dispose();
       }
     }
     FONT.dispose();
