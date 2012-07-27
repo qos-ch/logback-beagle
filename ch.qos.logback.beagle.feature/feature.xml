@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
-      id="ch.qos.logback.beagle.feature"
-      label="Logback Beagle Feature"
-      version="1.0.0.qualifier"
-      provider-name="http://logback.qos.ch">
-
-   <description url="http://logback.qos.ch/consolePlugin.html">
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.qos.logback.beagle.feature"
+      label="Logback Beagle Feature"
+      version="1.1.0.qualifier"
+      provider-name="http://logback.qos.ch">
+
+   <description url="http://logback.qos.ch/consolePlugin.html">
       During the development process, it is common for developers to
 print log output on the console. Typically, the developer will
 also customize the format of the log output by setting properties
@@ -16,28 +16,28 @@ Here is a list of key advantages of our plugin:
 - coloring of events
 - easy jump to caller 
 - flexible output format
-- easy configuration
-   </description>
-
-   <copyright url="http://logback.qos.ch/license.html">
-      Copyright (C) 2006-2012, QOS.ch. All rights reserved.
-   </copyright>
-
-   <license url="http://logback.qos.ch/license.html">
+- easy configuration
+   </description>
+
+   <copyright url="http://logback.qos.ch/license.html">
+      Copyright (C) 2006-2012, QOS.ch. All rights reserved.
+   </copyright>
+
+   <license url="http://logback.qos.ch/license.html">
       This program and the accompanying materials are licensed under
 the terms of the Eclipse Public License v1.0 as published by
-the Eclipse Foundation.
-   </license>
-
-   <url>
-      <update label="Logback" url="http://logback.qos.ch/eclipse/"/>
-   </url>
-
-   <plugin
-         id="ch.qos.logback.beagle"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-</feature>
+the Eclipse Foundation.
+   </license>
+
+   <url>
+      <update label="Logback" url="http://logback.qos.ch/eclipse/"/>
+   </url>
+
+   <plugin
+         id="ch.qos.logback.beagle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

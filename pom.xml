@@ -35,7 +35,7 @@
     <repository>
       <id>logback</id>
       <layout>p2</layout>
-      <url>http://logback.qos.ch/p2/proper</url>
+      <url>http://logback.qos.ch/p2/proper-nightly</url>
     </repository>
   </repositories>
 
@@ -58,14 +58,15 @@
         <extensions>true</extensions>
       </plugin>
       <!-- target platform configuration -->
-      <plugin>
+      <!-- <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
         <version>${tycho-version}</version>
         <configuration>
-          <pomDependencies>consider</pomDependencies>
+          ==<pomDependencies>consider</pomDependencies>==
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 
