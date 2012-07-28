@@ -15,17 +15,22 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Tree;
 
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
-import ch.qos.logback.beagle.menu.MenuBuilder;
+import ch.qos.logback.beagle.menu.GridMenuBuilder;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesChangeListenter;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
+import ch.qos.logback.beagle.tree.LoggerTree;
+import ch.qos.logback.beagle.tree.TreeMenuBuilder;
 import ch.qos.logback.beagle.util.LayoutDataHelper;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
@@ -46,35 +51,42 @@ public class TableMediator {
   static final int OFFSET_FROM_BUTTOM = -10;
 
   final Grid grid;
+  final Tree tree;
   public ClassicTISBuffer classicTISBuffer;
+  final Sash sash;
+  private final LoggerTree loggerTree;
+  
   public BeaglePreferencesChangeListenter preferencesChangeListenter;
 
   final Composite parent;
   ConverterFacade converterFacade = new ConverterFacade();
-  private LoggerContext loggerContext = new LoggerContext();
+  LoggerContext loggerContext = new LoggerContext();
   Label timeDifferenceLabel;
   Label totalEventsLabel;
   ToolItem unfreezeToolItem;
-
+  
   public TableMediator(Composite parent) {
     this.parent = parent;
     this.timeDifferenceLabel = new Label(parent, SWT.LEFT);
     this.totalEventsLabel = new Label(parent, SWT.LEFT);
     this.grid = new Grid(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
 	| SWT.MULTI | SWT.BORDER);
-
+    this.tree = new Tree(parent, SWT.BORDER);
+    this.sash = new Sash(parent, SWT.VERTICAL);
+    this.loggerTree = new LoggerTree(loggerContext, tree);
     init();
   }
 
   private void init() {
     loggerContext.setName("beagle");
-
+    
+    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree));
+    
     grid.setFont(ResourceUtil.FONT);
 
     int charHeight = MetricsUtil.computeCharHeight(grid);
     int charWidth = MetricsUtil.computeCharWidth(grid);
 
-   
     LayoutDataHelper.make(this.totalEventsLabel, 12 * charWidth, charHeight)
 	.left(charWidth).bottom(OFFSET_FROM_BUTTOM).set();
     this.totalEventsLabel.setText("0 events");
@@ -87,9 +99,18 @@ public class TableMediator {
 	.bottom(OFFSET_FROM_BUTTOM).rightOf(separator0Label, 10).set();
 
     ToolBar toolbar = buildToolbarAndItsItems();
-
+    
+    LayoutDataHelper sashLDH = LayoutDataHelper.make(sash).top(5).above(toolbar, -1);
+    sashLDH.getFormData().left =  new FormAttachment(30, 0);
+    sashLDH.getFormData().right =  new FormAttachment(30, Constants.SASH_WIDTH);
+    
+    sashLDH.set();
+    sash.addListener(SWT.Selection, new SashListener(sash, sashLDH.getFormData()));
+    
+    LayoutDataHelper.make(tree).top(5).left(5).leftOf(sash, 0).above(toolbar, -1).set();
+    
     // place grid
-    LayoutDataHelper.make(grid).top(5).left(5).right(-5).above(toolbar, -1)
+    LayoutDataHelper.make(grid).top(5).rightOf(sash, 0).right(-5).above(toolbar, -1)
 	.set();
     
     grid.setHeaderVisible(true);
@@ -124,10 +145,12 @@ public class TableMediator {
 
     grid.addMouseMoveListener(new TimeDifferenceMouseListener(this));
 
-    Menu menu = MenuBuilder.buildMenu(classicTISBuffer);
-    MenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
+    Menu menu = GridMenuBuilder.buildMenu(classicTISBuffer);
+    GridMenuBuilder.addOnMenuSelectionAction(menu, classicTISBuffer);
     grid.setMenu(menu);
     grid.setItemCount(0);
+    
+    
   }
 
 
@@ -239,6 +262,14 @@ public class TableMediator {
 
   public ConverterFacade getConverterFacade() {
     return converterFacade;
+  }
+
+  public LoggerContext getLoggerContext() {
+    return loggerContext;
+  }
+
+  public LoggerTree getLoggerTree() {
+    return loggerTree;
   }
 
 }

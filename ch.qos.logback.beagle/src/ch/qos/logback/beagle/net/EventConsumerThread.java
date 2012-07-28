@@ -16,10 +16,10 @@ public class EventConsumerThread extends Thread implements Listener {
   final BlockingQueue<ILoggingEvent> blockingQueue = new LinkedBlockingQueue<ILoggingEvent>();
 
   final static long MANDATORY_SLEEP = 500;
-  
+
   ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer;
   boolean disposed = false;
-
+  
   public EventConsumerThread(ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer) {
     this.iTableItemStubBuffer = iTableItemStubBuffer;
   }
@@ -33,23 +33,24 @@ public class EventConsumerThread extends Thread implements Listener {
 
     while (!disposed) {
       try {
-	Thread.sleep(MANDATORY_SLEEP);
-	List<ILoggingEvent> newEventList = new ArrayList<ILoggingEvent>();
-	blockingQueue.drainTo(newEventList);
-	handleNewEvents(newEventList);
+        Thread.sleep(MANDATORY_SLEEP);
+        List<ILoggingEvent> newEventList = new ArrayList<ILoggingEvent>();
+        blockingQueue.drainTo(newEventList);
+        handleNewEvents(newEventList);
       } catch (InterruptedException e) {
-	e.printStackTrace();
+        e.printStackTrace();
       }
     }
 
   }
 
   private void handleNewEvents(List<ILoggingEvent> newEventList) {
-    if(newEventList.size() == 0)
+    if (newEventList.size() == 0)
       return;
-    //System.out.println("batch size "+newEventList.size());
     iTableItemStubBuffer.add(newEventList);
   }
+
+
 
   public boolean isDisposed() {
     return disposed;

@@ -63,7 +63,7 @@ public class OnMenuSelectionAction implements SelectionListener {
   private void handleCallerMenu(String menuItemText, int index,
       ITableItemStub iTableItemStub) {
     
-    if (MenuBuilder.EXPLAND_CALLERS_MENU_TEXT.equals(menuItemText)) {
+    if (GridMenuBuilder.EXPLAND_CALLERS_MENU_TEXT.equals(menuItemText)) {
       StackTraceElement[] callerDataArray = getCallerDataFromTIS(iTableItemStub);
 
       if (callerDataArray != null && callerDataArray.length > 0) {
@@ -106,14 +106,14 @@ public class OnMenuSelectionAction implements SelectionListener {
     }
 
     switch (menuItemToIndex(mi)) {
-    case MenuBuilder.JUMP_TO_CALLER_MENU_INDEX:
+    case GridMenuBuilder.JUMP_TO_CALLER_MENU_INDEX:
       handleMenuJump(iVisualElement);
       break;
-    case MenuBuilder.SHOW_CALLERS_MENU_INDEX:
+    case GridMenuBuilder.SHOW_CALLERS_MENU_INDEX:
       handleCallerMenu(mi.getText(), index, iVisualElement);
       break;
 
-    case MenuBuilder.COPY_TO_CLIPBOARD_MENU_INDEX:
+    case GridMenuBuilder.COPY_TO_CLIPBOARD_MENU_INDEX:
       //System.out.println("**** Clipboard");
       handleCopyToClipboard(e.display);
       break;

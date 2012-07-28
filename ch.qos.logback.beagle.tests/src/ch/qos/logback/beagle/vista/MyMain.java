@@ -19,41 +19,41 @@ import ch.qos.logback.beagle.view.TableMediator;
 
 public class MyMain {
 
-	static final int OFFSET_FROM_BUTTOM = -5;
+  static final int OFFSET_FROM_BUTTOM = -5;
 
-	public static void main(String[] args) {;
-		Display display = new Display();
-		ResourceUtil.init(display);
+  public static void main(String[] args) {
+    Display display = new Display();
+    ResourceUtil.init(display);
 
-		Shell shell = new Shell(display);
-		shell.setText("Logback Beagle");
-		shell.setBounds(100, 100, 500, 500);
-		shell.setLayout(new FormLayout());
+    Shell shell = new Shell(display);
+    shell.setText("Logback Beagle");
+    shell.setBounds(100, 100, 500, 500);
+    shell.setLayout(new FormLayout());
 
-		TableMediator tableMediator = new TableMediator(shell);
+    TableMediator tableMediator = new TableMediator(shell);
+    
+    EventConsumerThread eventConsumerThread = new EventConsumerThread(tableMediator.classicTISBuffer);
+    MySupplierThread supplierThread0 = new MySupplierThread(
+        eventConsumerThread.getBlockingQueue());
 
-		EventConsumerThread eventConsumerThread = new EventConsumerThread(
-				tableMediator.classicTISBuffer);
-		MySupplierThread supplierThread0 = new MySupplierThread(eventConsumerThread.getBlockingQueue());
+    display.addListener(SWT.Dispose, supplierThread0);
+    supplierThread0.start();
 
-		display.addListener(SWT.Dispose, supplierThread0);
-		supplierThread0.start();
+    display.addListener(SWT.Dispose, eventConsumerThread);
+    eventConsumerThread.start();
 
-		display.addListener(SWT.Dispose, eventConsumerThread);
-		eventConsumerThread.start();
-
-		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		try {
-			display.dispose();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ResourceUtil.dispose();
-		System.out.println("exiting");
-	}
+    shell.open();
+    while (!shell.isDisposed()) {
+      if (!display.readAndDispatch())
+        display.sleep();
+    }
+    try {
+      display.dispose();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    ResourceUtil.dispose();
+    System.out.println("exiting");
+  }
 
 }

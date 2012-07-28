@@ -1,3 +1,11 @@
+/**
+ * Logback-beagle: The logback Console Plugin for Eclipse 
+ * Copyright (C) 2006-2012, QOS.ch. All rights reserved.
+ *
+ * This program and the accompanying materials are licensed under
+ * either the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
+ */
 package ch.qos.logback.beagle.net;
 
 import java.io.IOException;
@@ -12,6 +20,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.visual.ITableItemStubBuffer;
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
@@ -30,9 +39,11 @@ public class LoggingEventSocketServer implements Runnable, Listener {
 
   final ITableItemStubBuffer<ILoggingEvent> iTableItemStubBuffer;
   List<LoggingEventSocketReader> socketReaderList = new ArrayList<LoggingEventSocketReader>();
-
-  public LoggingEventSocketServer(
+  final LoggerContext loggerContext;
+  
+  public LoggingEventSocketServer(LoggerContext loggerContext,
       ITableItemStubBuffer<ILoggingEvent> classicTISBuffer) {
+    this.loggerContext = loggerContext;
     this.iTableItemStubBuffer = classicTISBuffer;
   }
 
@@ -53,8 +64,7 @@ public class LoggingEventSocketServer implements Runnable, Listener {
       serverSocket = new ServerSocket(port);
       while (!stop) {
 	Socket socket = serverSocket.accept();
-	EventConsumerThread eventConsumerThread = new EventConsumerThread(
-	    iTableItemStubBuffer);
+	EventConsumerThread eventConsumerThread = new EventConsumerThread(iTableItemStubBuffer);
 	eventConsumerThread.start();
 	LoggingEventSocketReader lesr = new LoggingEventSocketReader(socket,
 	    eventConsumerThread.getBlockingQueue());

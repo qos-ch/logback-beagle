@@ -52,11 +52,11 @@ public class BeagleView extends ViewPart {
     tableMediator = new TableMediator(parent);
 
     Activator.INSTANCE.getPreferenceStore().addPropertyChangeListener(
-	tableMediator.preferencesChangeListenter);
+        tableMediator.preferencesChangeListenter);
 
     // start Beagle socket server
     LoggingEventSocketServer loggingEventSocketServer = new LoggingEventSocketServer(
-	tableMediator.classicTISBuffer);
+        tableMediator.loggerContext, tableMediator.classicTISBuffer);
     Thread serverThread = new Thread(loggingEventSocketServer);
     serverThread.start();
 
@@ -64,10 +64,10 @@ public class BeagleView extends ViewPart {
     parent.addListener(SWT.Dispose, loggingEventSocketServer);
 
     PlatformUI.getWorkbench().getHelpSystem()
-	.setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
+        .setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
   }
-  
+
   public TableMediator getTableMediator() {
     return tableMediator;
   }
@@ -84,6 +84,6 @@ public class BeagleView extends ViewPart {
   public void dispose() {
     super.dispose();
     Activator.INSTANCE.getPreferenceStore().removePropertyChangeListener(
-	tableMediator.preferencesChangeListenter);
+        tableMediator.preferencesChangeListenter);
   }
 }

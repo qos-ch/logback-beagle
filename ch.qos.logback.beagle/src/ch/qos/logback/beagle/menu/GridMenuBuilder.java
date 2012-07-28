@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
-public class MenuBuilder {
+public class GridMenuBuilder {
 
   final public static String JUMP_TO_CALLER_MENU_TEXT = "Jump to caller";
   final public static String EXPLAND_CALLERS_MENU_TEXT = "Expand caller data";
@@ -34,17 +34,17 @@ public class MenuBuilder {
     Menu menu = new Menu(classicTISBuffer.getGrid());
 
     MenuItem jumpToCaller = new MenuItem(menu, SWT.PUSH);
-    jumpToCaller.setText(MenuBuilder.JUMP_TO_CALLER_MENU_TEXT);
+    jumpToCaller.setText(GridMenuBuilder.JUMP_TO_CALLER_MENU_TEXT);
     jumpToCaller.setImage(ResourceUtil.getImage(JUMP_IMG_KEY));
 
     MenuItem expandCallersMenuItem = new MenuItem(menu, SWT.PUSH);
-    expandCallersMenuItem.setText(MenuBuilder.EXPLAND_CALLERS_MENU_TEXT);
+    expandCallersMenuItem.setText(GridMenuBuilder.EXPLAND_CALLERS_MENU_TEXT);
     expandCallersMenuItem.setImage(ResourceUtil
 	.getImage(EXPAND_CALLERS_IMG_KEY));
 
-    MenuItem otherMenuItem = new MenuItem(menu, SWT.PUSH);
-    otherMenuItem.setText(MenuBuilder.COPY_TO_CLIPBOARD_MENU_TEXT);
-    otherMenuItem.setImage(ResourceUtil.getImage(COPY_CLIPBAORD_IMG_KEY));
+    MenuItem copyToClipboardMenuItem = new MenuItem(menu, SWT.PUSH);
+    copyToClipboardMenuItem.setText(GridMenuBuilder.COPY_TO_CLIPBOARD_MENU_TEXT);
+    copyToClipboardMenuItem.setImage(ResourceUtil.getImage(COPY_CLIPBAORD_IMG_KEY));
 
     if (menu != null) {
       menu.addMenuListener(new DynamicMenuEnabler(classicTISBuffer));
@@ -54,9 +54,9 @@ public class MenuBuilder {
   }
 
   static public void addOnMenuSelectionAction(Menu menu,
-      ClassicTISBuffer visualElementBuffer) {
+      ClassicTISBuffer classicTISBuffer) {
     OnMenuSelectionAction onMenuSelectionAction = new OnMenuSelectionAction(
-	visualElementBuffer);
+	classicTISBuffer);
     for (MenuItem menuItem : menu.getItems()) {
       menuItem.addSelectionListener(onMenuSelectionAction);
     }

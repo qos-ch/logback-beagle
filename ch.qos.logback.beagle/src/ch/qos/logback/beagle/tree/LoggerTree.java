@@ -1,11 +1,22 @@
+/**
+ * Logback-beagle: The logback Console Plugin for Eclipse 
+ * Copyright (C) 2006-2012, QOS.ch. All rights reserved.
+ *
+ * This program and the accompanying materials are licensed under
+ * either the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
+ */
 package ch.qos.logback.beagle.tree;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -22,8 +33,9 @@ public class LoggerTree {
   final Tree tree;
   final TreeItem rootTreeItem;
   final int IMAGE_MARGIN = 4;
-
-  LoggerTree(LoggerContext loggerContext, Tree tree) {
+  final Set<String> seenLoggerNames = new HashSet<String>();
+  
+  public LoggerTree(LoggerContext loggerContext, Tree tree) {
     this.loggerContext = loggerContext;
     this.tree = tree;
     this.rootTreeItem = makeRootTreeItem(tree);
@@ -89,9 +101,11 @@ public class LoggerTree {
     }
   }
 
-  void update(String loggerName) {
-    if (loggerContext.exists(loggerName) == null) {
+  public void update(String loggerName) {
+    if (!seenLoggerNames.contains(loggerName)) {
+      seenLoggerNames.add(loggerName);
       // create the logger
+      System.out.println("adding "+loggerName);
       Logger logger = loggerContext.getLogger(loggerName);
       createTreeItemByLogger(logger);
     }
@@ -137,6 +151,24 @@ public class LoggerTree {
     }
     return null;
 
+  }
+
+  public void handleMenuItemSlection(MenuItem menuItem) {
+    Level level = (Level) menuItem.getData();
+    
+    TreeItem[] selectedItems = tree.getSelection();
+    if(selectedItems.length == 1) {
+      TreeItem selectedItem = selectedItems[0];
+      
+      Logger logger = (Logger) selectedItem.getData();
+      if(level == null && Logger.ROOT_LOGGER_NAME.equalsIgnoreCase(logger.getName())) {
+        return;
+      } else {
+        logger.setLevel(level);
+        tree.redraw();
+      }
+      
+    }
   }
 
 }

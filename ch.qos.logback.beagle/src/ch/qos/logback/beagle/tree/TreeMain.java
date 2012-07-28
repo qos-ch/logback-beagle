@@ -1,3 +1,11 @@
+/**
+ * Logback-beagle: The logback Console Plugin for Eclipse 
+ * Copyright (C) 2006-2012, QOS.ch. All rights reserved.
+ *
+ * This program and the accompanying materials are licensed under
+ * either the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
+ */
 package ch.qos.logback.beagle.tree;
 
 import org.eclipse.swt.SWT;
@@ -22,6 +30,7 @@ public class TreeMain {
     tree.setBounds(clientArea.x, clientArea.y, 200, 200);
 
     LoggerTree loggerTree = new LoggerTree(loggerContext, tree);
+    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree));
     loggerTree.update("com.foo.Bar");
     loggerTree.update("com.foo.Bar");
     

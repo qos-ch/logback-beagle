@@ -10,7 +10,9 @@ package ch.qos.logback.beagle.visual;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -22,11 +24,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import ch.qos.logback.beagle.tree.LoggerTree;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.view.ConverterFacade;
 import ch.qos.logback.beagle.view.TableMediator;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.core.helpers.CyclicBuffer;
 
 public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     Listener, DisposeListener {
@@ -48,14 +54,18 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   private int bufferSize;
   private int dropSize;
+  private CyclicBuffer<ILoggingEvent> cyclicBuffer;
+  private LoggerContext loggerContext;
 
   public ClassicTISBuffer(TableMediator tableMediator, int bufferSize) {
     this.tableMediator = tableMediator;
     this.grid = tableMediator.getGrid();
     this.display = grid.getDisplay();
+    this.loggerContext = tableMediator.getLoggerContext();
     this.converterFacade = tableMediator.getConverterFacade();
     this.bufferSize = bufferSize;
     this.dropSize = computeDropSize(bufferSize);
+    this.cyclicBuffer = new CyclicBuffer<>(bufferSize);
   }
 
   public ConverterFacade getConverterFacade() {
@@ -115,13 +125,13 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     while (tp != null) {
       IThrowableProxy itp = event.getThrowableProxy();
       tisList.add(new ThrowableProxyTIS(converterFacade, itp,
-	  ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
+          ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-	tisList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
+        tisList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-	tisList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
+        tisList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
@@ -134,22 +144,22 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     int found = middleIndex;
     for (int i = middleIndex; i >= limit; i--) {
       if (tisList.get(i) instanceof CallerDataTIS)
-	found = i;
+        found = i;
       else
-	break;
+        break;
     }
     return found;
   }
 
   private int findIndexOfLastCallerItem(int middleIndex) {
     int limit = middleIndex + MAX_EXTENT <= tisList.size() ? middleIndex
-	+ MAX_EXTENT : tisList.size();
+        + MAX_EXTENT : tisList.size();
     int found = middleIndex;
     for (int i = middleIndex; i < limit; i++) {
       if (tisList.get(i) instanceof CallerDataTIS)
-	found = i;
+        found = i;
       else
-	break;
+        break;
     }
     return found;
   }
@@ -177,33 +187,46 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     refreshGrid();
   }
 
+  private boolean filterEvent(ILoggingEvent event) {
+    Logger logger = loggerContext.getLogger(event.getLoggerName());
+    return logger.isEnabledFor(event.getLevel());
+  }
+
   /**
    * This method is invoked by the producer to add events into this buffer/list.
    * 
    * @param loggingEventList
    */
   public void add(final List<ILoggingEvent> loggingEventList) {
-    List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
+    List<ITableItemStub> itemStubList = new ArrayList<ITableItemStub>();
+    Set<String> loggerNames = new HashSet<String>();
+    
     for (ILoggingEvent iLoggingEvent : loggingEventList) {
-      loggingEventToVisualElement(visualElementList, iLoggingEvent);
+      cyclicBuffer.add(iLoggingEvent);
+      loggerNames.add(iLoggingEvent.getLoggerName());
+      if (filterEvent(iLoggingEvent)) {
+        loggingEventToVisualElement(itemStubList, iLoggingEvent);
+      }
     }
-    addGridItemStubs(visualElementList);
+    addGridItemStubs(itemStubList, loggerNames);
   }
 
   public void add(final ILoggingEvent iLoggingEvent) {
     List<ITableItemStub> visualElementList = new ArrayList<ITableItemStub>();
+    Set<String> loggerNames = new HashSet<String>();
     loggingEventToVisualElement(visualElementList, iLoggingEvent);
-    addGridItemStubs(visualElementList);
+    loggerNames.add(iLoggingEvent.getLoggerName());
+    addGridItemStubs(visualElementList, loggerNames);
   }
 
-  private void addGridItemStubs(final List<ITableItemStub> newTISList) {
+  private void addGridItemStubs(final List<ITableItemStub> newTISList, Set<String> loggerNames) {
     if (disposed)
       return;
 
     for (ITableItemStub ve : newTISList)
       tisList.add(ve);
 
-    display.syncExec(new AddTableItemRunnable(newTISList));
+    display.syncExec(new AddTableItemRunnable(newTISList, loggerNames));
     contactIfTooBig();
   }
 
@@ -247,7 +270,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     this.scrollingEnabled = scrollingEnabled;
   }
 
-  // called by  display.syncExec!!
+  // called by display.syncExec!!
   private void addNewItemStubsToGrid(List<ITableItemStub> aTISList) {
     if (disposed || aTISList.size() == 0) {
       return;
@@ -257,13 +280,12 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     for (ITableItemStub tis : aTISList) {
       lastGridItem = new GridItem(grid, SWT.NONE);
       if (disposed)
-	return;
+        return;
       tis.populate(lastGridItem);
     }
 
-    tableMediator.setTotalEventsLabelText(tisList.size() +" events");
+    tableMediator.setTotalEventsLabelText(tisList.size() + " events");
 
-    
     if (isScrollingEnabled()) {
       grid.showItem(lastGridItem);
     }
@@ -272,7 +294,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   void assertSize() {
     if (grid.getItemCount() != tisList.size()) {
       System.out.println("size mismatch gridSize=" + grid.getItemCount()
-	  + " tisListSize" + tisList.size());
+          + " tisListSize" + tisList.size());
     }
   }
 
@@ -297,13 +319,19 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   // ------------------------- AddTableItemRunnable class
   private final class AddTableItemRunnable implements Runnable {
     private final List<ITableItemStub> aTISList;
-
-    private AddTableItemRunnable(List<ITableItemStub> aTISList) {
+    private final Set<String> loggerNames;
+    
+    private AddTableItemRunnable(List<ITableItemStub> aTISList, Set<String> loggerNames) {
       this.aTISList = aTISList;
+      this.loggerNames = loggerNames;
     }
 
     public void run() {
       addNewItemStubsToGrid(aTISList);
+      LoggerTree lt = tableMediator.getLoggerTree();
+      for(String loggerName: loggerNames) {
+        lt.update(loggerName);
+      }
     }
   }
 

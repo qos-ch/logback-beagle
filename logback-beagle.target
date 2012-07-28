@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-<target includeMode="feature" name="logback-beagle" sequenceNumber="5">
-  <locations>
-    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.jdt.feature.group" version="3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1"/>
-      <repository location="http://download.eclipse.org/releases/indigo"/>
-    </location>
-    
-    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-      <unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
-      <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
-    </location>
-    
-    <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="ch.qos.logback.core" version="0.0.0"/>
-      <unit id="ch.qos.logback.classic" version="0.0.0"/>
-      <unit id="slf4j.api" version="0.0.0"/>
-      <repository location="http://logback.qos.ch/p2/proper-nightly/"/>
-    </location>
-    
-    <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.nebula.widgets.grid" version="0.0.0"/>
-      <repository location="http://download.eclipse.org/technology/nebula/snapshot/"/>
-    </location>
-
-
-  </locations>
-  <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+<?pde version="3.6"?><target includeMode="feature" name="logback-beagle" sequenceNumber="5">
+<locations>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1"/>
+<repository location="http://download.eclipse.org/releases/indigo"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
+<unit id="org.eclipse.swtbot.eclipse.test.junit4.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
+<repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="ch.qos.logback.core" version="0.0.0"/>
+<unit id="ch.qos.logback.classic" version="0.0.0"/>
+<unit id="slf4j.api" version="0.0.0"/>
+<repository location="http://logback.qos.ch/p2/proper-nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.nebula.widgets.grid" version="0.0.0"/>
+<repository location="http://download.eclipse.org/technology/nebula/snapshot/"/>
+</location>
+</locations>
+<targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>
