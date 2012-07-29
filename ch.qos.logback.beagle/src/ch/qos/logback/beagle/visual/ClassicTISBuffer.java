@@ -200,7 +200,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   public void add(final List<ILoggingEvent> loggingEventList) {
     List<ITableItemStub> itemStubList = new ArrayList<ITableItemStub>();
     Set<String> loggerNames = new HashSet<String>();
-    
+
     for (ILoggingEvent iLoggingEvent : loggingEventList) {
       cyclicBuffer.add(iLoggingEvent);
       loggerNames.add(iLoggingEvent.getLoggerName());
@@ -219,7 +219,8 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     addGridItemStubs(visualElementList, loggerNames);
   }
 
-  private void addGridItemStubs(final List<ITableItemStub> newTISList, Set<String> loggerNames) {
+  private void addGridItemStubs(final List<ITableItemStub> newTISList,
+      Set<String> loggerNames) {
     if (disposed)
       return;
 
@@ -298,6 +299,15 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     }
   }
 
+  public void handleChangeInFilters() {
+    removeAll();
+    for (ILoggingEvent iLoggingEvent : cyclicBuffer.asList()) {
+      if (filterEvent(iLoggingEvent))
+        loggingEventToVisualElement(tisList, iLoggingEvent);
+    }
+    rebuildEmptyGrid();
+  }
+
   // ------------------------- RefreshGridRunnable class
   private final class RefreshGridRunnable implements Runnable {
     public void run() {
@@ -320,8 +330,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private final class AddTableItemRunnable implements Runnable {
     private final List<ITableItemStub> aTISList;
     private final Set<String> loggerNames;
-    
-    private AddTableItemRunnable(List<ITableItemStub> aTISList, Set<String> loggerNames) {
+
+    private AddTableItemRunnable(List<ITableItemStub> aTISList,
+        Set<String> loggerNames) {
       this.aTISList = aTISList;
       this.loggerNames = loggerNames;
     }
@@ -329,7 +340,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     public void run() {
       addNewItemStubsToGrid(aTISList);
       LoggerTree lt = tableMediator.getLoggerTree();
-      for(String loggerName: loggerNames) {
+      for (String loggerName : loggerNames) {
         lt.update(loggerName);
       }
     }

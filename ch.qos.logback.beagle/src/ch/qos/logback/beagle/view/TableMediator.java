@@ -80,7 +80,6 @@ public class TableMediator {
   private void init() {
     loggerContext.setName("beagle");
     
-    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree));
     
     grid.setFont(ResourceUtil.FONT);
 
@@ -124,6 +123,9 @@ public class TableMediator {
     int bufSize = getPreferredBufferSize();
     classicTISBuffer = new ClassicTISBuffer(this, bufSize);
     createColumns();
+
+    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree, classicTISBuffer));
+
     grid.pack();
 
     preferencesChangeListenter = new BeaglePreferencesChangeListenter(this);

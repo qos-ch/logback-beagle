@@ -34,7 +34,7 @@ public class LoggerTree {
   final TreeItem rootTreeItem;
   final int IMAGE_MARGIN = 4;
   final Set<String> seenLoggerNames = new HashSet<String>();
-  
+
   public LoggerTree(LoggerContext loggerContext, Tree tree) {
     this.loggerContext = loggerContext;
     this.tree = tree;
@@ -105,7 +105,7 @@ public class LoggerTree {
     if (!seenLoggerNames.contains(loggerName)) {
       seenLoggerNames.add(loggerName);
       // create the logger
-      System.out.println("adding "+loggerName);
+      System.out.println("adding " + loggerName);
       Logger logger = loggerContext.getLogger(loggerName);
       createTreeItemByLogger(logger);
     }
@@ -155,19 +155,22 @@ public class LoggerTree {
 
   public void handleMenuItemSlection(MenuItem menuItem) {
     Level level = (Level) menuItem.getData();
-    
+    setLevelForSelectedLogger(level);
+  }
+
+  private void setLevelForSelectedLogger(Level level) {
     TreeItem[] selectedItems = tree.getSelection();
-    if(selectedItems.length == 1) {
+    if (selectedItems.length == 1) {
       TreeItem selectedItem = selectedItems[0];
-      
+
       Logger logger = (Logger) selectedItem.getData();
-      if(level == null && Logger.ROOT_LOGGER_NAME.equalsIgnoreCase(logger.getName())) {
+      if (level == null
+          && Logger.ROOT_LOGGER_NAME.equalsIgnoreCase(logger.getName())) {
         return;
       } else {
         logger.setLevel(level);
         tree.redraw();
       }
-      
     }
   }
 

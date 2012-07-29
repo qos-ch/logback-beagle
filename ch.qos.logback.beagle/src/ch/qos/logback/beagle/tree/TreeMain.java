@@ -30,7 +30,7 @@ public class TreeMain {
     tree.setBounds(clientArea.x, clientArea.y, 200, 200);
 
     LoggerTree loggerTree = new LoggerTree(loggerContext, tree);
-    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree));
+    tree.setMenu(TreeMenuBuilder.buildTreeMenu(loggerTree, null));
     loggerTree.update("com.foo.Bar");
     loggerTree.update("com.foo.Bar");
     

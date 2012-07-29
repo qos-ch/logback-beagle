@@ -14,11 +14,12 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 import ch.qos.logback.classic.Level;
 
 public class TreeMenuBuilder {
 
-  static public Menu buildTreeMenu(LoggerTree loggerTree) {
+  static public Menu buildTreeMenu(LoggerTree loggerTree, ClassicTISBuffer classicTISBuffer) {
     Menu menu = new Menu(loggerTree.tree);
 
     {
@@ -64,7 +65,7 @@ public class TreeMenuBuilder {
     }
 
     for(MenuItem mi: menu.getItems()) {
-      mi.addSelectionListener(new TreeMenuSelectionListener(loggerTree));
+      mi.addSelectionListener(new TreeMenuSelectionListener(loggerTree, classicTISBuffer));
     }
     
     return menu;

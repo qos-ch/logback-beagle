@@ -12,12 +12,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.MenuItem;
 
+import ch.qos.logback.beagle.visual.ClassicTISBuffer;
+
 public class TreeMenuSelectionListener implements SelectionListener {
 
   final LoggerTree loggerTree;
-
-  TreeMenuSelectionListener(LoggerTree loggerTree) {
+  final ClassicTISBuffer classicTISBuffer;
+  
+  TreeMenuSelectionListener(LoggerTree loggerTree, ClassicTISBuffer classicTISBuffer) {
     this.loggerTree = loggerTree;
+    this.classicTISBuffer = classicTISBuffer;
     
   }
 
@@ -25,6 +29,7 @@ public class TreeMenuSelectionListener implements SelectionListener {
   public void widgetSelected(SelectionEvent e) {
     MenuItem menuItem = (MenuItem) e.widget;
     loggerTree.handleMenuItemSlection(menuItem);
+    classicTISBuffer.handleChangeInFilters();
   }
 
   @Override
