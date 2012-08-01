@@ -111,27 +111,27 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
    * @param tisList
    * @param event
    */
-  private void loggingEventToVisualElement(List<ITableItemStub> tisList,
+  private void loggingEventToVisualElement(List<ITableItemStub> aTISList,
       ILoggingEvent event) {
     lineCount++;
     Color c = null;
     if (lineCount % 2 == 0) {
       c = ResourceUtil.GRAY;
     }
-    tisList.add(new LoggingEventTIS(converterFacade, event, c));
+    aTISList.add(new LoggingEventTIS(converterFacade, event, c));
 
     IThrowableProxy tp = event.getThrowableProxy();
 
     while (tp != null) {
       IThrowableProxy itp = event.getThrowableProxy();
-      tisList.add(new ThrowableProxyTIS(converterFacade, itp,
+      aTISList.add(new ThrowableProxyTIS(converterFacade, itp,
           ThrowableProxyTIS.INDEX_FOR_INITIAL_LINE, c));
       int stackDepth = itp.getStackTraceElementProxyArray().length;
       for (int i = 0; i < stackDepth; i++) {
-        tisList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
+        aTISList.add(new ThrowableProxyTIS(converterFacade, itp, i, c));
       }
       if (itp.getCommonFrames() > 0) {
-        tisList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
+        aTISList.add(new ThrowableProxyTIS(converterFacade, itp, stackDepth, c));
       }
       tp = tp.getCause();
     }
@@ -232,8 +232,12 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void contactIfTooBig() {
-    if (tisList.size() >= bufferSize) {
-      tisList.subList(0, dropSize).clear();
+    System.out.println("bufferSize:"+bufferSize+", dropSize:"+dropSize);
+    if (this.tisList.size() >= bufferSize) {
+      System.out.println("contracting ");
+      if elements arrive faster than dropsize than they must be dropped faster
+      this.tisList.subList(0, dropSize).clear();
+      System.out.println("tisList.size:"+this.tisList.size());
       display.syncExec(new AdjustGridPostContractionRunnable());
     }
   }
@@ -243,14 +247,14 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   public int size() {
-    return tisList.size();
+    return this.tisList.size();
   }
 
   public ITableItemStub get(int index) {
-    if (index >= tisList.size()) {
+    if (index >= this.tisList.size()) {
       return null;
     } else {
-      return tisList.get(index);
+      return this.tisList.get(index);
     }
   }
 
@@ -272,20 +276,20 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   // called by display.syncExec!!
-  private void addNewItemStubsToGrid(List<ITableItemStub> aTISList) {
-    if (disposed || aTISList.size() == 0) {
+  private void addNewItemStubsToGrid(List<ITableItemStub> newTableItemStubs) {
+    if (disposed || newTableItemStubs.size() == 0) {
       return;
     }
 
     GridItem lastGridItem = null;
-    for (ITableItemStub tis : aTISList) {
+    for (ITableItemStub tis : newTableItemStubs) {
       lastGridItem = new GridItem(grid, SWT.NONE);
       if (disposed)
         return;
       tis.populate(lastGridItem);
     }
 
-    tableMediator.setTotalEventsLabelText(tisList.size() + " events");
+    tableMediator.setTotalEventsLabelText(this.tisList.size() + " events");
 
     if (isScrollingEnabled()) {
       grid.showItem(lastGridItem);
