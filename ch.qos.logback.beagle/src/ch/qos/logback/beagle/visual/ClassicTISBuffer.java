@@ -53,7 +53,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   private volatile boolean disposed = false;
 
   private int bufferSize;
-  private int dropSize;
+  private int minDropSize;
   private CyclicBuffer<ILoggingEvent> cyclicBuffer;
   private LoggerContext loggerContext;
 
@@ -64,7 +64,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     this.loggerContext = tableMediator.getLoggerContext();
     this.converterFacade = tableMediator.getConverterFacade();
     this.bufferSize = bufferSize;
-    this.dropSize = computeDropSize(bufferSize);
+    this.minDropSize = computeMinDropSize(bufferSize);
     this.cyclicBuffer = new CyclicBuffer<>(bufferSize);
   }
 
@@ -72,7 +72,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     return converterFacade;
   }
 
-  private int computeDropSize(int aBufferSize) {
+  private int computeMinDropSize(int aBufferSize) {
     return Math.min(1024, aBufferSize / 10);
   }
 
@@ -84,7 +84,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
    */
   public void setBufferSize(int size) {
     this.bufferSize = size;
-    this.dropSize = computeDropSize(bufferSize);
+    this.minDropSize = computeMinDropSize(bufferSize);
   }
 
   /**
@@ -232,10 +232,9 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void contactIfTooBig() {
-    int extraElements = this.tisList.size() - bufferSize; 
-    if (extraElements > 0) {
-      int elementsToDrop = dropSize+extraElements;
-      //if elements arrive faster than dropsize than they must be dropped faster
+    int extraneousElementCount = this.tisList.size() - bufferSize; 
+    if (extraneousElementCount > 0) {
+      int elementsToDrop = minDropSize+extraneousElementCount;
       this.tisList.subList(0, elementsToDrop).clear();
       display.syncExec(new AdjustGridPostContractionRunnable(elementsToDrop));
     }
