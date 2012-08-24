@@ -16,7 +16,7 @@ import ch.qos.logback.core.pattern.ConverterUtil;
 import ch.qos.logback.core.pattern.LiteralConverter;
 import ch.qos.logback.core.pattern.parser.Node;
 import ch.qos.logback.core.pattern.parser.Parser;
-import ch.qos.logback.core.pattern.parser.ScanException;
+import ch.qos.logback.core.spi.ScanException;
 
 public class ConverterFacade {
 

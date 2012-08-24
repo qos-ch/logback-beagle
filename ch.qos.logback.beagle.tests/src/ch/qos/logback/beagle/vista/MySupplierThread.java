@@ -19,47 +19,47 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 
 public class MySupplierThread extends Thread implements Listener {
 
-	final BlockingQueue<ILoggingEvent> blockingQueue;
-	boolean disposed = false;
-	static int LIMIT = 1000;
-	
-	public MySupplierThread(BlockingQueue<ILoggingEvent> blockingQueue) {
-		this.blockingQueue = blockingQueue;
-	}
+  final BlockingQueue<ILoggingEvent> blockingQueue;
+  boolean disposed = false;
+  static int LIMIT = 1000;
 
-	public void run() {
+  public MySupplierThread(BlockingQueue<ILoggingEvent> blockingQueue) {
+    this.blockingQueue = blockingQueue;
+  }
 
-		LoggingEventBuilder leb = null;
-		try {
-			leb = new LoggingEventBuilder();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		int count = 0;
-		while (!disposed && count++ < LIMIT) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e1) {
-			}
-			// bursts of 2
-			int burstSize = 2;
-			for (int i = 0; i < burstSize; i++) {
-				ILoggingEvent le = null;
-				le = leb.buildLoggingEvent();
-				try {
-					blockingQueue.put(le);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		System.out.println("exiting MySupplierThread");
-	}
+  public void run() {
 
-	@Override
-	public void handleEvent(Event event) {
-		disposed = true;
-		System.out.println("dispose event occured");
-	}
+    LoggingEventBuilder leb = null;
+    try {
+      leb = new LoggingEventBuilder();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    int count = 0;
+    while (!disposed && count++ < LIMIT) {
+      try {
+        Thread.sleep(1);
+      } catch (InterruptedException e1) {
+      }
+      // bursts of 2
+      int burstSize = 2;
+      for (int i = 0; i < burstSize; i++) {
+        ILoggingEvent le = null;
+        le = leb.buildLoggingEvent();
+        try {
+          blockingQueue.put(le);
+        } catch (InterruptedException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+    System.out.println("exiting MySupplierThread");
+  }
+
+  @Override
+  public void handleEvent(Event event) {
+    disposed = true;
+    System.out.println("dispose event occured");
+  }
 }
