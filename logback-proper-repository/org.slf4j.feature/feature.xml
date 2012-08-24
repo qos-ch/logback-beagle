@@ -2,7 +2,7 @@
 <feature
       id="org.slf4j.feature"
       label="SLF4J Feature"
-      version="1.6.6.qualifier">
+      version="1.6.6">
 
    <description url="http://www.slf4j.org">
       A feature which provides slf4j-api.jar.

@@ -235,7 +235,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     System.out.println("bufferSize:"+bufferSize+", dropSize:"+dropSize);
     if (this.tisList.size() >= bufferSize) {
       System.out.println("contracting ");
-      if elements arrive faster than dropsize than they must be dropped faster
+      //if elements arrive faster than dropsize than they must be dropped faster
       this.tisList.subList(0, dropSize).clear();
       System.out.println("tisList.size:"+this.tisList.size());
       display.syncExec(new AdjustGridPostContractionRunnable());

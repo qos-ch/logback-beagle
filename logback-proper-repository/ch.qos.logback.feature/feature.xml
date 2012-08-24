@@ -2,7 +2,7 @@
 <feature
       id="ch.qos.logback.feature"
       label="Logback Feature"
-      version="1.0.7.qualifier">
+      version="1.0.7">
 
    <description url="http://logback.qos.ch">
       This feature includes plugins for logback-core.jar and logback-classic.jar.
@@ -23,7 +23,7 @@ the Eclipse Foundation.
    </url>
 
    <requires>
-      <import feature="org.slf4j.feature" version="1.6.6.qualifier"/>
+      <import feature="org.slf4j.feature" version="1.6.6"/>
    </requires>
 
    <plugin

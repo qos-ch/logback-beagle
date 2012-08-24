@@ -6,27 +6,13 @@
   <parent>
     <groupId>ch.qos.logback.repository</groupId>
     <artifactId>repository-parent</artifactId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.7</version>
   </parent>
 
   <artifactId>org.slf4j.feature</artifactId>
-  <version>1.6.6-SNAPSHOT</version>
+  <version>1.6.6</version>
   <packaging>eclipse-feature</packaging>
 
-<!--
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>      
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-nop</artifactId>      
-      <version>${slf4j.version}</version>
-    </dependency>
-  </dependencies>
--->
 </project>
 
 

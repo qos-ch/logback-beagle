@@ -5,12 +5,12 @@
 
   <groupId>ch.qos.logback.repository</groupId>
   <artifactId>repository-parent</artifactId>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.7</version>
   <name>logback p2-repository parent</name>
   <packaging>pom</packaging>
 
   <properties>
-    <logback.version>1.0.7-SNAPSHOT</logback.version>
+    <logback.version>1.0.7</logback.version>
     <slf4j.version>1.6.6</slf4j.version>
     <tycho-version>0.15.0</tycho-version>
   </properties>
