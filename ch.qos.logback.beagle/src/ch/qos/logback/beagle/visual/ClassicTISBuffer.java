@@ -232,13 +232,12 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   private void contactIfTooBig() {
-    System.out.println("bufferSize:"+bufferSize+", dropSize:"+dropSize);
-    if (this.tisList.size() >= bufferSize) {
-      System.out.println("contracting ");
+    int extraElements = this.tisList.size() - bufferSize; 
+    if (extraElements > 0) {
+      int elementsToDrop = dropSize+extraElements;
       //if elements arrive faster than dropsize than they must be dropped faster
-      this.tisList.subList(0, dropSize).clear();
-      System.out.println("tisList.size:"+this.tisList.size());
-      display.syncExec(new AdjustGridPostContractionRunnable());
+      this.tisList.subList(0, elementsToDrop).clear();
+      display.syncExec(new AdjustGridPostContractionRunnable(elementsToDrop));
     }
   }
 
@@ -322,11 +321,16 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   // ------------------------- AdjustGridPostContractionRunnable class
   private final class AdjustGridPostContractionRunnable implements Runnable {
+    final int elementsToDrop;
+    public AdjustGridPostContractionRunnable(int elementsToDrop) {
+      this.elementsToDrop = elementsToDrop;
+    }
+
     public void run() {
       int topIndex = grid.getTopIndex();
-      grid.remove(0, dropSize - 1);
+      grid.remove(0, elementsToDrop - 1);
       assertSize();
-      grid.setTopIndex(topIndex - dropSize);
+      grid.setTopIndex(topIndex - elementsToDrop);
     }
   }
 

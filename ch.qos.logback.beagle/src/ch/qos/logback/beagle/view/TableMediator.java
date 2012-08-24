@@ -224,8 +224,6 @@ public class TableMediator {
   public void createColumns() {
     GridColumn column0 = new GridColumn(this.grid, SWT.NONE);
     column0.setWidth(24);
-
-    
     List<Converter<ILoggingEvent>>  converterList = converterFacade.getConverterList();
     int size = converterList.size();
     
