@@ -30,7 +30,6 @@ public class ToggleTreeActionDelegate implements IViewActionDelegate {
   private BeagleView beagleView = null;
   private FormAttachment oldLeft = null;
   private FormAttachment oldRight = null;
-  private boolean hidden = false;
 
   @Override
   public void init(IViewPart view) {
@@ -46,16 +45,15 @@ public class ToggleTreeActionDelegate implements IViewActionDelegate {
       if (tableMediator != null) {
         Sash sash = tableMediator.getSash();
         FormData formData = (FormData) sash.getLayoutData();
-        if (hidden) {
-          hidden = false;
-          formData.left = oldLeft;
-          formData.right = oldRight;
-        } else {
-          hidden = true;
-          oldLeft = formData.left;
-          oldRight = formData.right;
-          formData.left = new FormAttachment(0, 0);
-          formData.right = new FormAttachment(0, 0 + Constants.SASH_WIDTH);
+        if(action.isChecked()) {
+        	formData.left = oldLeft;
+            formData.right = oldRight;
+        }
+        else {
+            oldLeft = formData.left;
+            oldRight = formData.right;
+            formData.left = new FormAttachment(0, 0);
+            formData.right = new FormAttachment(0, 0 + Constants.SASH_WIDTH);
         }
         sash.getParent().layout();
       }
