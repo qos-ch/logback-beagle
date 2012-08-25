@@ -21,7 +21,6 @@ moments for the required plug-ins to be downlaoded.
 
 Import following projects into Eclipse:
 
-- ch.qos.logback.beagle.core
 - ch.qos.logback.beagle
 
 Please contact logback-dev@qos.ch [mailing list](http://logback.qos.ch/mailinglist.html) if you have
