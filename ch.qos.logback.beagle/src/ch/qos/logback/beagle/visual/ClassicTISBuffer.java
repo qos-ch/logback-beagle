@@ -65,7 +65,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     this.converterFacade = tableMediator.getConverterFacade();
     this.bufferSize = bufferSize;
     this.minDropSize = computeMinDropSize(bufferSize);
-    this.cyclicBuffer = new CyclicBuffer<>(bufferSize);
+    this.cyclicBuffer = new CyclicBuffer<ILoggingEvent>(bufferSize);
   }
 
   public ConverterFacade getConverterFacade() {
