@@ -271,5 +271,9 @@ public class TableMediator {
   public LoggerTree getLoggerTree() {
     return loggerTree;
   }
+  
+  public Sash getSash() {
+	  return sash;
+  }
 
 }

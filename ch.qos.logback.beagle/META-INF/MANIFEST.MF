@@ -22,3 +22,4 @@ Export-Package: ch.qos.logback.beagle,
  ch.qos.logback.beagle.view,
  ch.qos.logback.beagle.visual
 Bundle-ClassPath: .
+Bundle-Localization: plugin

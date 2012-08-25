@@ -56,6 +56,16 @@
               toolbarPath="top"
               tooltip="Clear">
         </action>
+        <action
+              class="ch.qos.logback.beagle.actions.ToggleTreeActionDelegate"
+              icon="icons/ch/qos/logback/beagle/icons/toggledetailpane_co.gif"
+              id="ch.qos.logback.beagle.actions.toggletree"
+              label="%ch.qos.logback.beagle.actions.toggletree"
+              state="true"
+              style="toggle"
+              toolbarPath="top"
+              tooltip="%ch.qos.logback.beagle.actions.toggletree">
+        </action>
      </viewContribution>
   </extension>
 
