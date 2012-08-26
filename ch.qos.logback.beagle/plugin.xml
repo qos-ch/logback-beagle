@@ -68,6 +68,20 @@
         </action>
      </viewContribution>
   </extension>
+  <extension
+        point="org.eclipse.ui.themes">
+     <themeElementCategory
+           id="ch.qos.logback.beagle.themeElementCategory"
+           label="%ch.qos.logback.beagle.themeElementCategory">
+     </themeElementCategory>
+     <fontDefinition
+           categoryId="ch.qos.logback.beagle.themeElementCategory"
+           defaultsTo="org.eclipse.debug.ui.consoleFont"
+           id="ch.qos.logback.beagle.fontDefinition"
+           isEditable="true"
+           label="%ch.qos.logback.beagle.fontDefinition">
+     </fontDefinition>
+  </extension>
 
 
 </plugin>

@@ -12,9 +12,14 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -23,6 +28,9 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
@@ -80,8 +88,23 @@ public class TableMediator {
   private void init() {
     loggerContext.setName("beagle");
     
-    
-    grid.setFont(ResourceUtil.FONT);
+    // set Beagle console font
+    final String FONT_ID = "ch.qos.logback.beagle.fontDefinition";
+    IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+	ITheme currentTheme = themeManager.getCurrentTheme();
+	final FontRegistry fontRegistry = currentTheme.getFontRegistry();
+	Font font = fontRegistry.get(FONT_ID);
+	grid.setFont(font);
+	fontRegistry.addListener(new IPropertyChangeListener() {
+		
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if(event.getProperty().equals(FONT_ID)) {
+				Font font = fontRegistry.get(FONT_ID);
+				grid.setFont(font);
+			}
+		}
+	});
 
     int charHeight = MetricsUtil.computeCharHeight(grid);
     int charWidth = MetricsUtil.computeCharWidth(grid);
