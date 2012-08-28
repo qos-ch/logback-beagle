@@ -1,0 +1,14 @@
+
+- release 1.1.2 on 2012-08-28
+
+  Fixed CONSPLUG-33, Clearing does not clear all buffers
+
+- release 1.1.1 on 2012-08-28
+
+  Fixed CONSPLUG-29, added ability to change the font used
+  Fixed CONSPLUG-31, toggle to view/hide the logger tree
+  Fixed CONSPLUG-32, compatibility with Java 1.6
+
+- Release 1.1.0 on 2012-08-25
+
+  Introduced Nebula Grid as a dependency.
