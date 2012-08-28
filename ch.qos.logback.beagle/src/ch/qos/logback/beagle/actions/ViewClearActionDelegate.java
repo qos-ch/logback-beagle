@@ -23,19 +23,19 @@ public class ViewClearActionDelegate implements IViewActionDelegate {
   @Override
   public void run(IAction action) {
     // TODO Auto-generated method stub
-    System.out.println("ViewClearActionDelegate.run "+action);
+    //System.out.println("ViewClearActionDelegate.run "+action);
     tableMediator.classicTISBuffer.removeAll();
   }
 
   @Override
   public void selectionChanged(IAction action, ISelection selection) {
-    System.out.println("ViewClearActionDelegate.selectionChanged "+action+", selection:"+selection);
+    //System.out.println("ViewClearActionDelegate.selectionChanged "+action+", selection:"+selection);
 
   }
 
   @Override
   public void init(IViewPart view) {
-    System.out.println("ViewClearActionDelegate.init "+view);
+    //System.out.println("ViewClearActionDelegate.init "+view);
     BeagleView beagleView = (BeagleView) view;
     tableMediator = beagleView.getTableMediator();
   }

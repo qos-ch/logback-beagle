@@ -175,6 +175,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
 
   public void removeAll() {
     tisList.clear();
+    cyclicBuffer.clear();
     grid.removeAll();
   }
 
