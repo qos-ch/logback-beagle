@@ -40,38 +40,39 @@ public class ToggleTreeActionDelegate implements IViewActionDelegate {
       beagleView = (BeagleView) view;
       TableMediator tableMediator = beagleView.getTableMediator();
       if (tableMediator != null) {
-          Sash sash = tableMediator.getSash();
-          sash.addControlListener(new ControlAdapter() {
-			@Override
-			public void controlMoved(ControlEvent event) {
-				if(action != null)
-				  action.setChecked(true);
-			}
-		});
+        Sash sash = tableMediator.getSash();
+        sash.addControlListener(new ControlAdapter() {
+          @Override
+          public void controlMoved(ControlEvent event) {
+            if (action != null)
+              action.setChecked(true);
+          }
+        });
       }
     }
   }
 
   @Override
   public void run(IAction action) {
-	this.action = action;
+    this.action = action;
     if (beagleView != null) {
       TableMediator tableMediator = beagleView.getTableMediator();
       if (tableMediator != null) {
         Sash sash = tableMediator.getSash();
         FormData formData = (FormData) sash.getLayoutData();
-        if(action.isChecked()) {
-        	formData.left = oldLeft;
-            formData.right = oldRight;
-        }
-        else {
-            oldLeft = formData.left;
-            oldRight = formData.right;
-            formData.left = new FormAttachment(0, 0);
-            formData.right = new FormAttachment(0, 0 + Constants.SASH_WIDTH);
+        if (action.isChecked()) {
+          formData.left = oldLeft;
+          formData.right = oldRight;
+        } else {
+          oldLeft = formData.left;
+          oldRight = formData.right;
+          formData.left = new FormAttachment(0, 0);
+          formData.right = new FormAttachment(0, 0 + Constants.SASH_WIDTH);
         }
         boolean checked = action.isChecked();
-        sash.getParent().layout(); // WARNING: .layout() will also call the above listener, but here we must preserve the checked status
+        sash.getParent().layout(); // WARNING: .layout() will also call the
+                                   // above listener, but here we must preserve
+                                   // the checked status
         action.setChecked(checked);
       }
     }
