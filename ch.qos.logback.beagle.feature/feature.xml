@@ -3,7 +3,8 @@
       id="ch.qos.logback.beagle.feature"
       label="Logback Beagle Feature"
       version="1.1.2.qualifier"
-      provider-name="http://logback.qos.ch">
+      provider-name="QOS.ch"
+      plugin="ch.qos.logback.beagle">
 
    <description url="http://logback.qos.ch/consolePlugin.html">
       During the development process, it is common for developers to
@@ -24,15 +25,14 @@ Here is a list of key advantages of our plugin:
       Copyright (C) 2006-2012, QOS.ch. All rights reserved.
    </copyright>
 
-   <license url="http://logback.qos.ch/license.html">
+   <license url="">
       This program and the accompanying materials are licensed under
 the terms of the Eclipse Public License v1.0 as published by
 the Eclipse Foundation.
    </license>
 
    <url>
-      <update label="Logback" url="http://logback.qos.ch/eclipse/"/>
-      <discovery label="Nebula project site" url="http://download.eclipse.org/technology/nebula/snapshot/"/>
+      <update label="Logback" url="http://logback.qos.ch/p2/"/>
    </url>
 
    <requires>
