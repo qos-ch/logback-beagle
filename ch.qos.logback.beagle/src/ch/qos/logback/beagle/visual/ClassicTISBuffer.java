@@ -173,11 +173,19 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
     display.syncExec(new RefreshGridRunnable());
   }
 
-  public void removeAll() {
+  public void clearAll() {
     tisList.clear();
     cyclicBuffer.clear();
     grid.removeAll();
   }
+  
+  private void clearGridAndUnderlyingList() {
+    tisList.clear();
+    cyclicBuffer.clear();
+    grid.removeAll();
+  }
+  
+  
 
   public void refreshGrid() {
     display.syncExec(new RefreshGridRunnable());
@@ -303,7 +311,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
   }
 
   public void handleChangeInFilters() {
-    removeAll();
+    clearGridAndUnderlyingList();
     for (ILoggingEvent iLoggingEvent : cyclicBuffer.asList()) {
       if (filterEvent(iLoggingEvent))
         loggingEventToVisualElement(tisList, iLoggingEvent);

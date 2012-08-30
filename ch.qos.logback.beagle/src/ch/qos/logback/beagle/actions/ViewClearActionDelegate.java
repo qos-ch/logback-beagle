@@ -24,7 +24,7 @@ public class ViewClearActionDelegate implements IViewActionDelegate {
   public void run(IAction action) {
     // TODO Auto-generated method stub
     //System.out.println("ViewClearActionDelegate.run "+action);
-    tableMediator.classicTISBuffer.removeAll();
+    tableMediator.classicTISBuffer.clearAll();
   }
 
   @Override
