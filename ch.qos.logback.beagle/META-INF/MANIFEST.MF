@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ch.qos.logback.beagle
 Bundle-SymbolicName: ch.qos.logback.beagle;singleton:=true
-Bundle-Version: 1.1.2.qualifier
+Bundle-Version: 1.1.3.qualifier
 Bundle-Activator: ch.qos.logback.beagle.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,

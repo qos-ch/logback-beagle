@@ -2,7 +2,7 @@
 <feature
       id="ch.qos.logback.beagle.feature"
       label="Logback Beagle Feature"
-      version="1.1.2.qualifier"
+      version="1.1.3.qualifier"
       provider-name="QOS.ch"
       plugin="ch.qos.logback.beagle">
 
@@ -37,12 +37,6 @@ the Eclipse Foundation.
 
    <requires>
       <import feature="org.eclipse.nebula.widgets.grid.feature" version="1.0.0.201207271307"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.jdt.core" version="3.7.3" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.7.101" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.nebula.widgets.grid" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.core" version="1.0.7" match="greaterOrEqual"/>
       <import plugin="slf4j.api" version="1.6.6" match="greaterOrEqual"/>
