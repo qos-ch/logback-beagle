@@ -17,5 +17,6 @@ public class Constants {
   final public static String COLUMN_SIZE_DIALOG_SETTINGS_PREFIX = "COLUMN_SIZE_DIALOG_SETTINGS_PREFIX_";
   final public static int SASH_WIDTH = 4;
   final public static String FONT_ID = "ch.qos.logback.beagle.fontDefinition";
+  final public static int DEFAULT_SASH_X_COORDINATE = 100;
 
 }

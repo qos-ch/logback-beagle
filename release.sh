@@ -1,9 +1,9 @@
 
 change version tags:
 
-
 in ./pom.xml
 in ./ch.qos.logback.beagle/pom.ml
+in ./ch.qos.logback.beagle/about.ini
 in ./ch.qos.logback.beagle/META-INF/MANIFEST.MF
 
 in ./ch.qos.logback.beagle.feature/pom.xml
@@ -15,6 +15,11 @@ in ./ch.qos.logback.beagle.repository/categoy.xml
 in ./ch.qos.logback.beagle.tests/pom.ml
 in ./ch.qos.logback.beagle.tests/META-INF/MANIFEST.MF
 
+
+mvn clean
+mvn install
+cd ch.qos.logback.beagle.repository/target/repository
+scp -r * pixie.qos.ch:/var/www/logback.qos.ch/htdocs/p2/beagle-$ver
 
 
 # script to manually check compiler ouptut (jdk 6 -> major version 50, jdk 7, major version 51)

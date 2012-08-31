@@ -107,7 +107,7 @@ public class TableMediator {
     ToolBar toolbar = buildToolbarAndItsItems();
     
     LayoutDataHelper sashLDH = LayoutDataHelper.make(sash).top(5).above(toolbar, -1);
-    int sashX = mementoUtil.getSashXCoordinate(100);
+    int sashX = mementoUtil.getSashXCoordinate(Constants.DEFAULT_SASH_X_COORDINATE);
     SashUtil.setXCoordinate(sash, sashLDH.getFormData(), sashX);
     sashLDH.set();
     sash.addListener(SWT.Selection, new SashListener(sash, sashLDH.getFormData()));
