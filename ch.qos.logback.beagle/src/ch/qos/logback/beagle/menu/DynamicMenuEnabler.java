@@ -64,8 +64,6 @@ public class DynamicMenuEnabler implements MenuListener {
   public void menuShown(MenuEvent e) {
     int selCount = table.getSelectionCount();
 
-    System.out.println("menu shown, items selected="
-        + table.getSelectionCount());
     Menu menu = (Menu) e.widget;
 
     defaultState(menu);

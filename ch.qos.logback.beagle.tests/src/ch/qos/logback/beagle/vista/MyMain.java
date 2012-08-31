@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import ch.qos.logback.beagle.net.EventConsumerThread;
+import ch.qos.logback.beagle.util.MementoUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 import ch.qos.logback.beagle.view.TableMediator;
 
@@ -30,7 +31,7 @@ public class MyMain {
     shell.setBounds(100, 100, 500, 500);
     shell.setLayout(new FormLayout());
 
-    TableMediator tableMediator = new TableMediator(shell);
+    TableMediator tableMediator = new TableMediator(shell, new MementoUtil());
     
     EventConsumerThread eventConsumerThread = new EventConsumerThread(tableMediator.classicTISBuffer);
     MySupplierThread supplierThread0 = new MySupplierThread(

@@ -9,11 +9,8 @@
 package ch.qos.logback.beagle.view;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -21,8 +18,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import ch.qos.logback.beagle.Activator;
-import ch.qos.logback.beagle.Constants;
 import ch.qos.logback.beagle.net.LoggingEventSocketServer;
+import ch.qos.logback.beagle.util.MementoUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
 
 /**
@@ -42,26 +39,17 @@ import ch.qos.logback.beagle.util.ResourceUtil;
 
 public class BeagleView extends ViewPart {
 
-  //
   TableMediator tableMediator;
 
-  // left Sash position
-  private FormAttachment sashLeftFormData = null;
-
+  private MementoUtil mementoUtil = new MementoUtil();
+  
   /**
    * {@inheritDoc}
    */
   public void init(IViewSite site, IMemento memento) throws PartInitException {
     super.init(site, memento);
-    try {
-      IMemento sashChild = memento.getChild("sash");
-      if (sashChild != null) {
-        sashLeftFormData = new FormAttachment(
-            sashChild.getInteger("numerator"), sashChild.getInteger("offset"));
-      }
-    } catch (Exception exception) {
-      Activator.getDefault().logException(exception);
-    }
+    System.out.println("BeagleView init called");
+    mementoUtil.init(memento);
   }
 
   /**
@@ -75,7 +63,7 @@ public class BeagleView extends ViewPart {
 
     // initialize Beagle table
     ResourceUtil.init(parent.getDisplay());
-    tableMediator = new TableMediator(parent);
+    tableMediator = new TableMediator(parent, mementoUtil);
 
     Activator.INSTANCE.getPreferenceStore().addPropertyChangeListener(
         tableMediator.preferencesChangeListenter);
@@ -92,16 +80,6 @@ public class BeagleView extends ViewPart {
     PlatformUI.getWorkbench().getHelpSystem()
         .setHelp(tableMediator.grid, "ch.qos.logback.beagle.viewer");
 
-    // restore saved view state
-    if (sashLeftFormData != null) {
-      Sash sash = tableMediator.getSash();
-      FormData formData = (FormData) sash.getLayoutData();
-      formData.left = sashLeftFormData;
-      formData.right = new FormAttachment(sashLeftFormData.numerator,
-          sashLeftFormData.offset + Constants.SASH_WIDTH);
-      sash.getParent().layout();
-    }
-
   }
 
   /**
@@ -109,10 +87,7 @@ public class BeagleView extends ViewPart {
    */
   @Override
   public void saveState(IMemento memento) {
-    FormData formData = (FormData) tableMediator.getSash().getLayoutData();
-    IMemento sashChild = memento.createChild("sash");
-    sashChild.putInteger("offset", formData.left.offset);
-    sashChild.putInteger("numerator", formData.left.numerator);
+    MementoUtil.save(memento, tableMediator);
   }
 
   public TableMediator getTableMediator() {

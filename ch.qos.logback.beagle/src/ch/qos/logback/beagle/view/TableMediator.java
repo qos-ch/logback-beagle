@@ -12,15 +12,10 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.FontRegistry;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -28,9 +23,6 @@ import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.themes.ITheme;
-import org.eclipse.ui.themes.IThemeManager;
 
 import ch.qos.logback.beagle.Activator;
 import ch.qos.logback.beagle.Constants;
@@ -39,9 +31,12 @@ import ch.qos.logback.beagle.preferences.BeaglePreferencesChangeListenter;
 import ch.qos.logback.beagle.preferences.BeaglePreferencesPage;
 import ch.qos.logback.beagle.tree.LoggerTree;
 import ch.qos.logback.beagle.tree.TreeMenuBuilder;
+import ch.qos.logback.beagle.util.FontUtil;
 import ch.qos.logback.beagle.util.LayoutDataHelper;
+import ch.qos.logback.beagle.util.MementoUtil;
 import ch.qos.logback.beagle.util.MetricsUtil;
 import ch.qos.logback.beagle.util.ResourceUtil;
+import ch.qos.logback.beagle.util.SashUtil;
 import ch.qos.logback.beagle.view.listener.ColumnControlListener;
 import ch.qos.logback.beagle.view.listener.TableControlListener;
 import ch.qos.logback.beagle.view.listener.TableItemSelectionListener;
@@ -72,9 +67,11 @@ public class TableMediator {
   Label timeDifferenceLabel;
   Label totalEventsLabel;
   ToolItem unfreezeToolItem;
+  MementoUtil mementoUtil;
   
-  public TableMediator(Composite parent) {
+  public TableMediator(Composite parent, MementoUtil mementoUtil) {
     this.parent = parent;
+    this.mementoUtil = mementoUtil;
     this.timeDifferenceLabel = new Label(parent, SWT.LEFT);
     this.totalEventsLabel = new Label(parent, SWT.LEFT);
     this.grid = new Grid(parent, SWT.VIRTUAL | SWT.H_SCROLL | SWT.V_SCROLL
@@ -88,24 +85,11 @@ public class TableMediator {
   private void init() {
     loggerContext.setName("beagle");
     
-    // set Beagle console font
-    final String FONT_ID = "ch.qos.logback.beagle.fontDefinition";
-    IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
-	ITheme currentTheme = themeManager.getCurrentTheme();
-	final FontRegistry fontRegistry = currentTheme.getFontRegistry();
-	Font font = fontRegistry.get(FONT_ID);
-	grid.setFont(font);
-	fontRegistry.addListener(new IPropertyChangeListener() {
-		
-		@Override
-		public void propertyChange(PropertyChangeEvent event) {
-			if(event.getProperty().equals(FONT_ID)) {
-				Font font = fontRegistry.get(FONT_ID);
-				grid.setFont(font);
-			}
-		}
-	});
 
+    Font beagleFont = FontUtil.getBeagleFont();
+    grid.setFont(beagleFont);
+    FontUtil.listenAndAdaptToFontChanges(grid);
+    
     int charHeight = MetricsUtil.computeCharHeight(grid);
     int charWidth = MetricsUtil.computeCharWidth(grid);
 
@@ -123,9 +107,8 @@ public class TableMediator {
     ToolBar toolbar = buildToolbarAndItsItems();
     
     LayoutDataHelper sashLDH = LayoutDataHelper.make(sash).top(5).above(toolbar, -1);
-    sashLDH.getFormData().left =  new FormAttachment(30, 0);
-    sashLDH.getFormData().right =  new FormAttachment(30, Constants.SASH_WIDTH);
-    
+    int sashX = mementoUtil.getSashXCoordinate(100);
+    SashUtil.setXCoordinate(sash, sashLDH.getFormData(), sashX);
     sashLDH.set();
     sash.addListener(SWT.Selection, new SashListener(sash, sashLDH.getFormData()));
     
@@ -237,7 +220,6 @@ public class TableMediator {
     try {
       int val = dialogSettings
 	  .getInt(Constants.COLUMN_SIZE_DIALOG_SETTINGS_PREFIX + columnName);
-      System.out.println("width for " + columnName + ": " + val);
       return val;
     } catch (NumberFormatException e) {
       return defaultValue;

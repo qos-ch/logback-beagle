@@ -1,3 +1,7 @@
+- release 1.1.2 on 2012-08-30
+
+  Fixed inccorrect clearing of primary cyclic buffer in response to
+  change in logger level filter.
 
 - release 1.1.2 on 2012-08-28
 

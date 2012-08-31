@@ -16,7 +16,6 @@ public class Constants {
   
   final public static String COLUMN_SIZE_DIALOG_SETTINGS_PREFIX = "COLUMN_SIZE_DIALOG_SETTINGS_PREFIX_";
   final public static int SASH_WIDTH = 4;
-  //public static int MAX = 20*1000;
+  final public static String FONT_ID = "ch.qos.logback.beagle.fontDefinition";
 
-  //public static int CLEAN_COUNT = MAX / 10;
 }

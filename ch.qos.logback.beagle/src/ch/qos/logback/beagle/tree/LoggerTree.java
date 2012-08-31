@@ -105,7 +105,6 @@ public class LoggerTree {
     if (!seenLoggerNames.contains(loggerName)) {
       seenLoggerNames.add(loggerName);
       // create the logger
-      System.out.println("adding " + loggerName);
       Logger logger = loggerContext.getLogger(loggerName);
       createTreeItemByLogger(logger);
     }
