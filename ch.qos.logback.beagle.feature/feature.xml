@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
-      id="ch.qos.logback.beagle.feature"
-      label="Logback Beagle Feature"
-      version="1.1.3.qualifier"
-      provider-name="QOS.ch"
-      plugin="ch.qos.logback.beagle">
-
-   <description url="http://logback.qos.ch/consolePlugin.html">
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="ch.qos.logback.beagle.feature"
+      label="Logback Beagle Feature"
+      version="1.1.4.qualifier"
+      provider-name="QOS.ch"
+      plugin="ch.qos.logback.beagle">
+
+   <description url="http://logback.qos.ch/consolePlugin.html">
       During the development process, it is common for developers to
 print log output on the console. Typically, the developer will
 also customize the format of the log output by setting properties
@@ -18,35 +18,35 @@ Here is a list of key advantages of our plugin:
 - easy jump to caller 
 - flexible output format
 - filter-out events by setting the level of existing loggers
-- easy configuration
-   </description>
-
-   <copyright url="http://logback.qos.ch/license.html">
-      Copyright (C) 2006-2012, QOS.ch. All rights reserved.
-   </copyright>
-
-   <license url="">
+- easy configuration
+   </description>
+
+   <copyright url="http://logback.qos.ch/license.html">
+      Copyright (C) 2006-2012, QOS.ch. All rights reserved.
+   </copyright>
+
+   <license url="">
       This program and the accompanying materials are licensed under
 the terms of the Eclipse Public License v1.0 as published by
-the Eclipse Foundation.
-   </license>
-
-   <url>
-      <update label="Logback" url="http://logback.qos.ch/p2/"/>
-   </url>
-
-   <requires>
-      <import feature="org.eclipse.nebula.widgets.grid.feature" version="1.0.0.201207271307"/>
-      <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>
-      <import plugin="ch.qos.logback.core" version="1.0.7" match="greaterOrEqual"/>
-      <import plugin="slf4j.api" version="1.6.6" match="greaterOrEqual"/>
-   </requires>
-
-   <plugin
-         id="ch.qos.logback.beagle"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-</feature>
+the Eclipse Foundation.
+   </license>
+
+   <url>
+      <update label="Logback" url="http://logback.qos.ch/p2/"/>
+   </url>
+
+   <requires>
+      <import feature="org.eclipse.nebula.widgets.grid.feature" version="1.0.0.201207271307"/>
+      <import plugin="ch.qos.logback.classic" version="1.0.7" match="greaterOrEqual"/>
+      <import plugin="ch.qos.logback.core" version="1.0.7" match="greaterOrEqual"/>
+      <import plugin="slf4j.api" version="1.6.6" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="ch.qos.logback.beagle"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
