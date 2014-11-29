@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>ch.qos.logback.beagle</groupId>
-    <artifactId>ch.qos.logback.beagle.parent</artifactId>
-    <version>1.1.4.qualifier</version>
-  </parent>
+	<parent>
+		<groupId>ch.qos.logback.beagle</groupId>
+		<artifactId>ch.qos.logback.beagle.releng</artifactId>
+		<relativePath>../ch.qos.logback.beagle.releng/pom.xml</relativePath>
+		<version>1.1.4-SNAPSHOT</version>
+	</parent>
 
-  <artifactId>ch.qos.logback.beagle.repository</artifactId>
-  <packaging>eclipse-repository</packaging>
+	<artifactId>ch.qos.logback.beagle.repository</artifactId>
+	<packaging>eclipse-repository</packaging>
 
-</project> 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
