@@ -17,7 +17,7 @@ public class MementoUtil {
   Map<String, Object> map = new HashMap<String, Object>();
 
   public static void save(IMemento memento, TableMediator tableMediator) {
-    System.out.println("saving memento");
+    System.out.println("сохраняется напоминание");
     FormData formData = (FormData) tableMediator.getSash().getLayoutData();
     IMemento sashChild = memento.createChild(SASH_MEMENTO_KEY);
     sashChild.putInteger(SASH_X_MEMENTO_KEY, formData.left.offset);
@@ -26,10 +26,10 @@ public class MementoUtil {
 
   public void init(IMemento memento) {
     if (memento == null) {
-      System.out.println("null memento");
+      System.out.println("null-напоминание");
       return;
     }
-    System.out.println("processing from memento");
+    System.out.println("обрабатывается напоминание");
     
     IMemento sashChild = memento.getChild(SASH_MEMENTO_KEY);
     if (sashChild != null) {

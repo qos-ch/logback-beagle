@@ -40,7 +40,7 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
   public BeaglePreferencesPage() {
     super(GRID);
     setPreferenceStore(Activator.INSTANCE.getPreferenceStore());
-    setDescription("Beagle (logback console) settings:");
+    setDescription("Настройки Beagle (logback console) :");
   }
 
   @Override
@@ -54,10 +54,10 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
       return;
     int val = bufferSizeEditor.getIntValue();
     if (val <= MIN_BUFFER_SIZE) {
-      setErrorMessage("Buffer size must be greater than " + MIN_BUFFER_SIZE);
+      setErrorMessage("Размер буфера должен быть больше " + MIN_BUFFER_SIZE);
       setValid(false);
     } else if (val > MAX_BUFFER_SIZE) {
-      setErrorMessage("Buffer size must be less than " + MAX_BUFFER_SIZE);
+      setErrorMessage("Размер буфера должен быть меньше " + MAX_BUFFER_SIZE);
       setValid(false);
     }
   }
@@ -74,11 +74,11 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
   @Override
   protected void createFieldEditors() {
     patternEditor = new StringFieldEditor(PATTERN_PREFERENCE,
-	"Log line pattern:", getFieldEditorParent());
+	"Шаблон строки-лога:", getFieldEditorParent());
     addField(patternEditor);
 
     bufferSizeEditor = new IntegerFieldEditor(BUFFER_SIZE_PREFERENCE,
-	"Buffer size (lines):", getFieldEditorParent());
+	"Размер буфера (строк):", getFieldEditorParent());
     addField(bufferSizeEditor);
   }
 

@@ -97,7 +97,7 @@ public class LoggerTree {
     case Level.ERROR_INT:
       return ResourceUtil.getImage(ResourceUtil.E_IMG_KEY);
     default:
-      throw new IllegalArgumentException("Level " + level + " unsupported");
+      throw new IllegalArgumentException("Уровень " + level + " не поддерживается");
     }
   }
 
