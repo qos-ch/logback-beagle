@@ -38,7 +38,7 @@ public class DynamicMenuEnabler implements MenuListener {
   MenuItem findMenuItemByIndex(Menu menu, int index) {
     MenuItem[] miArray = menu.getItems();
     if (index < 0 || index >= miArray.length) {
-      throw new IllegalArgumentException(index + " неподходящий индекс");
+      throw new IllegalArgumentException(index + " РЅРµРїРѕРґС…РѕРґСЏС‰РёР№ СЌР»РµРјРµРЅС‚ РјРµРЅСЋ");
     }
     return miArray[index];
   }

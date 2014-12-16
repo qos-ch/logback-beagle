@@ -92,7 +92,7 @@ public class ClassicTISBuffer implements ITableItemStubBuffer<ILoggingEvent>,
    */
   public void handleEvent(Event event) {
     if (event.type != SWT.SetData) {
-      throw new IllegalStateException("Неправильный тип события " + event.type);
+      throw new IllegalStateException("РќРµРѕР¶РёРґР°РЅРЅС‹Р№ С‚РёРї СЃРѕР±С‹С‚РёСЏ " + event.type);
     }
     GridItem item = (GridItem) event.item;
 

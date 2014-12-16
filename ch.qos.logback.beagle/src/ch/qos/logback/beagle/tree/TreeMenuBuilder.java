@@ -24,7 +24,7 @@ public class TreeMenuBuilder {
 
     {
       MenuItem nullMenuItem = new MenuItem(menu, SWT.PUSH);
-      nullMenuItem.setText("унаследовать (null)");
+      nullMenuItem.setText("СѓРЅР°СЃР»РµРґРѕРІР°РЅРЅС‹Р№ (null)");
     }
 
     {

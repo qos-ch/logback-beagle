@@ -95,7 +95,7 @@ public class TableMediator {
 
     LayoutDataHelper.make(this.totalEventsLabel, 12 * charWidth, charHeight)
 	.left(charWidth).bottom(OFFSET_FROM_BUTTOM).set();
-    this.totalEventsLabel.setText("0 событий");
+    this.totalEventsLabel.setText("0 СЃРѕР±С‹С‚РёР№");
 
     Label separator0Label = new Label(parent, SWT.SEPARATOR | SWT.VERTICAL);
     LayoutDataHelper.make(separator0Label, charWidth, charHeight)
@@ -183,7 +183,7 @@ public class TableMediator {
     this.unfreezeToolItem.setEnabled(false);
     this.unfreezeToolItem.setImage(ResourceUtil
 	.getImage(ResourceUtil.RELEASE_SCROLL_LOCK_IMG_KEY));
-    this.unfreezeToolItem.setToolTipText("расфиксировать прокрутку");
+    this.unfreezeToolItem.setToolTipText("СЂР°СЃС„РёРєСЃРёСЂРѕРІР°С‚СЊ РїСЂРѕРєСЂСѓС‚РєСѓ");
     return toolbar;
   }
 

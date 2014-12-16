@@ -40,7 +40,7 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
   public BeaglePreferencesPage() {
     super(GRID);
     setPreferenceStore(Activator.INSTANCE.getPreferenceStore());
-    setDescription("Настройки Beagle (logback console) :");
+    setDescription("РЅР°СЃС‚СЂРѕР№РєРё Beagle (logback console) :");
   }
 
   @Override
@@ -54,10 +54,10 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
       return;
     int val = bufferSizeEditor.getIntValue();
     if (val <= MIN_BUFFER_SIZE) {
-      setErrorMessage("Размер буфера должен быть больше " + MIN_BUFFER_SIZE);
+      setErrorMessage("Р Р°Р·РјРµСЂ Р±СѓС„РµСЂР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ " + MIN_BUFFER_SIZE);
       setValid(false);
     } else if (val > MAX_BUFFER_SIZE) {
-      setErrorMessage("Размер буфера должен быть меньше " + MAX_BUFFER_SIZE);
+      setErrorMessage("Р Р°Р·РјРµСЂ Р±СѓС„РµСЂР° РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ " + MAX_BUFFER_SIZE);
       setValid(false);
     }
   }
@@ -74,11 +74,11 @@ public class BeaglePreferencesPage extends FieldEditorPreferencePage implements
   @Override
   protected void createFieldEditors() {
     patternEditor = new StringFieldEditor(PATTERN_PREFERENCE,
-	"Шаблон строки-лога:", getFieldEditorParent());
+	"С€Р°Р±Р»РѕРЅ СЃС‚СЂРѕРєРё-Р»РѕРіР°:", getFieldEditorParent());
     addField(patternEditor);
 
     bufferSizeEditor = new IntegerFieldEditor(BUFFER_SIZE_PREFERENCE,
-	"Размер буфера (строк):", getFieldEditorParent());
+	"СЂР°Р·РјРµСЂ Р±СѓС„РµСЂР° (СЃС‚СЂРѕРє):", getFieldEditorParent());
     addField(bufferSizeEditor);
   }
 

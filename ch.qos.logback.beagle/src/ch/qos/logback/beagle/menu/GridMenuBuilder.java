@@ -21,10 +21,10 @@ import ch.qos.logback.beagle.visual.ClassicTISBuffer;
 
 public class GridMenuBuilder {
 
-  final public static String JUMP_TO_CALLER_MENU_TEXT = "Перейти к вызывающему";
-  final public static String EXPLAND_CALLERS_MENU_TEXT = "Показать информацию";
-  final public static String COLLAPSE_CALLERS_MENU_TEXT = "Скрыть информацию";
-  final public static String COPY_TO_CLIPBOARD_MENU_TEXT = "Скопировать в буфер";
+  final public static String JUMP_TO_CALLER_MENU_TEXT = "РџРµСЂРµР№С‚Рё Рє";
+  final public static String EXPLAND_CALLERS_MENU_TEXT = "РћС‚РєСЂС‹С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ";
+  final public static String COLLAPSE_CALLERS_MENU_TEXT = "РЎРєСЂС‹С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ";
+  final public static String COPY_TO_CLIPBOARD_MENU_TEXT = "РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РІ Р±СѓС„РµСЂ";
 
   final public static int JUMP_TO_CALLER_MENU_INDEX = 0;
   final public static int SHOW_CALLERS_MENU_INDEX = 1;
