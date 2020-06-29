@@ -4,25 +4,22 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.qos.logback.beagle</groupId>
-	<artifactId>ch.qos.logback.beagle.releng</artifactId>
-	<version>1.1.4-SNAPSHOT</version>
+	<artifactId>ch.qos.logback.beagle.parent</artifactId>
+	<version>1.1.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.21.0</tycho-version>
-		<platform-version>[4.4,4.5)</platform-version>
+		<tycho-version>1.7.0</tycho-version>
+		<platform-version>[4.16,4.17)</platform-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
-		<module>../ch.qos.logback.beagle.target</module>
-
-		<module>../ch.qos.logback.beagle</module>
-
-		<!--<module>../ch.qos.logback.beagle.tests</module> -->
-
-		<module>../ch.qos.logback.beagle.feature</module>
-		<module>../ch.qos.logback.beagle.repository</module>
+		<module>ch.qos.logback.beagle.target</module>
+		<module>ch.qos.logback.beagle</module>
+		<!--<module>ch.qos.logback.beagle.tests</module> -->
+		<module>ch.qos.logback.beagle.feature</module>
+		<module>ch.qos.logback.beagle.repository</module>
 	</modules>
 
 
@@ -56,7 +53,7 @@
 						<artifact>
 							<groupId>ch.qos.logback.beagle</groupId>
 							<artifactId>ch.qos.logback.beagle.target</artifactId>
-							<version>1.1.4-SNAPSHOT</version>
+							<version>1.1.5-SNAPSHOT</version>
 							<classifier>ch.qos.logback.beagle.target</classifier>
 						</artifact>
 					</target>
