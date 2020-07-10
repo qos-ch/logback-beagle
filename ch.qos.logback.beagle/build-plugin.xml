@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project default="plugin_export" name="build">
-	<target name="plugin_export">
-		<pde.exportPlugins destination="C:\home\ceki\logback-beagle" exportSource="true" exportType="zip" filename="Xlogback-beagle.zip" plugins="ch.qos.logback.beagle" useJARFormat="true"/>
-	</target>
-</project>

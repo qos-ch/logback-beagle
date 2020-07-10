@@ -1,8 +1,5 @@
 bin
 target
-.classpath
-.project
-.settings
 *~
 *.iml
 *.ipr

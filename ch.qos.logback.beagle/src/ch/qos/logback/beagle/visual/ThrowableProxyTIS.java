@@ -62,7 +62,7 @@ public class ThrowableProxyTIS implements ITableItemStub {
       } else {
 	buf.append(TAB_SUBSTITUTE);
 	buf.append("... ").append(commonFrames)
-	    .append(" common frames omitted");
+	    .append(" общие рамки опущены");
       }
     }
     return buf.toString();

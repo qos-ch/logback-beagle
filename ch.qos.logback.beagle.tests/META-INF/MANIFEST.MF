@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Logback Beagle Tests
 Bundle-SymbolicName: ch.qos.logback.beagle.tests;singleton:=true
 Bundle-Version: 1.1.4.qualifier
-Require-Bundle:  org.eclipse.nebula.widgets.grid;bundle-version="1.0.0",
+Require-Bundle: org.eclipse.nebula.widgets.grid;bundle-version="1.0.0",
  org.eclipse.swtbot.eclipse.core;bundle-version="2.0.5",
  org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.5",
- org.eclipse.swtbot.eclipse.junit4.headless;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.junit.headless;bundle-version="2.0.5",
  org.eclipse.swtbot.junit4_x;bundle-version="2.0.5",
- org.hamcrest;bundle-version="1.1.0",
- org.junit4;bundle-version="4.8.1",
+ org.hamcrest.core;bundle-version="1.1.0",
+ org.junit;bundle-version="4.8.1",
  org.apache.log4j;bundle-version="1.2.13",
  org.eclipse.ui;bundle-version="3.7.0",
  ch.qos.logback.classic;bundle-version="1.0.7",
@@ -18,3 +18,6 @@ Require-Bundle:  org.eclipse.nebula.widgets.grid;bundle-version="1.0.0",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,lib/logback-classic-1.0.6-tests.jar
+Export-Package: ch.qos.logback.beagle,
+ ch.qos.logback.beagle.tests,
+ ch.qos.logback.beagle.vista

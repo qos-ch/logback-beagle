@@ -118,7 +118,7 @@ public class OnMenuSelectionAction implements SelectionListener {
       handleCopyToClipboard(e.display);
       break;
     default:
-      throw new IllegalStateException("Unexpected menu item " + mi);
+      throw new IllegalStateException("Неподходящий элемент меню " + mi);
     }
   }
 

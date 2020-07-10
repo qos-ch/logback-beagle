@@ -73,8 +73,8 @@ public class LoggingEventSocketServer implements Runnable, Listener {
       }
       serverSocket.close();
     } catch (BindException bindException) {
-      Activator.INSTANCE.logException(bindException, "The port " + port
-	  + " is already in use.");
+      Activator.INSTANCE.logException(bindException, "порт" + port
+	  + " уже используется.");
     } catch (Exception exception) {
       Activator.INSTANCE.logException(exception, exception.getMessage());
     }

@@ -24,7 +24,7 @@ public class TreeMenuBuilder {
 
     {
       MenuItem nullMenuItem = new MenuItem(menu, SWT.PUSH);
-      nullMenuItem.setText("inherit (null)");
+      nullMenuItem.setText("унаследованный (null)");
     }
 
     {
